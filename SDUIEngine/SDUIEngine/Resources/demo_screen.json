@@ -11,7 +11,7 @@
       "id": "title_text",
       "type": "Text",
       "props": {
-        "text": "Welcome to SDUIEngine",
+        "text": "Demo Screen",
         "fontSize": 24,
         "fontWeight": "bold",
         "color": "#1F2937"

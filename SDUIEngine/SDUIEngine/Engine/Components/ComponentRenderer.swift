@@ -1,5 +1,6 @@
 import SwiftUI
 
+// Generic renderer that turns any ComponentModel into a concrete SwiftUI view.
 struct ComponentRenderer: View {
     let model: ComponentModel
     let context: UIContext
@@ -13,6 +14,7 @@ struct ComponentRenderer: View {
 
     var body: some View {
         renderedView
+            // Lifecycle events are dispatched back to the SDUI runtime.
             .onAppear {
                 if let event = model.event(for: .onAppear) {
                     context.trigger(event)
@@ -30,6 +32,7 @@ struct ComponentRenderer: View {
             return factory(model, context)
         }
 
+        // Safe fallback for unknown types so UI does not fully crash.
         return AnyView(
             VStack(alignment: .leading, spacing: 8) {
                 Text("Unknown component: \(model.type)")

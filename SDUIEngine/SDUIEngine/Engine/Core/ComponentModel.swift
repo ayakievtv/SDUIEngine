@@ -1,5 +1,6 @@
 import Foundation
 
+// Canonical server-driven component node.
 struct ComponentModel: Identifiable, Codable, Equatable {
     let id: String
     let type: String

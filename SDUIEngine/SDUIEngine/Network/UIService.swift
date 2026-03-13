@@ -1,5 +1,6 @@
 import Foundation
 
+// Errors produced while fetching and decoding remote/local screen definitions.
 enum UIServiceError: Error {
     case invalidBackendBaseURL
     case invalidResponse
@@ -19,6 +20,7 @@ actor UIScreenCache {
     }
 }
 
+// Loads SDUI screen JSON from backend with local fallback and in-memory cache.
 final class UIService {
     static let useLocalScreens = true
 
@@ -65,6 +67,7 @@ final class UIService {
     }
 
     private func loadFromBackend(screenName: String) async throws -> Data {
+        // Avoid duplicate network calls for previously loaded screens.
         if let cached = await cache.get(screenName) {
             return cached
         }
@@ -90,6 +93,7 @@ final class UIService {
     }
 
     private func loadLocalScreenData(screenName: String) throws -> Data {
+        // Expected path: Resources/<screenName>.json in the app bundle.
         if let resourceURL = Bundle.main.url(
             forResource: screenName,
             withExtension: "json",
@@ -107,6 +111,7 @@ final class UIService {
     }
 
     private func decodeComponent(from data: Data) throws -> ComponentModel {
+        // Supports multiple backend payload envelopes for compatibility.
         if let component = try? decoder.decode(ComponentModel.self, from: data) {
             return component
         }

@@ -1,5 +1,6 @@
 import SwiftUI
 
+// Reusable screen container: loads JSON by name and renders dynamic component tree.
 struct ScreenView: View {
     let name: String
     let service: UIService
@@ -40,6 +41,7 @@ struct ScreenView: View {
             }
         }
         .task(id: name) {
+            // Reload when route/screen name changes.
             await load()
         }
     }
@@ -50,6 +52,7 @@ struct ScreenView: View {
         errorMessage = nil
 
         do {
+            // Delegates to UIService (backend first, local fallback).
             rootComponent = try await service.loadScreen(name: name)
         } catch {
             rootComponent = nil

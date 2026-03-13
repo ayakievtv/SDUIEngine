@@ -1,6 +1,8 @@
 import SwiftUI
 
+// Root container for backend-driven navigation and initial screen bootstrap.
 struct ContentView: View {
+    @StateObject private var router: NavigationRouter
     private let context: UIContext
     private let service: UIService
 
@@ -9,21 +11,33 @@ struct ContentView: View {
     @State private var errorMessage: String?
 
     init() {
-        let context = UIContext()
+        // A single router instance is shared by the whole app tree.
+        let router = NavigationRouter()
+        _router = StateObject(wrappedValue: router)
+
+        // UIContext is the runtime "engine" used by components.
+        let context = UIContext(navigation: router)
         registerDefaultComponents(in: context.componentRegistry)
         self.context = context
         self.service = UIService()
     }
 
     var body: some View {
-        Group {
-            if isLoading {
-                ProgressView("Loading main screen...")
-            } else if let rootComponent {
-                ComponentRenderer(model: rootComponent, context: context, registry: context.componentRegistry)
-            } else {
-                Text(errorMessage ?? "Failed to load screen")
-                    .padding(16)
+        // Centralized NavigationStack for all server routes.
+        NavigationStack(path: $router.path) {
+            Group {
+                if isLoading {
+                    ProgressView("Loading main screen...")
+                } else if let rootComponent {
+                    ComponentRenderer(model: rootComponent, context: context, registry: context.componentRegistry)
+                } else {
+                    Text(errorMessage ?? "Failed to load screen")
+                        .padding(16)
+                }
+            }
+            // A single destination resolver for every AppRoute.
+            .navigationDestination(for: AppRoute.self) { route in
+                ScreenView(name: route.screenName, service: service, context: context)
             }
         }
         .task {
@@ -37,6 +51,7 @@ struct ContentView: View {
         errorMessage = nil
 
         do {
+            // Backend-driven entry point.
             rootComponent = try await service.loadScreen("main")
         } catch {
             rootComponent = nil
@@ -48,6 +63,7 @@ struct ContentView: View {
 }
 
 private func registerDefaultComponents(in registry: ComponentRegistry) {
+    // Default mapping between JSON "type" and SwiftUI implementation.
     registry.register(type: "VStack", component: VStackComponent.self)
     registry.register(type: "HStack", component: HStackComponent.self)
     registry.register(type: "ScrollView", component: ScrollViewComponent.self)

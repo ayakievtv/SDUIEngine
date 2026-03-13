@@ -8,6 +8,7 @@ enum EventType: String, Codable, Equatable, CaseIterable {
     case onSubmit
 }
 
+// Event descriptor attached to components in JSON config.
 struct EventModel: Codable, Equatable {
     let type: EventType
     let target: String
@@ -34,6 +35,7 @@ struct EventModel: Codable, Equatable {
 }
 
 extension ComponentModel {
+    // Reads event JSON and normalizes it to EventModel format.
     func event(for type: EventType) -> EventModel? {
         guard let definition = events[type.rawValue] else {
             return nil

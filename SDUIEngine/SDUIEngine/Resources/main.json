@@ -23,15 +23,21 @@
       "id": "cta_button",
       "type": "Button",
       "props": {
-        "title": "Continue",
+        "title": "Open Nested Flow",
         "padding": 12,
         "color": "#2563EB"
       },
       "events": {
         "onTap": {
-          "target": "continue_action",
+          "target": "backend_navigation",
           "params": {
-            "source": "demo_screen"
+            "type": "navigate_chain",
+            "mode": "push",
+            "routes": [
+              "demo_screen",
+              "main",
+              "demo_screen"
+            ]
           }
         }
       },

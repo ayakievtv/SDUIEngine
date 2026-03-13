@@ -60,6 +60,7 @@ final class MockAPIClient: APIClient {
 }
 
 @MainActor
+// Runtime context shared by every component: state, events, navigation and API.
 final class UIContext {
     let stateStore: StateStoreManaging
     let eventDispatcher: EventDispatching
@@ -70,15 +71,18 @@ final class UIContext {
     init(
         stateStore: StateStoreManaging = InMemoryStateStore(),
         eventDispatcher: EventDispatching = EventDispatcher(),
-        navigation: NavigationRouting = NavigationEngine(),
+        navigation: NavigationRouting? = nil,
         apiClient: APIClient = MockAPIClient(),
         componentRegistry: ComponentRegistry = ComponentRegistry()
     ) {
         self.stateStore = stateStore
         self.eventDispatcher = eventDispatcher
-        self.navigation = navigation
+        self.navigation = navigation ?? NavigationRouter()
         self.apiClient = apiClient
         self.componentRegistry = componentRegistry
+
+        // Bridge common component events to backend-driven navigation actions.
+        registerDefaultEventHandlers()
     }
 
     func setState(_ value: JSONValue, for key: String) {
@@ -94,6 +98,7 @@ final class UIContext {
     }
 
     func bindingString(for key: String, default defaultValue: String = "") -> Binding<String> {
+        // Two-way binding between UI controls and state store string values.
         Binding(
             get: { self.stateValue(for: key)?.stringValue ?? defaultValue },
             set: { self.setState(key: key, value: .string($0)) }
@@ -101,6 +106,7 @@ final class UIContext {
     }
 
     func bindingBool(for key: String, default defaultValue: Bool = false) -> Binding<Bool> {
+        // Two-way binding between UI controls and state store bool values.
         Binding(
             get: { self.stateValue(for: key)?.boolValue ?? defaultValue },
             set: { self.setState(key: key, value: .bool($0)) }
@@ -116,7 +122,7 @@ final class UIContext {
     }
 
     func navigate(to route: String) {
-        navigation.navigate(to: route, mode: .push)
+        navigation.navigate(to: AppRoute(screenName: route), mode: .push)
     }
 
     func navigate(_ route: String) {
@@ -124,15 +130,19 @@ final class UIContext {
     }
 
     func push(_ route: String) {
-        navigation.push(route)
+        navigation.push(AppRoute(screenName: route))
     }
 
     func modal(_ route: String) {
-        navigation.modal(route)
+        navigation.modal(AppRoute(screenName: route))
     }
 
     func replace(with route: String) {
-        navigation.replace(with: route)
+        navigation.replace(with: AppRoute(screenName: route))
+    }
+
+    func handle(action: ServerAction) {
+        navigation.handle(action: action)
     }
 
     func dismissModal() {
@@ -149,5 +159,23 @@ final class UIContext {
 
     func callAPI(_ endpoint: String, method: HTTPMethod = .get, body: [String: JSONValue]? = nil) async throws -> JSONValue {
         try await callAPI(endpoint: endpoint, method: method, body: body)
+    }
+
+    private func registerDefaultEventHandlers() {
+        guard let dispatcher = eventDispatcher as? EventDispatcher else {
+            return
+        }
+
+        // Standard tap action path: component event -> ServerAction -> router.
+        dispatcher.register(.onTap) { event, context in
+            guard let action = ServerAction.from(event: event) else { return }
+            context.handle(action: action)
+        }
+
+        // Submit actions can navigate as well (for forms/search flows).
+        dispatcher.register(.onSubmit) { event, context in
+            guard let action = ServerAction.from(event: event) else { return }
+            context.handle(action: action)
+        }
     }
 }
