@@ -1,0 +1,41 @@
+{
+  "id": "root_stack",
+  "type": "VStack",
+  "props": {
+    "padding": 16,
+    "spacing": 12
+  },
+  "events": {},
+  "children": [
+    {
+      "id": "title_text",
+      "type": "Text",
+      "props": {
+        "text": "Welcome to SDUIEngine",
+        "fontSize": 24,
+        "fontWeight": "bold",
+        "color": "#1F2937"
+      },
+      "events": {},
+      "children": []
+    },
+    {
+      "id": "cta_button",
+      "type": "Button",
+      "props": {
+        "title": "Continue",
+        "padding": 12,
+        "color": "#2563EB"
+      },
+      "events": {
+        "onTap": {
+          "target": "continue_action",
+          "params": {
+            "source": "demo_screen"
+          }
+        }
+      },
+      "children": []
+    }
+  ]
+}
