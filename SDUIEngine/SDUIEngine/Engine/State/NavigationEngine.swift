@@ -233,8 +233,8 @@ extension ServerAction {
             return ServerAction(type: type, route: AppRoute(screenName: routeName), mode: mode)
         }
 
-        if event.target.hasPrefix("screen:") {
-            let screenName = String(event.target.dropFirst("screen:".count))
+        if let screenTarget = event.targets.first(where: { $0.hasPrefix("screen:") }) {
+            let screenName = String(screenTarget.dropFirst("screen:".count))
             return ServerAction(type: .navigate, route: AppRoute(screenName: screenName), mode: mode)
         }
 

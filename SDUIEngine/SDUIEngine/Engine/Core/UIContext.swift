@@ -223,9 +223,42 @@ final class UIContext {
     // Expected shape:
     // {
     //   "target": "title_text",
+    //   "targets": ["title_text", "subtitle_text"],
     //   "params": { "action": "SET_TEXT", "value": "Hello" }
     // }
     private func dispatchComponentAction(_ event: EventModel) {
+        let targets = event.targets
+        guard !targets.isEmpty else { return }
+
+        if let actions = event.params["actions"]?.arrayValue {
+            for actionDefinition in actions {
+                guard
+                    let actionPayload = actionDefinition.objectValue,
+                    let action = actionPayload["action"]?.stringValue
+                else {
+                    continue
+                }
+
+                let params = actionPayload.reduce(into: [String: String]()) { result, pair in
+                    switch pair.value {
+                    case let .string(value):
+                        result[pair.key] = value
+                    case let .number(value):
+                        result[pair.key] = String(value)
+                    case let .bool(value):
+                        result[pair.key] = value ? "true" : "false"
+                    default:
+                        break
+                    }
+                }
+
+                for target in targets {
+                    componentStore.get(componentID: target)?.handle(action: action, params: params)
+                }
+            }
+            return
+        }
+
         guard let action = event.params["action"]?.stringValue else {
             return
         }
@@ -243,6 +276,8 @@ final class UIContext {
             }
         }
 
-        componentStore.get(componentID: event.target)?.handle(action: action, params: params)
+        for target in targets {
+            componentStore.get(componentID: target)?.handle(action: action, params: params)
+        }
     }
 }

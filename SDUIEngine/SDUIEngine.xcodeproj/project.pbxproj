@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00BE5B992F65F01400ACC29D /* codex.md in Resources */ = {isa = PBXBuildFile; fileRef = 00BE5B982F65F01300ACC29D /* codex.md */; };
 		A00000000000000000000001 /* SDUIEngineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* SDUIEngineApp.swift */; };
 		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012 /* ContentView.swift */; };
 		A00000000000000000000201 /* ComponentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000211 /* ComponentModel.swift */; };
@@ -30,9 +31,11 @@
 		A00000000000000000001201 /* NavigationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001211 /* NavigationEngine.swift */; };
 		A00000000000000000001301 /* demo_screen.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001311 /* demo_screen.json */; };
 		A00000000000000000001401 /* main.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001411 /* main.json */; };
+		A00000000000000000001501 /* demo_screen2.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001511 /* demo_screen2.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		00BE5B982F65F01300ACC29D /* codex.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = codex.md; sourceTree = "<group>"; };
 		A00000000000000000000010 /* SDUIEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDUIEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000011 /* SDUIEngineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDUIEngineApp.swift; sourceTree = "<group>"; };
 		A00000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -57,6 +60,7 @@
 		A00000000000000000001211 /* NavigationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEngine.swift; sourceTree = "<group>"; };
 		A00000000000000000001311 /* demo_screen.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = demo_screen.json; sourceTree = "<group>"; };
 		A00000000000000000001411 /* main.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = main.json; sourceTree = "<group>"; };
+		A00000000000000000001511 /* demo_screen2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = demo_screen2.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +85,7 @@
 		A00000000000000000000041 /* SDUIEngine */ = {
 			isa = PBXGroup;
 			children = (
+				00BE5B982F65F01300ACC29D /* codex.md */,
 				A00000000000000000000101 /* Engine */,
 				A00000000000000000000108 /* Network */,
 				A00000000000000000000109 /* Screens */,
@@ -200,6 +205,7 @@
 			children = (
 				A00000000000000000001311 /* demo_screen.json */,
 				A00000000000000000001411 /* main.json */,
+				A00000000000000000001511 /* demo_screen2.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -263,8 +269,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00BE5B992F65F01400ACC29D /* codex.md in Resources */,
 				A00000000000000000001301 /* demo_screen.json in Resources */,
 				A00000000000000000001401 /* main.json in Resources */,
+				A00000000000000000001501 /* demo_screen2.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

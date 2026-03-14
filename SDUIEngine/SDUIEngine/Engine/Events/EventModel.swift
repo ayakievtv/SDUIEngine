@@ -91,26 +91,54 @@ final class ParamResolver {
 // Event descriptor attached to components in JSON config.
 struct EventModel: Codable, Equatable {
     let type: EventType
-    let target: String
+    let targets: [String]
     let params: [String: JSONValue]
 
     init(type: EventType, target: String, params: [String: JSONValue] = [:]) {
         self.type = type
-        self.target = target
+        targets = [target]
         self.params = params
+    }
+
+    init(type: EventType, targets: [String], params: [String: JSONValue] = [:]) {
+        self.type = type
+        self.targets = targets
+        self.params = params
+    }
+
+    var target: String {
+        targets.first ?? ""
     }
 
     private enum CodingKeys: String, CodingKey {
         case type
         case target
+        case targets
         case params
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         type = try container.decode(EventType.self, forKey: .type)
-        target = try container.decode(String.self, forKey: .target)
+        if let decodedTargets = try container.decodeIfPresent([String].self, forKey: .targets), !decodedTargets.isEmpty {
+            targets = decodedTargets
+        } else if let decodedTarget = try container.decodeIfPresent(String.self, forKey: .target) {
+            targets = [decodedTarget]
+        } else {
+            targets = []
+        }
         params = try container.decodeIfPresent([String: JSONValue].self, forKey: .params) ?? [:]
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(type, forKey: .type)
+        if targets.count <= 1 {
+            try container.encode(targets.first ?? "", forKey: .target)
+        } else {
+            try container.encode(targets, forKey: .targets)
+        }
+        try container.encode(params, forKey: .params)
     }
 }
 
@@ -125,9 +153,19 @@ extension ComponentModel {
         case let .string(target):
             return EventModel(type: type, target: target)
         case let .object(object):
-            let target = object["target"]?.stringValue ?? id
+            let targets = object["targets"]?.arrayValue?
+                .compactMap(\.stringValue)
+                .filter { !$0.isEmpty }
+            let resolvedTargets: [String]
+            if let targets, !targets.isEmpty {
+                resolvedTargets = targets
+            } else if let target = object["target"]?.stringValue, !target.isEmpty {
+                resolvedTargets = [target]
+            } else {
+                resolvedTargets = [id]
+            }
             let params = object["params"]?.objectValue ?? [:]
-            return EventModel(type: type, target: target, params: params)
+            return EventModel(type: type, targets: resolvedTargets, params: params)
         default:
             return EventModel(type: type, target: id)
         }

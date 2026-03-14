@@ -30,8 +30,11 @@ struct TextFieldComponent: UIComponent {
             .onChange(of: textBinding.wrappedValue) { value in
                 guard let event = model.event(for: .onChange) else { return }
                 var params = event.params
-                params["value"] = .string(value)
-                context.trigger(EventModel(type: .onChange, target: event.target, params: params))
+                // Keep JSON-defined value if provided; otherwise pass current field value.
+                if params["value"] == nil {
+                    params["value"] = .string(value)
+                }
+                context.trigger(EventModel(type: .onChange, targets: event.targets, params: params))
             }
             .onSubmit {
                 if let event = model.event(for: .onSubmit) {
