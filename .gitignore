@@ -2,9 +2,12 @@
 # Xcode
 
 .DS_Store
+**/.DS_Store
 
 
 DerivedData/
+.DerivedData/
+**/.DerivedData/
 *.xcworkspace
 *.xcuserstate
 *.xcuserdata
