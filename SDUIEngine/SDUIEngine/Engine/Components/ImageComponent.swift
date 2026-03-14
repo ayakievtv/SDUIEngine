@@ -10,15 +10,15 @@ struct ImageComponent: UIComponent {
     }
 
     var body: some View {
-        let style = Style(props: model.props)
+        let style = Style(props: model.resolvedProps)
         return renderedImage().applyStyle(style, includeFontSize: false)
     }
 
     private func renderedImage() -> AnyView {
-        let isResizable = model.props.bool("resizable") ?? true
-        let contentMode: ContentMode = (model.props.string("contentMode")?.lowercased() == "fill") ? .fill : .fit
+        let isResizable = model.resolvedProps.bool("resizable") ?? true
+        let contentMode: ContentMode = (model.resolvedProps.string("contentMode")?.lowercased() == "fill") ? .fill : .fit
 
-        if let urlString = model.props.string("url"), let url = URL(string: urlString) {
+        if let urlString = model.resolvedProps.string("url"), let url = URL(string: urlString) {
             return AnyView(
                 AsyncImage(url: url) { phase in
                     switch phase {
@@ -39,7 +39,7 @@ struct ImageComponent: UIComponent {
             )
         }
 
-        if let systemName = model.props.string("systemName") {
+        if let systemName = model.resolvedProps.string("systemName") {
             let image = Image(systemName: systemName)
             if isResizable {
                 return AnyView(image.resizable().aspectRatio(contentMode: contentMode))
@@ -47,7 +47,7 @@ struct ImageComponent: UIComponent {
             return AnyView(image)
         }
 
-        if let name = model.props.string("name") {
+        if let name = model.resolvedProps.string("name") {
             let image = Image(name)
             if isResizable {
                 return AnyView(image.resizable().aspectRatio(contentMode: contentMode))

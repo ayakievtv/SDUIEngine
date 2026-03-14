@@ -10,7 +10,7 @@ struct SpacerComponent: UIComponent {
     }
 
     var body: some View {
-        let style = Style(props: model.props)
+        let style = Style(props: model.resolvedProps)
         let background = style.color ?? .clear
 
         if style.width != nil || style.height != nil {

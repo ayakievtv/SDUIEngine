@@ -38,7 +38,7 @@ struct ComponentRenderer: View {
                 Text("Unknown component: \(model.type)")
                     .font(.headline)
 
-                ForEach(model.children) { child in
+                ForEach(model.resolvedChildren) { child in
                     ComponentRenderer(model: child, context: context, registry: registry)
                 }
             }

@@ -25,8 +25,19 @@ protocol EventDispatching: AnyObject {
 
 typealias EventHandler = (EventModel, UIContext) -> Void
 
+// Dispatches both local UI events and backend dynamic actions.
 final class EventDispatcher: EventDispatching {
     private var handlers: [EventType: EventHandler] = [:]
+    private let componentStore: ComponentStore
+    private let paramResolver: ParamResolver
+
+    init(
+        componentStore: ComponentStore = .shared,
+        paramResolver: ParamResolver = ParamResolver()
+    ) {
+        self.componentStore = componentStore
+        self.paramResolver = paramResolver
+    }
 
     func register(_ type: EventType, handler: @escaping EventHandler) {
         handlers[type] = handler
@@ -34,6 +45,23 @@ final class EventDispatcher: EventDispatching {
 
     func dispatch(_ event: EventModel, context: UIContext) {
         handlers[event.type]?(event, context)
+    }
+
+    // Executes one dynamic action if trigger matches current lifecycle/user trigger.
+    func dispatch(_ componentEvent: ComponentEvent, for trigger: ComponentEventTrigger? = nil) {
+        if let trigger, componentEvent.trigger != trigger.rawValue {
+            return
+        }
+
+        let resolvedParams = paramResolver.resolve(params: componentEvent.params)
+        for targetID in componentEvent.targets {
+            componentStore.get(componentID: targetID)?.handle(action: componentEvent.action, params: resolvedParams)
+        }
+    }
+
+    // Executes all actions for a given trigger.
+    func dispatch(events: [ComponentEvent], for trigger: ComponentEventTrigger) {
+        events.forEach { dispatch($0, for: trigger) }
     }
 }
 
@@ -67,19 +95,22 @@ final class UIContext {
     let navigation: NavigationRouting
     let apiClient: APIClient
     let componentRegistry: ComponentRegistry
+    private let componentStore: ComponentStore
 
     init(
         stateStore: StateStoreManaging = InMemoryStateStore(),
         eventDispatcher: EventDispatching = EventDispatcher(),
         navigation: NavigationRouting? = nil,
         apiClient: APIClient = MockAPIClient(),
-        componentRegistry: ComponentRegistry = ComponentRegistry()
+        componentRegistry: ComponentRegistry = ComponentRegistry(),
+        componentStore: ComponentStore = .shared
     ) {
         self.stateStore = stateStore
         self.eventDispatcher = eventDispatcher
         self.navigation = navigation ?? NavigationRouter()
         self.apiClient = apiClient
         self.componentRegistry = componentRegistry
+        self.componentStore = componentStore
 
         // Bridge common component events to backend-driven navigation actions.
         registerDefaultEventHandlers()
@@ -168,14 +199,50 @@ final class UIContext {
 
         // Standard tap action path: component event -> ServerAction -> router.
         dispatcher.register(.onTap) { event, context in
+            context.dispatchComponentAction(event)
             guard let action = ServerAction.from(event: event) else { return }
             context.handle(action: action)
         }
 
         // Submit actions can navigate as well (for forms/search flows).
         dispatcher.register(.onSubmit) { event, context in
+            context.dispatchComponentAction(event)
             guard let action = ServerAction.from(event: event) else { return }
             context.handle(action: action)
         }
+
+        // Change actions support "event chains", e.g. TextField value update -> target component update.
+        dispatcher.register(.onChange) { event, context in
+            context.dispatchComponentAction(event)
+            guard let action = ServerAction.from(event: event) else { return }
+            context.handle(action: action)
+        }
+    }
+
+    // Supports direct component-to-component actions from simple onTap/onSubmit event payloads.
+    // Expected shape:
+    // {
+    //   "target": "title_text",
+    //   "params": { "action": "SET_TEXT", "value": "Hello" }
+    // }
+    private func dispatchComponentAction(_ event: EventModel) {
+        guard let action = event.params["action"]?.stringValue else {
+            return
+        }
+
+        let params = event.params.reduce(into: [String: String]()) { result, pair in
+            switch pair.value {
+            case let .string(value):
+                result[pair.key] = value
+            case let .number(value):
+                result[pair.key] = String(value)
+            case let .bool(value):
+                result[pair.key] = value ? "true" : "false"
+            default:
+                break
+            }
+        }
+
+        componentStore.get(componentID: event.target)?.handle(action: action, params: params)
     }
 }

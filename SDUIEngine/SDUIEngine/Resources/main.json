@@ -23,21 +23,55 @@
       "id": "cta_button",
       "type": "Button",
       "props": {
-        "title": "Open Nested Flow",
+        "title": "Change Title Text",
         "padding": 12,
         "color": "#2563EB"
       },
       "events": {
         "onTap": {
+          "target": "title_text",
+          "params": {
+            "action": "SET_TEXT",
+            "value": "Title changed from cta_button"
+          }
+        }
+      },
+      "children": []
+    },
+    {
+      "id": "color_button",
+      "type": "Button",
+      "props": {
+        "title": "Change Title Color",
+        "padding": 12,
+        "color": "#059669"
+      },
+      "events": {
+        "onTap": {
+          "target": "title_text",
+          "params": {
+            "action": "SET_COLOR",
+            "value": "#DC2626"
+          }
+        }
+      },
+      "children": []
+    },
+    {
+      "id": "go_demo_button",
+      "type": "Button",
+      "props": {
+        "title": "Open Second Screen",
+        "padding": 12,
+        "color": "#0EA5E9"
+      },
+      "events": {
+        "onTap": {
           "target": "backend_navigation",
           "params": {
-            "type": "navigate_chain",
+            "type": "navigate",
             "mode": "push",
-            "routes": [
-              "demo_screen",
-              "main",
-              "demo_screen"
-            ]
+            "route": "demo_screen"
           }
         }
       },

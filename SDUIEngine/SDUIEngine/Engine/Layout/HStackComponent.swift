@@ -10,10 +10,10 @@ struct HStackComponent: UIComponent {
     }
 
     var body: some View {
-        let style = Style(props: model.props)
+        let style = Style(props: model.resolvedProps)
 
         HStack {
-            ForEach(model.children) { child in
+            ForEach(model.resolvedChildren) { child in
                 ComponentRenderer(model: child, context: context, registry: context.componentRegistry)
             }
         }

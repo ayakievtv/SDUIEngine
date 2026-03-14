@@ -1,41 +1,191 @@
 {
-  "id": "root_stack",
-  "type": "VStack",
+  "id": "demo_root_scroll",
+  "type": "ScrollView",
   "props": {
-    "padding": 16,
-    "spacing": 12
+    "padding": 16
   },
   "events": {},
   "children": [
     {
-      "id": "title_text",
-      "type": "Text",
+      "id": "demo_root_stack",
+      "type": "VStack",
       "props": {
-        "text": "Demo Screen",
-        "fontSize": 24,
-        "fontWeight": "bold",
-        "color": "#1F2937"
+        "spacing": 12
       },
       "events": {},
-      "children": []
-    },
-    {
-      "id": "cta_button",
-      "type": "Button",
-      "props": {
-        "title": "Continue",
-        "padding": 12,
-        "color": "#2563EB"
-      },
-      "events": {
-        "onTap": {
-          "target": "continue_action",
-          "params": {
-            "source": "demo_screen"
-          }
+      "children": [
+        {
+          "id": "demo_title_text",
+          "type": "Text",
+          "props": {
+            "text": "Demo Screen: All Components",
+            "fontSize": 24,
+            "fontWeight": "bold",
+            "color": "#1F2937"
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "demo_status_text",
+          "type": "Text",
+          "props": {
+            "text": "Status: waiting for actions",
+            "fontSize": 14,
+            "color": "#6B7280",
+            "inputLike": 1,
+            "borderColor": "#CBD5E1",
+            "backgroundColor": "#F8FAFC"
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "demo_icon",
+          "type": "Image",
+          "props": {
+            "systemName": "sparkles.rectangle.stack.fill",
+            "resizable": 1,
+            "contentMode": "fit",
+            "width": 44,
+            "height": 44,
+            "color": "#2563EB"
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "demo_spacer",
+          "type": "Spacer",
+          "props": {
+            "height": 8
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "demo_actions_row",
+          "type": "HStack",
+          "props": {
+            "spacing": 8
+          },
+          "events": {},
+          "children": [
+            {
+              "id": "demo_set_text_btn",
+              "type": "Button",
+              "props": {
+                "title": "Set Title",
+                "padding": 10,
+                "color": "#2563EB"
+              },
+              "events": {
+                "onTap": {
+                  "target": "demo_title_text",
+                  "params": {
+                    "action": "SET_TEXT",
+                    "value": "Title changed from ON_TAP"
+                  }
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "demo_set_color_btn",
+              "type": "Button",
+              "props": {
+                "title": "Set Title Color",
+                "padding": 10,
+                "color": "#059669"
+              },
+              "events": {
+                "onTap": {
+                  "target": "demo_title_text",
+                  "params": {
+                    "action": "SET_COLOR",
+                    "value": "#DC2626"
+                  }
+                }
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "demo_email_field",
+          "type": "TextField",
+          "props": {
+            "placeholder": "Type to trigger ON_CHANGE...",
+            "stateKey": "demoEmail",
+            "padding": 10
+          },
+          "events": {
+            "onChange": {
+              "target": "demo_status_text",
+              "params": {
+                "action": "SET_TEXT",
+                "value": "111111"
+              }
+            },
+            "onSubmit": {
+              "target": "demo_status_text",
+              "params": {
+                "action": "SET_COLOR",
+                "value": "#7C3AED"
+              }
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "demo_chain_button",
+          "type": "Button",
+          "props": {
+            "title": "Chain: Button -> TextField -> Status",
+            "padding": 12,
+            "color": "#0EA5E9",
+            "borderColor": "#0EA5E9",
+            "borderWidth": 1,
+            "cornerRadius": 12,
+            "backgroundColor": "#FFFFFF"
+         
+          },
+          "events": {
+            "onTap": {
+              "target": "demo_email_field",
+              "params": {
+                "action": "SET_TEXT",
+                "value": "Changed by button chain event"
+              }
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "demo_go_main_btn",
+          "type": "Button",
+          "props": {
+            "title": "Back To Main Screen",
+            "padding": 12,
+            "color": "#0EA5E9",
+            "borderColor": "#0EA5E9",
+            "borderWidth": 1,
+            "cornerRadius": 12,
+            "backgroundColor": "#FFFFFF"
+          },
+          "events": {
+            "onTap": {
+              "target": "backend_navigation",
+              "params": {
+                "type": "navigate",
+                "mode": "push",
+                "route": "main"
+              }
+            }
+          },
+          "children": []
         }
-      },
-      "children": []
+      ]
     }
   ]
 }

@@ -21,3 +21,22 @@ final class ComponentRegistry {
         factories[type]
     }
 }
+
+// Central runtime storage for active components that can receive actions by ID.
+final class ComponentStore {
+    static let shared = ComponentStore()
+
+    private var components: [String: AnyComponent] = [:]
+
+    func register(componentID: String, component: AnyComponent) {
+        components[componentID] = component
+    }
+
+    func get(componentID: String) -> AnyComponent? {
+        components[componentID]
+    }
+
+    func unregister(componentID: String) {
+        components.removeValue(forKey: componentID)
+    }
+}
