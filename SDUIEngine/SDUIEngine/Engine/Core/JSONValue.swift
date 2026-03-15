@@ -1,6 +1,7 @@
 import Foundation
 
 enum JSONValue: Codable, Equatable {
+    case null
     case string(String)
     case number(Double)
     case bool(Bool)
@@ -9,6 +10,11 @@ enum JSONValue: Codable, Equatable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
+
+        if container.decodeNil() {
+            self = .null
+            return
+        }
 
         if let value = try? container.decode(String.self) {
             self = .string(value)
@@ -45,6 +51,8 @@ enum JSONValue: Codable, Equatable {
         var container = encoder.singleValueContainer()
 
         switch self {
+        case .null:
+            try container.encodeNil()
         case let .string(value):
             try container.encode(value)
         case let .number(value):

@@ -9,7 +9,19 @@
     "fetchPolicy": "NETWORK_FIRST_LOCAL_FALLBACK",
     "savePolicy": "QUEUE_FIRST"
   },
-  "events": {},
+  "events": {
+    "onAppear": {
+      "target": "backend_data",
+      "params": {
+        "action": "OPEN_FORM",
+        "formKey": "invoice_edit_form",
+        "formStatePrefix": "invoiceForm",
+        "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
+        "idStateKey": "invoiceForm.id",
+        "clearPreviousDraft": "true"
+      }
+    }
+  },
   "children": [
     {
       "id": "invoice_edit_root_stack",
@@ -43,11 +55,44 @@
           "children": []
         },
         {
+          "id": "invoice_open_form_error",
+          "type": "Text",
+          "props": {
+            "text": "Open form error: {{invoiceForm._openFormError}}",
+            "fontSize": 12,
+            "color": "#DC2626"
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "invoice_open_form_endpoint",
+          "type": "Text",
+          "props": {
+            "text": "Last detail endpoint: {{invoiceForm._lastOpenFormEndpoint}}",
+            "fontSize": 11,
+            "color": "#64748B"
+          },
+          "events": {},
+          "children": []
+        },
+        {
           "id": "invoice_id_field",
           "type": "TextField",
           "props": {
-            "placeholder": "Invoice ID",
+            "placeholder": "Invoice UUID",
             "stateKey": "invoiceForm.id",
+            "padding": 10
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "invoice_doc_number_field",
+          "type": "TextField",
+          "props": {
+            "placeholder": "Document Number",
+            "stateKey": "invoiceForm.doc_number",
             "padding": 10
           },
           "events": {},
@@ -79,7 +124,7 @@
           "id": "invoice_due_date_field",
           "type": "TextField",
           "props": {
-            "placeholder": "Due Date (YYYY-MM-DD)",
+            "placeholder": "Document Date (ISO)",
             "stateKey": "invoiceForm.due_date",
             "padding": 10
           },

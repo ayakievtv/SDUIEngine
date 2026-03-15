@@ -453,6 +453,18 @@ struct DBGridComponent: UIComponent {
     }
 
     private func handleRowTap(row: DBGridRow) {
+        let selectedIDStateKey = model.resolvedProps.string("selectedIdStateKey")
+            ?? model.resolvedProps.string("selectionStateKey")
+            ?? "selectedRowId"
+        context.setState(key: selectedIDStateKey, value: .string(row.id))
+        if selectedIDStateKey.hasSuffix(".id") {
+            let uuidKey = String(selectedIDStateKey.dropLast(3)) + ".uuid"
+            context.setState(key: uuidKey, value: .string(row.id))
+        } else if selectedIDStateKey.hasSuffix(".uuid") {
+            let idKey = String(selectedIDStateKey.dropLast(5)) + ".id"
+            context.setState(key: idKey, value: .string(row.id))
+        }
+
         guard let event = model.event(for: .onTap) else {
             return
         }

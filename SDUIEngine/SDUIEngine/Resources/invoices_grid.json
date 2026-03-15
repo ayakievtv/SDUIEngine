@@ -49,6 +49,7 @@
       "type": "DBGrid",
       "props": {
         "dataSourceId": "invoices_rest_ds",
+        "selectedIdStateKey": "invoiceForm.id",
         "showControls": 1,
         "showHeader": 1,
         "rowComponent": {

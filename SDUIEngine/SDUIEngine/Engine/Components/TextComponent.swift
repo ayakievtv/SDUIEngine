@@ -4,6 +4,7 @@ struct TextComponent: UIComponent {
     let model: ComponentModel
     let context: UIContext
     @StateObject private var controller: TextActionController
+    @State private var stateRefreshToken = 0
 
     init(model: ComponentModel, context: UIContext) {
         self.model = model
@@ -27,7 +28,8 @@ struct TextComponent: UIComponent {
         }
 
         let style = Style(props: props)
-        let value = props.string("text") ?? ""
+        let rawText = props.string("text") ?? ""
+        let value = interpolateStateTokens(in: rawText)
         let isInputLike = props.bool("inputLike") ?? false
         let borderColor = Color.sduiColor(props.string("borderColor") ?? "#D1D5DB") ?? Color.gray.opacity(0.5)
         let backgroundColor = Color.sduiColor(props.string("backgroundColor") ?? "#FFFFFF") ?? Color.white
@@ -65,9 +67,37 @@ struct TextComponent: UIComponent {
                     })
                 )
             }
+            .onReceive(NotificationCenter.default.publisher(for: .sduiStateDidChange)) { _ in
+                stateRefreshToken += 1
+            }
             .onDisappear {
                 ComponentStore.shared.unregister(componentID: model.id)
             }
+    }
+
+    private func interpolateStateTokens(in text: String) -> String {
+        var output = text
+        while let open = output.range(of: "{{"),
+              let close = output.range(of: "}}", range: open.upperBound..<output.endIndex) {
+            let key = output[open.upperBound..<close.lowerBound]
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let replacement: String
+            if let value = context.stateValue(for: key) {
+                if let string = value.stringValue {
+                    replacement = string
+                } else if let number = value.numberValue {
+                    replacement = String(number)
+                } else if let bool = value.boolValue {
+                    replacement = bool ? "true" : "false"
+                } else {
+                    replacement = ""
+                }
+            } else {
+                replacement = ""
+            }
+            output.replaceSubrange(open.lowerBound..<close.upperBound, with: replacement)
+        }
+        return output
     }
 }
 
