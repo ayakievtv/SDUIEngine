@@ -175,3 +175,38 @@ extension View {
         return result
     }
 }
+
+extension View {
+    @ViewBuilder
+    func drawingGroup(if condition: Bool) -> some View {
+        if condition {
+            drawingGroup()
+        } else {
+            self
+        }
+    }
+
+    @ViewBuilder
+    func compositingGroup(if condition: Bool) -> some View {
+        if condition {
+            compositingGroup()
+        } else {
+            self
+        }
+    }
+
+    @ViewBuilder
+    func applyPerformanceProps(_ props: [String: JSONValue]) -> some View {
+        let drawing = props.bool("drawingGroup") ?? false
+        let compositing = props.bool("compositingGroup") ?? false
+        let fixedH = props.bool("fixedSizeHorizontal") ?? false
+        let fixedV = props.bool("fixedSizeVertical") ?? false
+
+        self
+            // Use layer-backed rendering for expensive subtrees when requested.
+            .drawingGroup(if: drawing)
+            // Allow caller to reduce layout churn for stable text/row blocks.
+            .fixedSize(horizontal: fixedH, vertical: fixedV)
+            .compositingGroup(if: compositing)
+    }
+}

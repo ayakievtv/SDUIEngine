@@ -87,6 +87,12 @@ final class MockAPIClient: APIClient {
     }
 }
 
+func makeDefaultAPIClient() -> APIClient {
+    let remote = URLSessionRemoteClient()
+    let dataLayer = OfflineDataLayer(remote: remote)
+    return OfflineAPIClient(dataLayer: dataLayer)
+}
+
 @MainActor
 // Runtime context shared by every component: state, events, navigation and API.
 final class UIContext {
@@ -95,14 +101,16 @@ final class UIContext {
     let navigation: NavigationRouting
     let apiClient: APIClient
     let componentRegistry: ComponentRegistry
+    let dataSourceRegistry: DataSourceRegistry
     private let componentStore: ComponentStore
 
     init(
         stateStore: StateStoreManaging = InMemoryStateStore(),
         eventDispatcher: EventDispatching = EventDispatcher(),
         navigation: NavigationRouting? = nil,
-        apiClient: APIClient = MockAPIClient(),
+        apiClient: APIClient = makeDefaultAPIClient(),
         componentRegistry: ComponentRegistry = ComponentRegistry(),
+        dataSourceRegistry: DataSourceRegistry = DataSourceRegistry(),
         componentStore: ComponentStore = .shared
     ) {
         self.stateStore = stateStore
@@ -110,6 +118,7 @@ final class UIContext {
         self.navigation = navigation ?? NavigationRouter()
         self.apiClient = apiClient
         self.componentRegistry = componentRegistry
+        self.dataSourceRegistry = dataSourceRegistry
         self.componentStore = componentStore
 
         // Bridge common component events to backend-driven navigation actions.

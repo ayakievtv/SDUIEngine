@@ -1,0 +1,258 @@
+{
+  "id": "invoice_edit_root_scroll",
+  "type": "ScrollView",
+  "props": {
+    "padding": 16,
+    "formKey": "invoice_edit_form",
+    "entityType": "invoice",
+    "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices",
+    "fetchPolicy": "NETWORK_FIRST_LOCAL_FALLBACK",
+    "savePolicy": "QUEUE_FIRST"
+  },
+  "events": {},
+  "children": [
+    {
+      "id": "invoice_edit_root_stack",
+      "type": "VStack",
+      "props": {
+        "spacing": 12
+      },
+      "events": {},
+      "children": [
+        {
+          "id": "invoice_edit_title",
+          "type": "Text",
+          "props": {
+            "text": "Invoice Edit Form",
+            "fontSize": 24,
+            "fontWeight": "bold",
+            "color": "#1F2937"
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "invoice_edit_hint",
+          "type": "Text",
+          "props": {
+            "text": "GET: /invoices/{id}, SAVE: POST/PUT via offline queue",
+            "fontSize": 12,
+            "color": "#64748B"
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "invoice_id_field",
+          "type": "TextField",
+          "props": {
+            "placeholder": "Invoice ID",
+            "stateKey": "invoiceForm.id",
+            "padding": 10
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "invoice_customer_field",
+          "type": "TextField",
+          "props": {
+            "placeholder": "Customer Name",
+            "stateKey": "invoiceForm.customer_name",
+            "padding": 10
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "invoice_amount_field",
+          "type": "TextField",
+          "props": {
+            "placeholder": "Amount",
+            "stateKey": "invoiceForm.amount",
+            "padding": 10
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "invoice_due_date_field",
+          "type": "TextField",
+          "props": {
+            "placeholder": "Due Date (YYYY-MM-DD)",
+            "stateKey": "invoiceForm.due_date",
+            "padding": 10
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "invoice_status_field",
+          "type": "TextField",
+          "props": {
+            "placeholder": "Status",
+            "stateKey": "invoiceForm.status",
+            "padding": 10
+          },
+          "events": {},
+          "children": []
+        },
+        {
+          "id": "invoice_load_actions",
+          "type": "HStack",
+          "props": {
+            "spacing": 8
+          },
+          "events": {},
+          "children": [
+            {
+              "id": "invoice_load_button",
+              "type": "Button",
+              "props": {
+                "title": "Load Invoice",
+                "padding": 10,
+                "color": "#2563EB"
+              },
+              "events": {
+                "onTap": {
+                  "target": "backend_data",
+                  "params": {
+                    "action": "OPEN_FORM",
+                    "formKey": "invoice_edit_form",
+                    "entityType": "invoice",
+                    "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
+                    "idStateKey": "invoiceForm.id",
+                    "clearPreviousDraft": "true"
+                  }
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "invoice_refresh_button",
+              "type": "Button",
+              "props": {
+                "title": "Reload",
+                "padding": 10,
+                "color": "#0EA5E9"
+              },
+              "events": {
+                "onTap": {
+                  "target": "backend_data",
+                  "params": {
+                    "action": "OPEN_FORM",
+                    "formKey": "invoice_edit_form",
+                    "entityType": "invoice",
+                    "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
+                    "idStateKey": "invoiceForm.id",
+                    "clearPreviousDraft": "true"
+                  }
+                }
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "invoice_save_actions",
+          "type": "HStack",
+          "props": {
+            "spacing": 8
+          },
+          "events": {},
+          "children": [
+            {
+              "id": "invoice_save_post_button",
+              "type": "Button",
+              "props": {
+                "title": "Save (POST Queue)",
+                "padding": 10,
+                "color": "#16A34A"
+              },
+              "events": {
+                "onTap": {
+                  "target": "backend_data",
+                  "params": {
+                    "action": "SAVE_FORM",
+                    "formKey": "invoice_edit_form",
+                    "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices",
+                    "method": "POST",
+                    "queue": "true"
+                  }
+                }
+              },
+              "children": []
+            },
+            {
+              "id": "invoice_save_put_button",
+              "type": "Button",
+              "props": {
+                "title": "Save (PUT Queue)",
+                "padding": 10,
+                "color": "#15803D"
+              },
+              "events": {
+                "onTap": {
+                  "target": "backend_data",
+                  "params": {
+                    "action": "SAVE_FORM",
+                    "formKey": "invoice_edit_form",
+                    "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
+                    "method": "PUT",
+                    "idStateKey": "invoiceForm.id",
+                    "queue": "true"
+                  }
+                }
+              },
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "invoice_discard_button",
+          "type": "Button",
+          "props": {
+            "title": "Close Without Save",
+            "padding": 12,
+            "color": "#DC2626"
+          },
+          "events": {
+            "onTap": {
+              "target": "backend_data",
+              "params": {
+                "action": "DISCARD_FORM",
+                "formKey": "invoice_edit_form",
+                "clearDraft": "true"
+              }
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "invoice_back_to_grid",
+          "type": "Button",
+          "props": {
+            "title": "Back To Invoices Grid",
+            "padding": 12,
+            "color": "#0EA5E9",
+            "borderColor": "#0EA5E9",
+            "borderWidth": 1,
+            "cornerRadius": 12,
+            "backgroundColor": "#FFFFFF"
+          },
+          "events": {
+            "onTap": {
+              "target": "backend_navigation",
+              "params": {
+                "type": "navigate",
+                "mode": "push",
+                "route": "invoices_grid"
+              }
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

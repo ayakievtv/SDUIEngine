@@ -14,6 +14,7 @@ struct ComponentRenderer: View {
 
     var body: some View {
         renderedView
+            .applyPerformanceProps(model.resolvedProps)
             // Lifecycle events are dispatched back to the SDUI runtime.
             .onAppear {
                 if let event = model.event(for: .onAppear) {

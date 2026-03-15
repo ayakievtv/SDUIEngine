@@ -26,12 +26,18 @@
 		A00000000000000000000904 /* ImageComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000914 /* ImageComponent.swift */; };
 		A00000000000000000000905 /* SpacerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000915 /* SpacerComponent.swift */; };
 		A00000000000000000000906 /* TextFieldComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000916 /* TextFieldComponent.swift */; };
+		A00000000000000000000907 /* DataSourceComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000917 /* DataSourceComponent.swift */; };
+		A00000000000000000000908 /* DBGridComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000918 /* DBGridComponent.swift */; };
 		A00000000000000000001001 /* UIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001011 /* UIService.swift */; };
 		A00000000000000000001101 /* ScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001111 /* ScreenView.swift */; };
 		A00000000000000000001201 /* NavigationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001211 /* NavigationEngine.swift */; };
+		A00000000000000000001202 /* OfflineDataLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001212 /* OfflineDataLayer.swift */; };
+		A00000000000000000001203 /* DataSourceRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001213 /* DataSourceRegistry.swift */; };
 		A00000000000000000001301 /* demo_screen.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001311 /* demo_screen.json */; };
 		A00000000000000000001401 /* main.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001411 /* main.json */; };
 		A00000000000000000001501 /* demo_screen2.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001511 /* demo_screen2.json */; };
+		A00000000000000000001601 /* invoices_grid.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001611 /* invoices_grid.json */; };
+		A00000000000000000001701 /* invoice_edit_form.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001711 /* invoice_edit_form.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,12 +61,18 @@
 		A00000000000000000000914 /* ImageComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageComponent.swift; sourceTree = "<group>"; };
 		A00000000000000000000915 /* SpacerComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacerComponent.swift; sourceTree = "<group>"; };
 		A00000000000000000000916 /* TextFieldComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldComponent.swift; sourceTree = "<group>"; };
+		A00000000000000000000917 /* DataSourceComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceComponent.swift; sourceTree = "<group>"; };
+		A00000000000000000000918 /* DBGridComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBGridComponent.swift; sourceTree = "<group>"; };
 		A00000000000000000001011 /* UIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIService.swift; sourceTree = "<group>"; };
 		A00000000000000000001111 /* ScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenView.swift; sourceTree = "<group>"; };
 		A00000000000000000001211 /* NavigationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEngine.swift; sourceTree = "<group>"; };
+		A00000000000000000001212 /* OfflineDataLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineDataLayer.swift; sourceTree = "<group>"; };
+		A00000000000000000001213 /* DataSourceRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceRegistry.swift; sourceTree = "<group>"; };
 		A00000000000000000001311 /* demo_screen.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = demo_screen.json; sourceTree = "<group>"; };
 		A00000000000000000001411 /* main.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = main.json; sourceTree = "<group>"; };
 		A00000000000000000001511 /* demo_screen2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = demo_screen2.json; sourceTree = "<group>"; };
+		A00000000000000000001611 /* invoices_grid.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = invoices_grid.json; sourceTree = "<group>"; };
+		A00000000000000000001711 /* invoice_edit_form.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = invoice_edit_form.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +148,8 @@
 				A00000000000000000000915 /* SpacerComponent.swift */,
 				A00000000000000000000912 /* TextComponent.swift */,
 				A00000000000000000000916 /* TextFieldComponent.swift */,
+				A00000000000000000000917 /* DataSourceComponent.swift */,
+				A00000000000000000000918 /* DBGridComponent.swift */,
 				A00000000000000000000911 /* ComponentStyle.swift */,
 				A00000000000000000000711 /* ComponentRenderer.swift */,
 				A00000000000000000000511 /* UIComponent.swift */,
@@ -165,6 +179,8 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000001211 /* NavigationEngine.swift */,
+				A00000000000000000001212 /* OfflineDataLayer.swift */,
+				A00000000000000000001213 /* DataSourceRegistry.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
@@ -206,6 +222,8 @@
 				A00000000000000000001311 /* demo_screen.json */,
 				A00000000000000000001411 /* main.json */,
 				A00000000000000000001511 /* demo_screen2.json */,
+				A00000000000000000001611 /* invoices_grid.json */,
+				A00000000000000000001711 /* invoice_edit_form.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -273,6 +291,8 @@
 				A00000000000000000001301 /* demo_screen.json in Resources */,
 				A00000000000000000001401 /* main.json in Resources */,
 				A00000000000000000001501 /* demo_screen2.json in Resources */,
+				A00000000000000000001601 /* invoices_grid.json in Resources */,
+				A00000000000000000001701 /* invoice_edit_form.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,9 +321,13 @@
 				A00000000000000000000904 /* ImageComponent.swift in Sources */,
 				A00000000000000000000905 /* SpacerComponent.swift in Sources */,
 				A00000000000000000000906 /* TextFieldComponent.swift in Sources */,
+				A00000000000000000000907 /* DataSourceComponent.swift in Sources */,
+				A00000000000000000000908 /* DBGridComponent.swift in Sources */,
 				A00000000000000000001001 /* UIService.swift in Sources */,
 				A00000000000000000001101 /* ScreenView.swift in Sources */,
 				A00000000000000000001201 /* NavigationEngine.swift in Sources */,
+				A00000000000000000001202 /* OfflineDataLayer.swift in Sources */,
+				A00000000000000000001203 /* DataSourceRegistry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

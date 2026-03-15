@@ -72,6 +72,8 @@ private func registerDefaultComponents(in registry: ComponentRegistry) {
     registry.register(type: "Image", component: ImageComponent.self)
     registry.register(type: "Spacer", component: SpacerComponent.self)
     registry.register(type: "TextField", component: TextFieldComponent.self)
+    registry.register(type: "DataSource", component: DataSourceComponent.self)
+    registry.register(type: "DBGrid", component: DBGridComponent.self)
 }
 
 struct ContentView_Previews: PreviewProvider {

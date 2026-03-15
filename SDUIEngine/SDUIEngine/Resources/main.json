@@ -137,6 +137,26 @@
         }
       },
       "children": []
+    },
+    {
+      "id": "go_invoices_grid_button",
+      "type": "Button",
+      "props": {
+        "title": "Open Invoices Grid",
+        "padding": 12,
+        "color": "#0284C7"
+      },
+      "events": {
+        "onTap": {
+          "target": "backend_navigation",
+          "params": {
+            "type": "navigate",
+            "mode": "push",
+            "route": "invoices_grid"
+          }
+        }
+      },
+      "children": []
     }
   ]
 }
