@@ -248,6 +248,12 @@ Capabilities implemented:
 4. `Equatable` plain card content to reduce unnecessary body recomputation.
 5. Row template parsing moved out of repeated path into state-backed initialization flow.
 6. DataSource resolution retry in grid init to avoid startup race (DataSource may appear after DBGrid).
+7. Global JSON-driven performance modifiers are supported on all components:
+- `drawingGroup`
+- `compositingGroup`
+- `fixedSizeHorizontal`
+- `fixedSizeVertical`
+8. Performance modifiers are applied in `ComponentRenderer` via `applyPerformanceProps`, so the same JSON contract works for primitive components and nested `rowComponent` trees.
 
 ---
 
@@ -259,6 +265,7 @@ To handle inconsistent backend key naming:
 3. Dot-path lookup (`a.b.c`).
 4. Recursive lookup through nested objects/arrays.
 5. Row wrapper merge for common envelopes (`row`, `data`, `value`, `record`, `item`).
+6. Placeholder interpolation for `{{...}}` is implemented with deterministic manual parsing (not regex), for both simple row templates and `rowComponent` props/events resolution.
 
 This was added because list payloads may vary between environments and wrappers.
 
@@ -321,4 +328,3 @@ Screens:
 2. Data source + grid + cards: `invoices_grid.json`.
 3. Edit form contract: `invoice_edit_form.json`.
 4. Offline data runtime present in code and wired as default API path.
-
