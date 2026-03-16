@@ -132,10 +132,9 @@
                 "onTap": {
                   "target": "backend_data",
                   "params": {
-                    "action": "OPEN_FORM",
-                    "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
-                    "idStateKey": "invoiceForm.id",
-                    "clearPreviousDraft": "true"
+                      "actions": [
+                        { "target": "backend_data", "action": "OPEN_FORM" , "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}" , "idStateKey": "invoiceForm.id" , "clearPreviousDraft": "true" }
+                      ]
                   }
                 }
               }
@@ -152,10 +151,11 @@
                 "onTap": {
                   "target": "backend_data",
                   "params": {
-                    "action": "OPEN_FORM",
-                    "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
-                    "idStateKey": "invoiceForm.id",
-                    "clearPreviousDraft": "true"
+                
+                    "actions": [
+                      { "target": "backend_data", "action": "OPEN_FORM" , "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}" , "idStateKey": "invoiceForm.id" , "clearPreviousDraft": "true" }
+                    ]
+                    
                   }
                 }
               }
@@ -243,11 +243,11 @@
           },
           "events": {
             "onTap": {
-              "target": "backend_navigation",
+           
               "params": {
-                "type": "navigate",
-                "mode": "push",
-                "route": "invoices_grid"
+               "actions": [
+                  { "target": "navigation", "action": "push", "route": "invoices_grid" }
+                ]
               }
             }
           }

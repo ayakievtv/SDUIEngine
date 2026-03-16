@@ -8,6 +8,7 @@ enum JSONValue: Codable, Equatable {
     case array([JSONValue])
     case object([String: JSONValue])
 
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
 

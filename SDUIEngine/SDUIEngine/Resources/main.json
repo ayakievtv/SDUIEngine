@@ -5,6 +5,7 @@
     "padding": 16,
     "spacing": 12
   },
+  "events": {},
   "children": [
     {
       "id": "title_text",
@@ -14,7 +15,9 @@
         "fontSize": 24,
         "fontWeight": "bold",
         "color": "#1F2937"
-      }
+      },
+      "events": {},
+      "children": []
     },
     {
       "id": "subtitle_text",
@@ -23,7 +26,9 @@
         "text": "This text can also be updated by event targets",
         "fontSize": 16,
         "color": "#4B5563"
-      }
+      },
+      "events": {},
+      "children": []
     },
     {
       "id": "cta_button",
@@ -38,10 +43,14 @@
           "target": "title_text",
           "params": {
             "action": "SET_TEXT",
-            "value": "Title changed from cta_button"
+            "value": "Title changed from cta_button",
+            "actions": [
+              { "target": "title_text", "action": "SET_TEXT", "value": "Title changed from cta_button" }
+            ]
           }
         }
-      }
+      },
+      "children": []
     },
     {
       "id": "color_button",
@@ -59,7 +68,8 @@
             "value": "#DC2626"
           }
         }
-      }
+      },
+      "children": []
     },
     {
       "id": "text_and_color_button",
@@ -88,7 +98,8 @@
             ]
           }
         }
-      }
+      },
+      "children": []
     },
     {
       "id": "go_demo_button",
@@ -100,14 +111,17 @@
       },
       "events": {
         "onTap": {
-          "target": "backend_navigation",
+       
           "params": {
-            "type": "navigate",
-            "mode": "push",
-            "route": "demo_screen"
+         
+            "actions": [
+              { "target": "navigation", "action": "push", "route": "demo_screen" }
+            ]
+
           }
         }
-      }
+      },
+      "children": []
     },
     {
       "id": "go_demo2_button",
@@ -119,14 +133,17 @@
       },
       "events": {
         "onTap": {
-          "target": "backend_navigation",
+       
           "params": {
-            "type": "navigate",
-            "mode": "push",
-            "route": "demo_screen2"
+          
+            "actions": [
+              { "target": "navigation", "action": "push", "route": "demo_screen2" }
+            ]
+            
           }
         }
-      }
+      },
+      "children": []
     },
     {
       "id": "go_invoices_grid_button",
@@ -138,14 +155,16 @@
       },
       "events": {
         "onTap": {
-          "target": "backend_navigation",
+        
           "params": {
-            "type": "navigate",
-            "mode": "push",
-            "route": "invoices_grid"
+         
+            "actions": [
+              { "target": "navigation", "action": "push", "route": "invoices_grid" }
+            ]
           }
         }
-      }
+      },
+      "children": []
     }
   ]
 }

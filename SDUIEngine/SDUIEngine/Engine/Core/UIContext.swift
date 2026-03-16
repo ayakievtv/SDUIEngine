@@ -7,19 +7,41 @@ extension Notification.Name {
 
 protocol StateStoreManaging: AnyObject {
     var state: [String: JSONValue] { get }
-    func value(for key: String) -> JSONValue?
+    func getValue(for key: String) -> JSONValue?
     func set(_ value: JSONValue, for key: String)
+    func merge(_ json: JSONValue, withPrefix: String)
+    func getValues(forPrefix prefix: String) -> [String: JSONValue]
 }
 
 final class InMemoryStateStore: StateStoreManaging {
     private(set) var state: [String: JSONValue] = [:]
 
-    func value(for key: String) -> JSONValue? {
+    func getValue(for key: String) -> JSONValue? {
         state[key]
     }
 
     func set(_ value: JSONValue, for key: String) {
         state[key] = value
+    }
+    
+    func merge(_ json: JSONValue, withPrefix prefix: String) {
+        guard let object = json.objectValue else { return }
+        for (key, value) in object {
+            self.set(value, for: "\(prefix).\(key)")
+        }
+    }
+    
+    func getValues(forPrefix prefix: String) -> [String: JSONValue] {
+        var result: [String: JSONValue] = [:]
+        let searchPrefix = prefix.hasSuffix(".") ? prefix : "\(prefix)."
+        
+        for (key, value) in state {
+            if key.hasPrefix(searchPrefix) {
+                let cleanKey = String(key.dropFirst(searchPrefix.count))
+                result[cleanKey] = value
+            }
+        }
+        return result
     }
 }
 
@@ -145,7 +167,7 @@ final class UIContext {
     }
 
     func stateValue(for key: String) -> JSONValue? {
-        stateStore.value(for: key)
+        stateStore.getValue(for: key)
     }
 
     func bindingString(for key: String, default defaultValue: String = "") -> Binding<String> {
@@ -254,204 +276,254 @@ final class UIContext {
         }
     }
 
-    // Supports direct component-to-component actions from simple onTap/onSubmit event payloads.
-    // Expected shape:
-    // {
-    //   "target": "title_text",
-    //   "targets": ["title_text", "subtitle_text"],
-    //   "params": { "action": "SET_TEXT", "value": "Hello" }
-    // }
+    // MARK: - Event Dispatching Logic
+
 //    private func dispatchComponentAction(_ event: EventModel) {
 //        let targets = event.targets
 //        guard !targets.isEmpty else { return }
 //
-//        if targets.contains("backend_data") {
-//            Task { [weak self] in
-//                await self?.handleBackendDataAction(event)
+//        for targetID in targets {
+//            if isSystemTarget(targetID) {
+//                // Обработка системных сервисов (Навигация, Данные, Логи)
+//                handleSystemAction(targetID, event: event)
+//            } else {
+//                // Обработка обычных UI-компонентов
+//                dispatchToComponent(targetID, event: event)
 //            }
-//        }
-//
-//        if let actions = event.params["actions"]?.arrayValue {
-//            for actionDefinition in actions {
-//                guard
-//                    let actionPayload = actionDefinition.objectValue,
-//                    let action = actionPayload["action"]?.stringValue
-//                else {
-//                    continue
-//                }
-//
-//                let params = actionPayload.reduce(into: [String: String]()) { result, pair in
-//                    switch pair.value {
-//                    case let .string(value):
-//                        result[pair.key] = value
-//                    case let .number(value):
-//                        result[pair.key] = String(value)
-//                    case let .bool(value):
-//                        result[pair.key] = value ? "true" : "false"
-//                    default:
-//                        break
-//                    }
-//                }
-//
-//                for target in targets {
-//                    componentStore.get(componentID: target)?.handle(action: action, params: params)
-//                }
-//            }
-//            return
-//        }
-//
-//        guard let action = event.params["action"]?.stringValue else {
-//            return
-//        }
-//
-//        let params = event.params.reduce(into: [String: String]()) { result, pair in
-//            switch pair.value {
-//            case let .string(value):
-//                result[pair.key] = value
-//            case let .number(value):
-//                result[pair.key] = String(value)
-//            case let .bool(value):
-//                result[pair.key] = value ? "true" : "false"
-//            default:
-//                break
-//            }
-//        }
-//
-//        for target in targets {
-//            componentStore.get(componentID: target)?.handle(action: action, params: params)
 //        }
 //    }
 
     
-    // MARK: - Event Dispatching Logic
-
-    private func dispatchComponentAction(_ event: EventModel) {
-        let targets = event.targets
-        guard !targets.isEmpty else { return }
-
-        for targetID in targets {
+    func dispatchComponentAction(_ event: EventModel) {
+        guard let actions = event.params["actions"]?.arrayValue else { return }
+        
+        for actionValue in actions {
+            guard let actionData = actionValue.objectValue,
+                  let actionName = actionData["action"]?.stringValue else { continue }
+                  
+            // Ищем таргет сначала в экшене, потом в событии
+            let targetID = actionData["target"]?.stringValue ?? event.targets.first ?? ""
+            let params = flattenJSONParams(actionData)
+            
             if isSystemTarget(targetID) {
-                // Обработка системных сервисов (Навигация, Данные, Логи)
-                handleSystemAction(targetID, event: event)
+                handleSystemAction(targetID, action: actionName, params: params)
+//                handleSystemAction(targetID, event: event)
             } else {
-                // Обработка обычных UI-компонентов
+//                componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
                 dispatchToComponent(targetID, event: event)
             }
         }
     }
-
+    
+    
     /// Проверка, является ли таргет системным ключевым словом
     private func isSystemTarget(_ id: String) -> Bool {
-        let systemTargets = ["backend_navigation", "backend_data", "backend_logger"]
+        let systemTargets = ["navigation", "backend_data", "backend_logger"]
         return systemTargets.contains(id)
     }
 
     /// Маршрутизатор системных действий
-    private func handleSystemAction(_ targetID: String, event: EventModel) {
+//    private func handleSystemAction11(_ targetID: String, event: EventModel) {
+//        switch targetID {
+//        case "navigation":
+//            handleNavigationAction(event)
+//        case "backend_data":
+//            Task { [weak self] in
+//                await self?.handleBackendDataAction(event)
+//            }
+//        case "backend_logger":
+//            print("SDUI Log [\(event.type)]: \(event.params)")
+//        default:
+//            break
+//        }
+//    }
+    
+    private func handleSystemAction(_ targetID: String, action: String, params: [String: String]) {
         switch targetID {
-        case "backend_navigation":
-            handleNavigationAction(event)
-        case "backend_data":
-            Task { [weak self] in
-                await self?.handleBackendDataAction(event)
-            }
-        case "backend_logger":
-            print("SDUI Log [\(event.type)]: \(event.params)")
-        default:
-            break
-        }
-    }
-
-    /// Навигационный движок (интерпретирует параметры navigate)
-    private func handleNavigationAction(_ event: EventModel) {
-        // В новом JSON параметры лежат в params напрямую или внутри actions
-        // Для совместимости проверяем оба варианта
-        let navType = event.params["type"]?.stringValue ?? event.params["action"]?.stringValue
-        let route = event.params["route"]?.stringValue ?? ""
-        let mode = event.params["mode"]?.stringValue ?? "push"
-
-        guard !route.isEmpty || navType == "pop" || navType == "dismiss" else { return }
-
-        switch navType?.lowercased() {
-        case "navigate", "push":
-            self.push(route)
-        case "modal":
-            self.modal(route)
-        case "replace":
-            self.replace(with: route)
-        case "pop", "back":
-            self.goBack()
-        case "dismiss":
-            self.dismissModal()
-        default:
-            // Если тип не указан, но есть route, считаем это обычным push
-            if !route.isEmpty { self.push(route) }
-        }
-    }
-
-    /// Отправка команды конкретному UI-компоненту (Text, Button, TextField...)
-    private func dispatchToComponent(_ targetID: String, event: EventModel) {
-        // 1. Обработка массива множественных действий (actions)
-        if let actions = event.params["actions"]?.arrayValue {
-            for actionDefinition in actions {
-                guard let payload = actionDefinition.objectValue,
-                      let actionName = payload["action"]?.stringValue else { continue }
-                
-                let params = flattenJSONParams(payload)
-                componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
-            }
-            return
-        }
-
-        // 2. Обработка одиночного действия
-        guard let actionName = event.params["action"]?.stringValue else { return }
-        let params = flattenJSONParams(event.params)
-        componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
-    }
-
-    /// Вспомогательная функция для приведения JSONValue к [String: String]
-    /// (именно такой формат ожидает метод handle у компонентов)
-    private func flattenJSONParams(_ dict: [String: JSONValue]) -> [String: String] {
-        dict.reduce(into: [String: String]()) { result, pair in
-            switch pair.value {
-            case .string(let v): result[pair.key] = v
-            case .number(let v): result[pair.key] = String(v)
-            case .bool(let v):   result[pair.key] = v ? "true" : "false"
+        case "navigation":
+            // Теперь ориентируемся только на action (push, pop, modal)
+            switch action.lowercased() {
+            case "push", "navigate": self.push(params["route"] ?? "")
+            case "modal":   self.modal(params["route"] ?? "")
+            case "pop":     self.goBack()
+            case "replace": self.replace(with: params["route"] ?? "")
             default: break
+            }
+            
+        case "backend_data":
+            // Передаем параметры в существующие методы OPEN_FORM / SAVE_FORM
+            // Нужно будет слегка адаптировать их под [String: String] или обратно в JSONValue
+            handleDataAction(action: action, params: params)
+//            Task { [weak self] in
+//                await self?.handleBackendDataAction(event)
+//            }
+        default: break
+        }
+    }
+    
+//    private func handleBackendDataAction(_ event: EventModel) async {
+//        guard let action = event.params["action"]?.stringValue?.uppercased() else {
+//            return
+//        }
+//
+//        switch action {
+//        case "OPEN_FORM":
+//            await performOpenForm(event.params)
+//        case "SAVE_FORM":
+//            await performSaveForm(event.params)
+//        case "DISCARD_FORM":
+//            performDiscardForm(event.params)
+//        default:
+//            break
+//        }
+//    }
+    
+    private func handleDataAction(action: String, params: [String: String]) {
+        Task { @MainActor in
+            switch action.uppercased() {
+            case "OPEN_FORM":
+                await performOpenForm(params)
+                
+            case "SAVE_FORM":
+                await performSaveForm(params)
+                
+            case "REFRESH_DATA":
+                // Например, для ручного обновления DataSource
+                if let dsId = params["dataSourceId"] {
+                    // Логика уведомления DataSource о необходимости перезагрузки
+                }
+                
+            default:
+                print("⚠️ SDUI: Unknown data action: \(action)")
             }
         }
     }
     
-    private func handleBackendDataAction(_ event: EventModel) async {
-        guard let action = event.params["action"]?.stringValue?.uppercased() else {
+    
+//    private func performOpenForm(_ params: [String: String]) async {
+//        guard let rawEndpoint = params["endpoint"] else { return }
+//        
+//        // 1. Извлекаем ID из стейта, если он указан
+//        var idValue = ""
+//        if let idKey = params["idStateKey"] {
+//            idValue = stateStore.getValue(for: idKey)?.stringValue ?? ""
+//        }
+//        
+//        // 2. Формируем финальный URL
+//        let endpoint = rawEndpoint.replacingOccurrences(of: "{id}", with: idValue)
+//        
+//        do {
+//            // 3. Выполняем запрос
+//            let response = try await callAPI(endpoint: endpoint, method: .get)
+//            
+//            // 4. Записываем результат в стейт с префиксом (например, "invoiceForm")
+//            if let prefix = params["formStatePrefix"] {
+//                stateStore.merge(response, withPrefix: prefix)
+//            }
+//        } catch {
+//            print("❌ SDUI: Open form error: \(error)")
+//        }
+//    }
+    private func performOpenForm(_ params: [String: String]) async {
+        // 1. Извлекаем базовые параметры из плоского словаря
+        guard let rawEndpoint = params["endpoint"] else { return }
+
+        let idStateKey = params["idStateKey"] ?? "invoiceForm.id"
+        let formPrefix = params["formStatePrefix"] ?? String(idStateKey.split(separator: ".").first ?? "invoiceForm")
+        
+        // Формируем ключи для синхронизации ID и UUID
+        let uuidStateKey = idStateKey.hasSuffix(".id")
+            ? String(idStateKey.dropLast(3)) + ".uuid"
+            : (idStateKey.hasSuffix(".uuid") ? idStateKey : "\(formPrefix).uuid")
+
+        // Получаем текущее значение ID из стейта для подстановки в URL
+        let idValue = stateValue(for: idStateKey)?.stringValue
+            ?? stateValue(for: uuidStateKey)?.stringValue
+            ?? ""
+
+        let endpoint = rawEndpoint.replacingOccurrences(of: "{id}", with: idValue)
+
+        // Валидация: если в URL нужен ID, а его нет — стоп
+        if rawEndpoint.contains("{id}") && idValue.isEmpty {
+            setState(.string("OPEN_FORM: id is empty for endpoint with {id}"), for: "\(formPrefix)._openFormError")
             return
         }
 
-        switch action {
-        case "OPEN_FORM":
-            await performOpenForm(event.params)
-        case "SAVE_FORM":
-            await performSaveForm(event.params)
-        case "DISCARD_FORM":
-            performDiscardForm(event.params)
-        default:
-            break
+        let clearPreviousDraft = params["clearPreviousDraft"] == "true"
+        let keyPrefix = formPrefix.hasSuffix(".") ? formPrefix : "\(formPrefix)."
+
+        // 2. Управление сессией запроса (Anti-race condition)
+        openFormRequestSerial += 1
+        let requestToken = openFormRequestSerial
+        activeOpenFormTokenByPrefix[formPrefix] = requestToken
+
+        // Очистка старых данных, если требуется
+        if clearPreviousDraft {
+            let keysToClear = stateStore.state.keys.filter { $0.hasPrefix(keyPrefix) }
+            for key in keysToClear {
+                setState(.string(""), for: key)
+            }
+        }
+
+        // Предварительная установка ID в стейт (чтобы UI знал, что мы грузим)
+        if !idValue.isEmpty {
+            setState(.string(idValue), for: idStateKey)
+            setState(.string(idValue), for: uuidStateKey)
+        }
+        
+        setState(.string(""), for: "\(formPrefix)._openFormError")
+        setState(.string(endpoint), for: "\(formPrefix)._lastOpenFormEndpoint")
+
+        // 3. Сетевой запрос
+        do {
+            let response = try await callAPI(endpoint: endpoint, method: .get, body: nil)
+            
+            // Проверка: актуален ли еще этот ответ?
+            guard activeOpenFormTokenByPrefix[formPrefix] == requestToken else { return }
+            
+            guard let payload = response.objectValue else {
+                setState(.string("OPEN_FORM: response is not an object"), for: "\(formPrefix)._openFormError")
+                return
+            }
+
+            // Распаковка данных (Oracle ORDS "items" или плоский объект)
+            let items = payload["items"]?.arrayValue
+            let firstRecord = items?.first?.objectValue ?? payload
+            
+            // Массовое обновление стейта
+            for (key, value) in firstRecord {
+                setState(value, for: "\(formPrefix).\(key)")
+            }
+
+            // Синхронизация системных полей ID/UUID
+            if let uuid = firstRecord["uuid"]?.stringValue, !uuid.isEmpty {
+                setState(.string(uuid), for: "\(formPrefix).uuid")
+                setState(.string(uuid), for: "\(formPrefix).id")
+            } else if let id = firstRecord["id"]?.stringValue, !id.isEmpty {
+                setState(.string(id), for: "\(formPrefix).id")
+                setState(.string(id), for: "\(formPrefix).uuid")
+            }
+
+            // Маппинг дат (если одна из них отсутствует)
+            if let docDate = firstRecord["doc_date"] {
+                setState(docDate, for: "\(formPrefix).due_date")
+            } else if let dueDate = firstRecord["due_date"] {
+                setState(dueDate, for: "\(formPrefix).doc_date")
+            }
+
+            // Финальная проверка ID
+            if !idValue.isEmpty {
+                setState(.string(idValue), for: idStateKey)
+                setState(.string(idValue), for: uuidStateKey)
+            }
+            
+        } catch {
+            guard activeOpenFormTokenByPrefix[formPrefix] == requestToken else { return }
+            setState(.string(error.localizedDescription), for: "\(formPrefix)._openFormError")
         }
     }
-
-    private func performDiscardForm(_ params: [String: JSONValue]) {
-        let prefix = params["formStatePrefix"]?.stringValue
-            ?? params["formKey"]?.stringValue
-            ?? "invoiceForm"
-        let keyPrefix = prefix.hasSuffix(".") ? prefix : "\(prefix)."
-
-        let keysToClear = stateStore.state.keys.filter { $0.hasPrefix(keyPrefix) }
-        for key in keysToClear {
-            setState(.string(""), for: key)
-        }
-    }
-
-    private func performOpenForm(_ params: [String: JSONValue]) async {
+    
+    private func performOpenFormOLD (_ params: [String: JSONValue]) async {
         guard let rawEndpoint = params["endpoint"]?.stringValue else {
             return
         }
@@ -532,6 +604,114 @@ final class UIContext {
             setState(.string(error.localizedDescription), for: "\(formPrefix)._openFormError")
         }
     }
+    
+    private func performSaveForm(_ params: [String: String]) async {
+        guard let rawEndpoint = params["endpoint"],
+              let prefix = params["formStatePrefix"] else { return }
+        
+        // Собираем данные. Если getValues еще нет в протоколе,
+        // его нужно туда добавить (реализация ниже)
+        let formData = stateStore.getValues(forPrefix: prefix)
+        
+        let idValue = stateStore.getValue(for: "\(prefix).id")?.stringValue ?? ""
+        let endpoint = rawEndpoint.replacingOccurrences(of: "{id}", with: idValue)
+        
+        let method: HTTPMethod = (params["method"]?.uppercased() == "POST") ? .post : .put
+        
+        do {
+            _ = try await callAPI(endpoint: endpoint, method: method, body: formData)
+            print("✅ SDUI: Data saved successfully")
+        } catch {
+            print("❌ SDUI: Save error: \(error)")
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /// Навигационный движок (интерпретирует параметры navigate)
+    private func handleNavigationAction(_ event: EventModel) {
+        // В новом JSON параметры лежат в params напрямую или внутри actions
+        // Для совместимости проверяем оба варианта
+        let navType = event.params["type"]?.stringValue ?? event.params["action"]?.stringValue
+        let route = event.params["route"]?.stringValue ?? ""
+        let mode = event.params["mode"]?.stringValue ?? "push"
+
+        guard !route.isEmpty || navType == "pop" || navType == "dismiss" else { return }
+
+        switch navType?.lowercased() {
+        case "navigate", "push":
+            self.push(route)
+        case "modal":
+            self.modal(route)
+        case "replace":
+            self.replace(with: route)
+        case "pop", "back":
+            self.goBack()
+        case "dismiss":
+            self.dismissModal()
+        default:
+            // Если тип не указан, но есть route, считаем это обычным push
+            if !route.isEmpty { self.push(route) }
+        }
+    }
+
+    /// Отправка команды конкретному UI-компоненту (Text, Button, TextField...)
+    private func dispatchToComponent(_ targetID: String, event: EventModel) {
+        // 1. Обработка массива множественных действий (actions)
+        if let actions = event.params["actions"]?.arrayValue {
+            for actionDefinition in actions {
+                guard let payload = actionDefinition.objectValue,
+                      let actionName = payload["action"]?.stringValue else { continue }
+                
+                let params = flattenJSONParams(payload)
+                componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
+            }
+            return
+        }
+
+        // 2. Обработка одиночного действия
+        guard let actionName = event.params["action"]?.stringValue else { return }
+        let params = flattenJSONParams(event.params)
+        componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
+    }
+
+    /// Вспомогательная функция для приведения JSONValue к [String: String]
+    /// (именно такой формат ожидает метод handle у компонентов)
+    private func flattenJSONParams(_ dict: [String: JSONValue]) -> [String: String] {
+        dict.reduce(into: [String: String]()) { result, pair in
+            switch pair.value {
+            case .string(let v): result[pair.key] = v
+            case .number(let v): result[pair.key] = String(v)
+            case .bool(let v):   result[pair.key] = v ? "true" : "false"
+            default: break
+            }
+        }
+    }
+    
+  
+
+    private func performDiscardForm(_ params: [String: JSONValue]) {
+        let prefix = params["formStatePrefix"]?.stringValue
+            ?? params["formKey"]?.stringValue
+            ?? "invoiceForm"
+        let keyPrefix = prefix.hasSuffix(".") ? prefix : "\(prefix)."
+
+        let keysToClear = stateStore.state.keys.filter { $0.hasPrefix(keyPrefix) }
+        for key in keysToClear {
+            setState(.string(""), for: key)
+        }
+    }
+
+
 
     private func performSaveForm(_ params: [String: JSONValue]) async {
         guard let rawEndpoint = params["endpoint"]?.stringValue else {

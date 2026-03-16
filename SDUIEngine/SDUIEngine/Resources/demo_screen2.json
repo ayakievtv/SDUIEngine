@@ -75,11 +75,13 @@
       },
       "events": {
         "onTap": {
-          "target": "backend_navigation",
+       
           "params": {
-            "type": "navigate",
-            "mode": "push",
-            "route": "main"
+         
+            "actions": [
+              { "target": "navigation", "action": "push", "route": "main" }
+            ]
+            
           }
         }
       }
