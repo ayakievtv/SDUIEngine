@@ -261,67 +261,167 @@ final class UIContext {
     //   "targets": ["title_text", "subtitle_text"],
     //   "params": { "action": "SET_TEXT", "value": "Hello" }
     // }
+//    private func dispatchComponentAction(_ event: EventModel) {
+//        let targets = event.targets
+//        guard !targets.isEmpty else { return }
+//
+//        if targets.contains("backend_data") {
+//            Task { [weak self] in
+//                await self?.handleBackendDataAction(event)
+//            }
+//        }
+//
+//        if let actions = event.params["actions"]?.arrayValue {
+//            for actionDefinition in actions {
+//                guard
+//                    let actionPayload = actionDefinition.objectValue,
+//                    let action = actionPayload["action"]?.stringValue
+//                else {
+//                    continue
+//                }
+//
+//                let params = actionPayload.reduce(into: [String: String]()) { result, pair in
+//                    switch pair.value {
+//                    case let .string(value):
+//                        result[pair.key] = value
+//                    case let .number(value):
+//                        result[pair.key] = String(value)
+//                    case let .bool(value):
+//                        result[pair.key] = value ? "true" : "false"
+//                    default:
+//                        break
+//                    }
+//                }
+//
+//                for target in targets {
+//                    componentStore.get(componentID: target)?.handle(action: action, params: params)
+//                }
+//            }
+//            return
+//        }
+//
+//        guard let action = event.params["action"]?.stringValue else {
+//            return
+//        }
+//
+//        let params = event.params.reduce(into: [String: String]()) { result, pair in
+//            switch pair.value {
+//            case let .string(value):
+//                result[pair.key] = value
+//            case let .number(value):
+//                result[pair.key] = String(value)
+//            case let .bool(value):
+//                result[pair.key] = value ? "true" : "false"
+//            default:
+//                break
+//            }
+//        }
+//
+//        for target in targets {
+//            componentStore.get(componentID: target)?.handle(action: action, params: params)
+//        }
+//    }
+
+    
+    // MARK: - Event Dispatching Logic
+
     private func dispatchComponentAction(_ event: EventModel) {
         let targets = event.targets
         guard !targets.isEmpty else { return }
 
-        if targets.contains("backend_data") {
-            Task { [weak self] in
-                await self?.handleBackendDataAction(event)
+        for targetID in targets {
+            if isSystemTarget(targetID) {
+                // Обработка системных сервисов (Навигация, Данные, Логи)
+                handleSystemAction(targetID, event: event)
+            } else {
+                // Обработка обычных UI-компонентов
+                dispatchToComponent(targetID, event: event)
             }
-        }
-
-        if let actions = event.params["actions"]?.arrayValue {
-            for actionDefinition in actions {
-                guard
-                    let actionPayload = actionDefinition.objectValue,
-                    let action = actionPayload["action"]?.stringValue
-                else {
-                    continue
-                }
-
-                let params = actionPayload.reduce(into: [String: String]()) { result, pair in
-                    switch pair.value {
-                    case let .string(value):
-                        result[pair.key] = value
-                    case let .number(value):
-                        result[pair.key] = String(value)
-                    case let .bool(value):
-                        result[pair.key] = value ? "true" : "false"
-                    default:
-                        break
-                    }
-                }
-
-                for target in targets {
-                    componentStore.get(componentID: target)?.handle(action: action, params: params)
-                }
-            }
-            return
-        }
-
-        guard let action = event.params["action"]?.stringValue else {
-            return
-        }
-
-        let params = event.params.reduce(into: [String: String]()) { result, pair in
-            switch pair.value {
-            case let .string(value):
-                result[pair.key] = value
-            case let .number(value):
-                result[pair.key] = String(value)
-            case let .bool(value):
-                result[pair.key] = value ? "true" : "false"
-            default:
-                break
-            }
-        }
-
-        for target in targets {
-            componentStore.get(componentID: target)?.handle(action: action, params: params)
         }
     }
 
+    /// Проверка, является ли таргет системным ключевым словом
+    private func isSystemTarget(_ id: String) -> Bool {
+        let systemTargets = ["backend_navigation", "backend_data", "backend_logger"]
+        return systemTargets.contains(id)
+    }
+
+    /// Маршрутизатор системных действий
+    private func handleSystemAction(_ targetID: String, event: EventModel) {
+        switch targetID {
+        case "backend_navigation":
+            handleNavigationAction(event)
+        case "backend_data":
+            Task { [weak self] in
+                await self?.handleBackendDataAction(event)
+            }
+        case "backend_logger":
+            print("SDUI Log [\(event.type)]: \(event.params)")
+        default:
+            break
+        }
+    }
+
+    /// Навигационный движок (интерпретирует параметры navigate)
+    private func handleNavigationAction(_ event: EventModel) {
+        // В новом JSON параметры лежат в params напрямую или внутри actions
+        // Для совместимости проверяем оба варианта
+        let navType = event.params["type"]?.stringValue ?? event.params["action"]?.stringValue
+        let route = event.params["route"]?.stringValue ?? ""
+        let mode = event.params["mode"]?.stringValue ?? "push"
+
+        guard !route.isEmpty || navType == "pop" || navType == "dismiss" else { return }
+
+        switch navType?.lowercased() {
+        case "navigate", "push":
+            self.push(route)
+        case "modal":
+            self.modal(route)
+        case "replace":
+            self.replace(with: route)
+        case "pop", "back":
+            self.goBack()
+        case "dismiss":
+            self.dismissModal()
+        default:
+            // Если тип не указан, но есть route, считаем это обычным push
+            if !route.isEmpty { self.push(route) }
+        }
+    }
+
+    /// Отправка команды конкретному UI-компоненту (Text, Button, TextField...)
+    private func dispatchToComponent(_ targetID: String, event: EventModel) {
+        // 1. Обработка массива множественных действий (actions)
+        if let actions = event.params["actions"]?.arrayValue {
+            for actionDefinition in actions {
+                guard let payload = actionDefinition.objectValue,
+                      let actionName = payload["action"]?.stringValue else { continue }
+                
+                let params = flattenJSONParams(payload)
+                componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
+            }
+            return
+        }
+
+        // 2. Обработка одиночного действия
+        guard let actionName = event.params["action"]?.stringValue else { return }
+        let params = flattenJSONParams(event.params)
+        componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
+    }
+
+    /// Вспомогательная функция для приведения JSONValue к [String: String]
+    /// (именно такой формат ожидает метод handle у компонентов)
+    private func flattenJSONParams(_ dict: [String: JSONValue]) -> [String: String] {
+        dict.reduce(into: [String: String]()) { result, pair in
+            switch pair.value {
+            case .string(let v): result[pair.key] = v
+            case .number(let v): result[pair.key] = String(v)
+            case .bool(let v):   result[pair.key] = v ? "true" : "false"
+            default: break
+            }
+        }
+    }
+    
     private func handleBackendDataAction(_ event: EventModel) async {
         guard let action = event.params["action"]?.stringValue?.uppercased() else {
             return
