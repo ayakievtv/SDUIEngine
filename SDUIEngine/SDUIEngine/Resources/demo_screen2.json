@@ -5,7 +5,6 @@
     "padding": 16,
     "spacing": 12
   },
-  "events": {},
   "children": [
     {
       "id": "demo2_title",
@@ -15,9 +14,7 @@
         "fontSize": 24,
         "fontWeight": "bold",
         "color": "#1F2937"
-      },
-      "events": {},
-      "children": []
+      }
     },
     {
       "id": "demo2_field_1",
@@ -35,8 +32,7 @@
             "value": "333"
           }
         }
-      },
-      "children": []
+      }
     },
     {
       "id": "demo2_field_2",
@@ -45,9 +41,7 @@
         "placeholder": "Second input (auto sync from first)",
         "stateKey": "demo2Field2",
         "padding": 10
-      },
-      "events": {},
-      "children": []
+      }
     },
     {
       "id": "demo2_set_first_button",
@@ -65,8 +59,7 @@
             "value": "Changed by button"
           }
         }
-      },
-      "children": []
+      }
     },
     {
       "id": "demo2_back_to_main",
@@ -89,8 +82,7 @@
             "route": "main"
           }
         }
-      },
-      "children": []
+      }
     }
   ]
 }

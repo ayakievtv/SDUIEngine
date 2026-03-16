@@ -2,12 +2,7 @@
   "id": "invoice_edit_root_scroll",
   "type": "ScrollView",
   "props": {
-    "padding": 16,
-    "formKey": "invoice_edit_form",
-    "entityType": "invoice",
-    "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices",
-    "fetchPolicy": "NETWORK_FIRST_LOCAL_FALLBACK",
-    "savePolicy": "QUEUE_FIRST"
+    "padding": 16
   },
   "events": {
     "onAppear": {
@@ -26,10 +21,6 @@
     {
       "id": "invoice_edit_root_stack",
       "type": "VStack",
-      "props": {
-        "spacing": 12
-      },
-      "events": {},
       "children": [
         {
           "id": "invoice_edit_title",
@@ -39,9 +30,7 @@
             "fontSize": 24,
             "fontWeight": "bold",
             "color": "#1F2937"
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_edit_hint",
@@ -50,9 +39,7 @@
             "text": "GET: /invoices/{id}, SAVE: POST/PUT via offline queue",
             "fontSize": 12,
             "color": "#64748B"
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_open_form_error",
@@ -61,9 +48,7 @@
             "text": "Open form error: {{invoiceForm._openFormError}}",
             "fontSize": 12,
             "color": "#DC2626"
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_open_form_endpoint",
@@ -72,9 +57,7 @@
             "text": "Last detail endpoint: {{invoiceForm._lastOpenFormEndpoint}}",
             "fontSize": 11,
             "color": "#64748B"
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_id_field",
@@ -83,9 +66,7 @@
             "placeholder": "Invoice UUID",
             "stateKey": "invoiceForm.id",
             "padding": 10
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_doc_number_field",
@@ -94,9 +75,7 @@
             "placeholder": "Document Number",
             "stateKey": "invoiceForm.doc_number",
             "padding": 10
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_customer_field",
@@ -105,9 +84,7 @@
             "placeholder": "Customer Name",
             "stateKey": "invoiceForm.customer_name",
             "padding": 10
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_amount_field",
@@ -116,9 +93,7 @@
             "placeholder": "Amount",
             "stateKey": "invoiceForm.amount",
             "padding": 10
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_due_date_field",
@@ -127,9 +102,7 @@
             "placeholder": "Document Date (ISO)",
             "stateKey": "invoiceForm.due_date",
             "padding": 10
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_status_field",
@@ -138,9 +111,7 @@
             "placeholder": "Status",
             "stateKey": "invoiceForm.status",
             "padding": 10
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "invoice_load_actions",
@@ -148,7 +119,6 @@
           "props": {
             "spacing": 8
           },
-          "events": {},
           "children": [
             {
               "id": "invoice_load_button",
@@ -163,15 +133,12 @@
                   "target": "backend_data",
                   "params": {
                     "action": "OPEN_FORM",
-                    "formKey": "invoice_edit_form",
-                    "entityType": "invoice",
                     "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
                     "idStateKey": "invoiceForm.id",
                     "clearPreviousDraft": "true"
                   }
                 }
-              },
-              "children": []
+              }
             },
             {
               "id": "invoice_refresh_button",
@@ -186,15 +153,12 @@
                   "target": "backend_data",
                   "params": {
                     "action": "OPEN_FORM",
-                    "formKey": "invoice_edit_form",
-                    "entityType": "invoice",
                     "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
                     "idStateKey": "invoiceForm.id",
                     "clearPreviousDraft": "true"
                   }
                 }
-              },
-              "children": []
+              }
             }
           ]
         },
@@ -204,7 +168,6 @@
           "props": {
             "spacing": 8
           },
-          "events": {},
           "children": [
             {
               "id": "invoice_save_post_button",
@@ -219,14 +182,12 @@
                   "target": "backend_data",
                   "params": {
                     "action": "SAVE_FORM",
-                    "formKey": "invoice_edit_form",
                     "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices",
                     "method": "POST",
                     "queue": "true"
                   }
                 }
-              },
-              "children": []
+              }
             },
             {
               "id": "invoice_save_put_button",
@@ -241,15 +202,13 @@
                   "target": "backend_data",
                   "params": {
                     "action": "SAVE_FORM",
-                    "formKey": "invoice_edit_form",
                     "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
                     "method": "PUT",
                     "idStateKey": "invoiceForm.id",
                     "queue": "true"
                   }
                 }
-              },
-              "children": []
+              }
             }
           ]
         },
@@ -265,13 +224,10 @@
             "onTap": {
               "target": "backend_data",
               "params": {
-                "action": "DISCARD_FORM",
-                "formKey": "invoice_edit_form",
-                "clearDraft": "true"
+                "action": "DISCARD_FORM"
               }
             }
-          },
-          "children": []
+          }
         },
         {
           "id": "invoice_back_to_grid",
@@ -294,8 +250,7 @@
                 "route": "invoices_grid"
               }
             }
-          },
-          "children": []
+          }
         }
       ]
     }

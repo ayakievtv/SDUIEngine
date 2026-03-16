@@ -4,7 +4,6 @@
   "props": {
     "padding": 16
   },
-  "events": {},
   "children": [
     {
       "id": "demo_root_stack",
@@ -12,7 +11,6 @@
       "props": {
         "spacing": 12
       },
-      "events": {},
       "children": [
         {
           "id": "demo_title_text",
@@ -22,9 +20,7 @@
             "fontSize": 24,
             "fontWeight": "bold",
             "color": "#1F2937"
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "demo_status_text",
@@ -36,9 +32,7 @@
             "inputLike": 1,
             "borderColor": "#CBD5E1",
             "backgroundColor": "#F8FAFC"
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "demo_icon",
@@ -50,18 +44,14 @@
             "width": 44,
             "height": 44,
             "color": "#2563EB"
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "demo_spacer",
           "type": "Spacer",
           "props": {
             "height": 8
-          },
-          "events": {},
-          "children": []
+          }
         },
         {
           "id": "demo_actions_row",
@@ -69,7 +59,6 @@
           "props": {
             "spacing": 8
           },
-          "events": {},
           "children": [
             {
               "id": "demo_set_text_btn",
@@ -87,8 +76,7 @@
                     "value": "Title changed from ON_TAP"
                   }
                 }
-              },
-              "children": []
+              }
             },
             {
               "id": "demo_set_color_btn",
@@ -106,8 +94,7 @@
                     "value": "#DC2626"
                   }
                 }
-              },
-              "children": []
+              }
             }
           ]
         },
@@ -134,8 +121,7 @@
                 "value": "#7C3AED"
               }
             }
-          },
-          "children": []
+          }
         },
         {
           "id": "demo_chain_button",
@@ -148,7 +134,6 @@
             "borderWidth": 1,
             "cornerRadius": 12,
             "backgroundColor": "#FFFFFF"
-         
           },
           "events": {
             "onTap": {
@@ -158,8 +143,7 @@
                 "value": "Changed by button chain event"
               }
             }
-          },
-          "children": []
+          }
         },
         {
           "id": "demo_go_main_btn",
@@ -182,8 +166,7 @@
                 "route": "main"
               }
             }
-          },
-          "children": []
+          }
         }
       ]
     }

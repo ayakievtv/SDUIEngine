@@ -2,10 +2,8 @@
   "id": "invoices_grid_root",
   "type": "VStack",
   "props": {
-    "padding": 16,
-    "spacing": 12
+    "padding": 16
   },
-  "events": {},
   "children": [
     {
       "id": "invoices_title",
@@ -15,9 +13,7 @@
         "fontSize": 24,
         "fontWeight": "bold",
         "color": "#1F2937"
-      },
-      "events": {},
-      "children": []
+      }
     },
     {
       "id": "invoices_subtitle",
@@ -26,9 +22,7 @@
         "text": "DataSource + DBGrid with defaults for filtering, sorting and paging",
         "fontSize": 13,
         "color": "#64748B"
-      },
-      "events": {},
-      "children": []
+      }
     },
     {
       "id": "invoices_ds",
@@ -40,9 +34,7 @@
         "queryParam": "q",
         "cursorParam": "offset",
         "keyField": "uuid"
-      },
-      "events": {},
-      "children": []
+      }
     },
     {
       "id": "invoices_grid",
@@ -50,24 +42,16 @@
       "props": {
         "dataSourceId": "invoices_rest_ds",
         "selectedIdStateKey": "invoiceForm.id",
-        "showControls": 1,
-        "showHeader": 1,
         "rowComponent": {
           "id": "invoice_row_card",
           "type": "VStack",
           "props": {
-            "spacing": 6,
             "compositingGroup": 1
           },
-          "events": {},
           "children": [
             {
               "id": "invoice_row_top",
               "type": "HStack",
-              "props": {
-                "spacing": 8
-              },
-              "events": {},
               "children": [
                 {
                   "id": "invoice_row_title",
@@ -78,9 +62,7 @@
                     "fontWeight": "semibold",
                     "color": "#0F172A",
                     "fixedSizeVertical": 1
-                  },
-                  "events": {},
-                  "children": []
+                  }
                 },
                 {
                   "id": "invoice_row_status",
@@ -95,9 +77,7 @@
                     "cornerRadius": 8,
                     "inputPaddingVertical": 4,
                     "inputPaddingHorizontal": 8
-                  },
-                  "events": {},
-                  "children": []
+                  }
                 }
               ]
             },
@@ -109,17 +89,11 @@
                 "fontSize": 14,
                 "color": "#334155",
                 "fixedSizeVertical": 1
-              },
-              "events": {},
-              "children": []
+              }
             },
             {
               "id": "invoice_row_amount_due",
               "type": "HStack",
-              "props": {
-                "spacing": 8
-              },
-              "events": {},
               "children": [
                 {
                   "id": "invoice_row_amount",
@@ -129,9 +103,7 @@
                     "fontSize": 12,
                     "color": "#475569",
                     "fixedSizeVertical": 1
-                  },
-                  "events": {},
-                  "children": []
+                  }
                 },
                 {
                   "id": "invoice_row_due",
@@ -141,9 +113,7 @@
                     "fontSize": 12,
                     "color": "#475569",
                     "fixedSizeVertical": 1
-                  },
-                  "events": {},
-                  "children": []
+                  }
                 }
               ]
             },
@@ -156,9 +126,7 @@
                 "color": "#64748B",
                 "fixedSizeVertical": 1,
                 "drawingGroup": 1
-              },
-              "events": {},
-              "children": []
+              }
             }
           ]
         },
@@ -204,8 +172,7 @@
             "route": "invoice_edit_form"
           }
         }
-      },
-      "children": []
+      }
     },
     {
       "id": "invoices_back_main",
@@ -228,8 +195,7 @@
             "route": "main"
           }
         }
-      },
-      "children": []
+      }
     }
   ]
 }
