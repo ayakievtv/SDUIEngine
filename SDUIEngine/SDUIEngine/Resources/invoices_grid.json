@@ -25,10 +25,9 @@
       }
     },
     {
-      "id": "invoices_ds",
+      "id": "invoices_rest_ds",
       "type": "DataSource",
       "props": {
-        "id": "invoices_rest_ds",
         "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices",
         "pageSize": 20,
         "queryParam": "q",
