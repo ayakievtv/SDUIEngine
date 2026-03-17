@@ -307,7 +307,7 @@ https://oracleapex.com/ords/yakiev/sdui_example/invoices
 
 ## 🤖 AI Development
 
-**This project was built 100% with AI assistance using:**
+**This project was built 100% with AI assistance using:Codex, Windsurf, Gemini, and ChatGPT**
 
 - **Code Generation**: Automated component creation
 - **Architecture Design**: AI-driven system planning
