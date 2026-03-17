@@ -1,346 +1,106 @@
 {
-    "id":"root_stack",
-    "type":"VStack",
-    "props":{
-        "padding":16,
-        "spacing":12
-    },
-    "children":[
-        
-        
-        {
-           "id":"_root_scewewroll",
-           "type":"ScrollView",
-           "props":{
-              "navigationTitle":"Main",
-              "showsIndicators":false
-           },
-           "children":[
-        
-        
-        
-        
-        {
-            "id":"title_text",
-            "type":"Text",
-            "props":{
-                "text":"Welcome to SDUIEngine",
-                "fontSize":24,
-                "fontWeight":"bold",
-                "color":"#1F2937"
-            }
-        },
-        {
-            "id":"subtitle_text",
-            "type":"Text",
-            "props":{
-                "text":"This text can also be updated by event targets",
-                "fontSize":16,
-                "color":"#4B5563"
-            }
-        },
-        {
-            "id":"cta_button",
-            "type":"Button",
-            "props":{
-                "title":"Change Title Text",
-                "padding":12,
-                "color":"#2563EB"
-            },
-            "events":{
-                "onTap":{
-                    "params":{
-                        "actions":[
-                            {
-                                "target":"title_text",
-                                "action":"SET_TEXT",
-                                "value":"Title changed from cta_button"
-                            }
-                        ]
-                    }
-                }
-            },
-            "children":[
-                
-            ]
-        },
-        {
-            "id":"color_button",
-            "type":"Button",
-            "props":{
-                "title":"Change Title Color",
-                "padding":12,
-                "color":"#059669"
-            },
-            "events":{
-                "onTap":{
-                    
-                    "params":{
-                        "actions":[
-                            {
-                                "target":"title_text",
-                                "action":"SET_COLOR",
-                                "value":"#DC2626"
-                            }
-                        ]
-                        
-                    }
-                }
-            },
-            "children":[
-                
-            ]
-        },
-        {
-            "id":"text_and_color_button",
-            "type":"Button",
-            "props":{
-                "title":"Change Title Text + Color",
-                "padding":12,
-                "color":"#D97706"
-            },
-            "events":{
-                "onTap":{
-                    
-                    "params":{
-                        
-                        "actions":[
-                            {
-                                "target":"title_text",
-                                "action":"SET_TEXT",
-                                "value":"Title changed by combined action"
-                            },
-                            {
-                                "target":"subtitle_text",
-                                "action":"SET_COLOR",
-                                "value":"#7C3AED"
-                            }
-                        ]
-                        
-                        
-                    }
-                }
-            },
-            "children":[
-                
-            ]
-        },
-        {
-            "id":"go_demo_button",
-            "type":"Button",
-            "props":{
-                "title":"Open Second Screen",
-                "padding":12,
-                "color":"#0EA5E9"
-            },
-            "events":{
-                "onTap":{
-                    "params":{
-                        "actions":[
-                            {
-                                "target":"navigation",
-                                "action":"push",
-                                "route":"demo_screen"
-                            }
-                        ]
-                    }
-                }
-            },
-            "children":[
-                
-            ]
-        },
-        {
-            "id":"go_demo2_button",
-            "type":"Button",
-            "props":{
-                "title":"Open Demo Screen 2",
-                "padding":12,
-                "color":"#14B8A6"
-            },
-            "events":{
-                "onTap":{
-                    "params":{
-                        "actions":[
-                            {
-                                "target":"navigation",
-                                "action":"push",
-                                "route":"demo_screen2"
-                            }
-                        ]
-                    }
-                }
-            },
-            "children":[
-                
-            ]
-        },
-        {
-            "id":"go_invoices_grid_button",
-            "type":"Button",
-            "props":{
-                "title":"Open Invoices Grid",
-                "padding":12,
-                "color":"#0284C7"
-            },
-            "events":{
-                "onTap":{
-                    "params":{
-                        "actions":[
-                            {
-                                "target":"navigation",
-                                "action":"push",
-                                "route":"invoices_grid"
-                            }
-                        ]
-                    }
-                }
-            },
-            "children":[
-                
-            ]
-        },
-        {
-            "id":"go_tabbar_demo_button",
-            "type":"Button",
-            "props":{
-                "title":"Open TabBar Demo",
-                "padding":12,
-                "color":"#7C3AED"
-            },
-            "events":{
-                "onTap":{
-                    "params":{
-                        "actions":[
-                            {
-                                "target":"navigation",
-                                "action":"push",
-                                "route":"tabbar_demo"
-                            }
-                        ]
-                    }
-                }
-            },
-            "children":[
-                
-            ]
-        }
-        
-        
-        
-    ]},
-      
-      
-      
-      
+   "id":"root_stack",
+   "type":"VStack",
+   "props":{
+      "padding":16,
+      "spacing":12
+   },
+   "children":[
       {
-        "id": "main_tabbar",
-        "type": "TabBar",
-        "props": {
-          "selectedIndex": 0
-        },
-        "children": [
-          {
-            "id": "home_tab",
-            "type": "VStack",
-            "props": {
-              "title": "Главная",
-              "systemImage": "house.fill"
+         "id":"_root_scwqwqroll",
+         "type":"ScrollView",
+         "props":{
+            "navigationTitle":"Главная",
+            "showsIndicators":false
+         },
+         "children":[
+            {
+               "id":"title_text",
+               "type":"Text",
+               "props":{
+                  "text":"Welcome to SDUIEngine",
+                  "fontSize":26,
+                  "fontWeight":"bold",
+                  "color":"#5F2937"
+               }
             },
-            "children": [
-              {
-                "id": "home_title",
-                "type": "Text",
-                "props": {
-                  "text": "Главная страница",
-                  "fontSize": 24,
-                  "fontWeight": "bold",
-                  "padding": 20
-                }
-              },
-              {
-                "id": "home_content",
-                "type": "Text",
-                "props": {
-                  "text": "Добро пожаловать в приложение!",
-                  "fontSize": 16,
-                  "padding": 20
-                }
-              }
-            ]
-          },
-          {
-            "id": "invoices_tab",
-            "type": "VStack",
-            "props": {
-              "title": "Счета",
-              "systemImage": "doc.text.fill"
-            },
-            "children": [
-              {
-                "id": "invoices_title",
-                "type": "Text",
-                "props": {
-                  "text": "Список счетов",
-                  "fontSize": 24,
-                  "fontWeight": "bold",
-                  "padding": 20
-                }
-              },
-              {
-                "id": "invoices_button",
-                "type": "Button",
-                "props": {
-                  "text": "Открыть счета",
-                  "padding": 20,
-                  "color": "#0EA5E9",
-                  "backgroundColor": "#EFF6FF",
-                  "cornerRadius": 8
-                },
-                "events": {
-                  "onTap": {
-                    "action": "navigate",
-                    "target": "invoices_grid"
+            {
+               "id":"go_demo_button",
+               "type":"Button",
+               "props":{
+                  "title":"Open Demo Screen 1",
+                  "padding":12,
+                  "color":"#0EA5E9"
+               },
+               "events":{
+                  "onTap":{
+                     "params":{
+                        "actions":[
+                           {
+                              "target":"navigation",
+                              "action":"push",
+                              "route":"demo_screen"
+                           }
+                        ]
+                     }
                   }
-                }
-              }
-            ]
-          },
-          {
-            "id": "profile_tab",
-            "type": "VStack",
-            "props": {
-              "title": "Профиль",
-              "systemImage": "person.fill"
+               },
+               "children":[
+                  
+               ]
             },
-            "children": [
-              {
-                "id": "profile_title",
-                "type": "Text",
-                "props": {
-                  "text": "Профиль пользователя",
-                  "fontSize": 24,
-                  "fontWeight": "bold",
-                  "padding": 20
-                }
-              },
-              {
-                "id": "profile_info",
-                "type": "Text",
-                "props": {
-                  "text": "Здесь будет информация о профиле",
-                  "fontSize": 16,
-                  "padding": 20
-                }
-              }
-            ]
-          }
-        ]
+            {
+               "id":"go_demo2_button",
+               "type":"Button",
+               "props":{
+                  "title":"Open Demo Screen 2",
+                  "padding":12,
+                  "color":"#14B8A6"
+               },
+               "events":{
+                  "onTap":{
+                     "params":{
+                        "actions":[
+                           {
+                              "target":"navigation",
+                              "action":"push",
+                              "route":"demo_screen2"
+                           }
+                        ]
+                     }
+                  }
+               },
+               "children":[
+                  
+               ]
+            },
+            {
+               "id":"go_invoices_grid_button",
+               "type":"Button",
+               "props":{
+                  "title":"Open Invoices Grid",
+                  "padding":12,
+                  "color":"#0284C7"
+               },
+               "events":{
+                  "onTap":{
+                     "params":{
+                        "actions":[
+                           {
+                              "target":"navigation",
+                              "action":"push",
+                              "route":"invoices_grid"
+                           }
+                        ]
+                     }
+                  }
+               },
+               "children":[
+                  
+               ]
+            }
+            
+         ]
       }
-      
-      
-      
-      
-      
    ]
 }

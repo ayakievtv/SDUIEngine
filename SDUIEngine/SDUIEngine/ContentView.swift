@@ -9,6 +9,7 @@ struct ContentView: View {
     @State private var rootComponent: ComponentModel?
     @State private var isLoading = true
     @State private var errorMessage: String?
+    @State private var selectedTab = 0
 
     init() {
         // A single router instance is shared by the whole app tree.
@@ -23,22 +24,35 @@ struct ContentView: View {
     }
 
     var body: some View {
-        // Centralized NavigationStack for all server routes.
-        NavigationStack(path: $router.path) {
-            Group {
-                if isLoading {
-                    ProgressView("Loading main screen...")
-                } else if let rootComponent {
-                    ComponentRenderer(model: rootComponent, context: context, registry: context.componentRegistry)
-                } else {
-                    Text(errorMessage ?? "Failed to load screen")
-                        .padding(16)
+        TabView(selection: $selectedTab) {
+            // SDUI Tab
+            NavigationStack(path: $router.path) {
+                Group {
+                    if isLoading {
+                        ProgressView("Loading main screen...")
+                    } else if let rootComponent {
+                        ComponentRenderer(model: rootComponent, context: context, registry: context.componentRegistry)
+                    } else {
+                        Text(errorMessage ?? "Failed to load screen")
+                            .padding(16)
+                    }
+                }
+                // A single destination resolver for every AppRoute.
+                .navigationDestination(for: AppRoute.self) { route in
+                    ScreenView(name: route.screenName, service: service, context: context)
                 }
             }
-            // A single destination resolver for every AppRoute.
-            .navigationDestination(for: AppRoute.self) { route in
-                ScreenView(name: route.screenName, service: service, context: context)
+            .tabItem {
+                Label("Главная", systemImage: "house.fill")
             }
+            .tag(0)
+            
+            // Settings Tab
+            SettingsView()
+                .tabItem {
+                    Label("Настройки", systemImage: "gear")
+                }
+                .tag(1)
         }
         .task {
             await loadMainScreen()
@@ -59,6 +73,65 @@ struct ContentView: View {
         }
 
         isLoading = false
+    }
+}
+
+// Native Settings View
+struct SettingsView: View {
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                Text("Настройки")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding()
+                
+                VStack(alignment: .leading, spacing: 15) {
+                    SettingsRow(title: "Профиль", subtitle: "Управление профилем пользователя", icon: "person.circle")
+                    SettingsRow(title: "Уведомления", subtitle: "Настройки push-уведомлений", icon: "bell")
+                    SettingsRow(title: "Безопасность", subtitle: "Пароль и аутентификация", icon: "lock.shield")
+                    SettingsRow(title: "Язык", subtitle: "Русский", icon: "globe")
+                    SettingsRow(title: "О приложении", subtitle: "Версия 1.0.0", icon: "info.circle")
+                }
+                .padding()
+                
+                Spacer()
+            }
+            .navigationTitle("Настройки")
+            .navigationBarTitleDisplayMode(.large)
+        }
+    }
+}
+
+struct SettingsRow: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    
+    var body: some View {
+        HStack(spacing: 15) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundColor(.blue)
+                .frame(width: 30)
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.headline)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundColor(.secondary)
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 8)
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
     }
 }
 
