@@ -309,6 +309,8 @@ https://oracleapex.com/ords/yakiev/sdui_example/invoices
 
 **This project was built 100% with AI assistance using:Codex, Windsurf, Gemini, and ChatGPT**
 
+The core structure of the project was generated using Codex, further developed and refined in Windsurf, and continuously improved through clarification, review, and iteration with Gemini and ChatGPT.
+
 - **Code Generation**: Automated component creation
 - **Architecture Design**: AI-driven system planning
 - **Debugging**: Automated error resolution

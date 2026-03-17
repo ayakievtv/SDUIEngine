@@ -10,7 +10,7 @@
          "id":"_root_scwqwqroll",
          "type":"ScrollView",
          "props":{
-            "navigationTitle":"Главная",
+            "navigationTitle":"Main",
             "showsIndicators":false
          },
          "children":[
