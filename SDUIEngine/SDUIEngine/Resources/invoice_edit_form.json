@@ -13,12 +13,16 @@
             "onAppear":{
                "target":"backend_data",
                "params":{
-                  "action":"OPEN_FORM",
-                  "formKey":"invoice_edit_form",
-                  "formStatePrefix":"invoiceForm",
-                  "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
-                  "idStateKey":"invoiceForm.id",
-                  "clearPreviousDraft":"true"
+                  "actions":[
+                     {
+                        "target":"backend_data",
+                        "action":"OPEN_FORM",
+                        "formStatePrefix":"invoiceForm",
+                        "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
+                        "idStateKey":"invoiceForm.id",
+                        "clearPreviousDraft":"true"
+                     }
+                  ]
                }
             }
          },
@@ -150,7 +154,6 @@
                            },
                            "events":{
                               "onTap":{
-                                 "target":"backend_data",
                                  "params":{
                                     "actions":[
                                        {
@@ -186,10 +189,15 @@
                               "onTap":{
                                  "target":"backend_data",
                                  "params":{
-                                    "action":"SAVE_FORM",
-                                    "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices",
-                                    "method":"POST",
-                                    "queue":"true"
+                                    "actions":[
+                                       {
+                                          "target":"backend_data",
+                                          "action":"SAVE_FORM",
+                                          "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices",
+                                          "method":"POST",
+                                          "queue":"true"
+                                       }
+                                    ]
                                  }
                               }
                            }
@@ -204,13 +212,17 @@
                            },
                            "events":{
                               "onTap":{
-                                 "target":"backend_data",
                                  "params":{
-                                    "action":"SAVE_FORM",
-                                    "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
-                                    "method":"PUT",
-                                    "idStateKey":"invoiceForm.id",
-                                    "queue":"true"
+                                    "actions":[
+                                       {
+                                          "target":"backend_data",
+                                          "action":"SAVE_FORM",
+                                          "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices/{id}",
+                                          "method":"PUT",
+                                          "idStateKey":"invoiceForm.id",
+                                          "queue":"true"
+                                       }
+                                    ]
                                  }
                               }
                            }
@@ -227,9 +239,13 @@
                      },
                      "events":{
                         "onTap":{
-                           "target":"backend_data",
                            "params":{
-                              "action":"DISCARD_FORM"
+                              "actions":[
+                                 {
+                                    "target":"backend_data",
+                                    "action":"DISCARD_FORM"
+                                 }
+                              ]
                            }
                         }
                      }

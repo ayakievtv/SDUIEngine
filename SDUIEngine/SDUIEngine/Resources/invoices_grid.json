@@ -13,18 +13,11 @@
             {
                "id":"_content_vstack",
                "type":"VStack",
+               "props":{
+                  "padding":10
+               },
                "children":[
-                  {
-                     "id":"invoices_rest_ds",
-                     "type":"DataSource",
-                     "props":{
-                        "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices",
-                        "pageSize":20,
-                        "queryParam":"q",
-                        "cursorParam":"offset",
-                        "keyField":"uuid"
-                     }
-                  },
+                 
                   {
                      "id":"invoices_grid",
                      "type":"DBGrid",
@@ -51,6 +44,14 @@
                                           "fontWeight":"semibold",
                                           "color":"#0F172A",
                                           "fixedSizeVertical":1
+                                       }
+                                    },
+                                    
+                                    {
+                                       "id":"demo_spacer1",
+                                       "type":"Spacer",
+                                       "props":{
+                                          "height":8
                                        }
                                     },
                                     {
@@ -80,6 +81,7 @@
                                     "fixedSizeVertical":1
                                  }
                               },
+                              
                               {
                                  "id":"invoice_row_amount_due",
                                  "type":"HStack",
@@ -92,6 +94,13 @@
                                           "fontSize":12,
                                           "color":"#475569",
                                           "fixedSizeVertical":1
+                                       }
+                                    },
+                                    {
+                                       "id":"demo_spacersdsd",
+                                       "type":"Spacer",
+                                       "props":{
+                                          "height":8
                                        }
                                     },
                                     {
@@ -164,6 +173,17 @@
                               ]
                            }
                         }
+                     }
+                  },
+                  {
+                     "id":"invoices_rest_ds",
+                     "type":"DataSource",
+                     "props":{
+                        "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices",
+                        "pageSize":20,
+                        "queryParam":"q",
+                        "cursorParam":"offset",
+                        "keyField":"uuid"
                      }
                   },
                   {

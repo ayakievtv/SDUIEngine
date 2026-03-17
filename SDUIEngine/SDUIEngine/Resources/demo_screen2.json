@@ -38,10 +38,14 @@
                      },
                      "events":{
                         "onChange":{
-                           "target":"demo2_field_2",
                            "params":{
-                              "action":"SET_TEXT",
-                              "value":"333"
+                              "actions":[
+                                 {
+                                    "target":"demo2_field_2",
+                                    "action":"SET_TEXT",
+                                    "value":"#333"
+                                 }
+                              ]
                            }
                         }
                      }
@@ -65,10 +69,14 @@
                      },
                      "events":{
                         "onTap":{
-                           "target":"demo2_field_1",
                            "params":{
-                              "action":"SET_TEXT",
-                              "value":"Changed by button"
+                              "actions":[
+                                 {
+                                    "target":"demo2_field_1",
+                                    "action":"SET_TEXT",
+                                    "value":"Changed by button"
+                                 }
+                              ]
                            }
                         }
                      }

@@ -5,9 +5,6 @@
       "padding":16,
       "spacing":12
    },
-   "events":{
-      
-   },
    "children":[
       {
          "id":"title_text",
@@ -17,13 +14,7 @@
             "fontSize":24,
             "fontWeight":"bold",
             "color":"#1F2937"
-         },
-         "events":{
-            
-         },
-         "children":[
-            
-         ]
+         }
       },
       {
          "id":"subtitle_text",
@@ -32,13 +23,7 @@
             "text":"This text can also be updated by event targets",
             "fontSize":16,
             "color":"#4B5563"
-         },
-         "events":{
-            
-         },
-         "children":[
-            
-         ]
+         }
       },
       {
          "id":"cta_button",
@@ -50,10 +35,7 @@
          },
          "events":{
             "onTap":{
-               "target":"title_text",
                "params":{
-                  "action":"SET_TEXT",
-                  "value":"Title changed from cta_button",
                   "actions":[
                      {
                         "target":"title_text",
@@ -78,10 +60,16 @@
          },
          "events":{
             "onTap":{
-               "target":"title_text",
+         
                "params":{
-                  "action":"SET_COLOR",
-                  "value":"#DC2626"
+                 "actions":[
+                     {
+                        "target":"title_text",
+                        "action":"SET_COLOR",
+                        "value":"#DC2626"
+                     }
+                  ]
+                  
                }
             }
          },
@@ -99,21 +87,23 @@
          },
          "events":{
             "onTap":{
-               "targets":[
-                  "title_text",
-                  "subtitle_text"
-               ],
+           
                "params":{
-                  "actions":[
-                     {
-                        "action":"SET_TEXT",
-                        "value":"Title changed by combined action"
-                     },
-                     {
-                        "action":"SET_COLOR",
-                        "value":"#7C3AED"
-                     }
-                  ]
+                   
+                   "actions":[
+                       {
+                          "target":"title_text",
+                          "action":"SET_TEXT",
+                          "value":"Title changed by combined action"
+                       },
+                       {
+                          "target":"subtitle_text",
+                          "action":"SET_COLOR",
+                          "value":"#7C3AED"
+                       }
+                    ]
+                   
+                   
                }
             }
          },

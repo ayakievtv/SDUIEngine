@@ -347,14 +347,17 @@ struct DBGridComponent: UIComponent {
                     headerView(columns: columns)
                 }
 
-                LazyVStack(alignment: .leading, spacing: 8) {
-                    ForEach(Array(visibleRows.enumerated()), id: \.element.id) { index, row in
+                LazyVStack(alignment: .leading, spacing: 4) {
+                    ForEach(visibleRows, id: \.id) { row in
                         rowCard(row: row, template: rowTemplate, rowComponentTemplate: rowComponentTemplate)
                             .onAppear {
-                                let threshold = max(cfg.prefetchThreshold, 1)
-                                let shouldPrefetch = hasMore && !isLoadingMore && index >= visibleRows.count - threshold
-                                if shouldPrefetch {
-                                    Task { await loadMore(config: cfg) }
+                                // Проверяем только последнюю строку для дозагрузки
+                                if let lastId = visibleRows.last?.id, row.id == lastId {
+                                    let threshold = max(cfg.prefetchThreshold, 1)
+                                    let shouldPrefetch = hasMore && !isLoadingMore
+                                    if shouldPrefetch {
+                                        Task { await loadMore(config: cfg) }
+                                    }
                                 }
                             }
                     }
@@ -670,6 +673,7 @@ struct DBGridComponent: UIComponent {
             let response = try await context.callAPI(endpoint: endpoint, method: .get, body: nil)
             let parsed = parseRows(response: response, keyField: config.keyField, pageSize: config.pageSize)
             allRows.append(contentsOf: parsed.rows)
+            visibleRows = allRows // Добавлено обновление visibleRows
             nextCursor = parsed.nextCursor
             hasMore = parsed.hasMore
             applyLocalFilterAndSort(columns: resolvedColumns(props: model.resolvedProps), config: config)
