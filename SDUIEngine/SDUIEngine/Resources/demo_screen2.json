@@ -1,90 +1,107 @@
 {
-  "id": "demo2_root_stack",
-  "type": "VStack",
-  "props": {
-    "padding": 16,
-    "spacing": 12
-  },
-  "children": [
-    {
-      "id": "demo2_title",
-      "type": "Text",
-      "props": {
-        "text": "Demo Screen 2: TextField Chain",
-        "fontSize": 24,
-        "fontWeight": "bold",
-        "color": "#1F2937"
+   "id":"demo_screen2_root",
+   "type":"VStack",
+   "children":[
+      {
+         "id":"demo_screen2_root_scroll",
+         "type":"ScrollView",
+         "props":{
+            "navigationTitle":"Demo Screen 2: TextField Chain",
+            "showsIndicators":false
+         },
+         "children":[
+            {
+               "id":"demo2_root_stack",
+               "type":"VStack",
+               "props":{
+                  "padding":16,
+                  "spacing":12
+               },
+               "children":[
+                  {
+                     "id":"demo2_title",
+                     "type":"Text",
+                     "props":{
+                        "text":"Demo Screen 2: TextField Chain",
+                        "fontSize":24,
+                        "fontWeight":"bold",
+                        "color":"#1F2937"
+                     }
+                  },
+                  {
+                     "id":"demo2_field_1",
+                     "type":"TextField",
+                     "props":{
+                        "placeholder":"First input",
+                        "stateKey":"demo2Field1",
+                        "padding":10
+                     },
+                     "events":{
+                        "onChange":{
+                           "target":"demo2_field_2",
+                           "params":{
+                              "action":"SET_TEXT",
+                              "value":"333"
+                           }
+                        }
+                     }
+                  },
+                  {
+                     "id":"demo2_field_2",
+                     "type":"TextField",
+                     "props":{
+                        "placeholder":"Second input (auto sync from first)",
+                        "stateKey":"demo2Field2",
+                        "padding":10
+                     }
+                  },
+                  {
+                     "id":"demo2_set_first_button",
+                     "type":"Button",
+                     "props":{
+                        "title":"Set text in first input",
+                        "padding":12,
+                        "color":"#2563EB"
+                     },
+                     "events":{
+                        "onTap":{
+                           "target":"demo2_field_1",
+                           "params":{
+                              "action":"SET_TEXT",
+                              "value":"Changed by button"
+                           }
+                        }
+                     }
+                  },
+                  {
+                     "id":"demo2_back_to_main",
+                     "type":"Button",
+                     "props":{
+                        "title":"Back To Main Screen",
+                        "padding":12,
+                        "color":"#0EA5E9",
+                        "borderColor":"#0EA5E9",
+                        "borderWidth":1,
+                        "cornerRadius":12,
+                        "backgroundColor":"#FFFFFF"
+                     },
+                     "events":{
+                        "onTap":{
+                           "params":{
+                              "actions":[
+                                 {
+                                    "target":"navigation",
+                                    "action":"push",
+                                    "route":"main"
+                                 }
+                              ]
+                           }
+                        }
+                     }
+                  }
+               ]
+            }
+         ]
       }
-    },
-    {
-      "id": "demo2_field_1",
-      "type": "TextField",
-      "props": {
-        "placeholder": "First input",
-        "stateKey": "demo2Field1",
-        "padding": 10
-      },
-      "events": {
-        "onChange": {
-          "target": "demo2_field_2",
-          "params": {
-            "action": "SET_TEXT",
-            "value": "333"
-          }
-        }
-      }
-    },
-    {
-      "id": "demo2_field_2",
-      "type": "TextField",
-      "props": {
-        "placeholder": "Second input (auto sync from first)",
-        "stateKey": "demo2Field2",
-        "padding": 10
-      }
-    },
-    {
-      "id": "demo2_set_first_button",
-      "type": "Button",
-      "props": {
-        "title": "Set text in first input",
-        "padding": 12,
-        "color": "#2563EB"
-      },
-      "events": {
-        "onTap": {
-          "target": "demo2_field_1",
-          "params": {
-            "action": "SET_TEXT",
-            "value": "Changed by button"
-          }
-        }
-      }
-    },
-    {
-      "id": "demo2_back_to_main",
-      "type": "Button",
-      "props": {
-        "title": "Back To Main Screen",
-        "padding": 12,
-        "color": "#0EA5E9",
-        "borderColor": "#0EA5E9",
-        "borderWidth": 1,
-        "cornerRadius": 12,
-        "backgroundColor": "#FFFFFF"
-      },
-      "events": {
-        "onTap": {
-       
-          "params": {
-         
-            "actions": [
-              { "target": "navigation", "action": "push", "route": "main" }
-            ]
-            
-          }
-        }
-      }
-    }
-  ]
+   ]
 }

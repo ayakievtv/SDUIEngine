@@ -1,170 +1,200 @@
 {
-  "id": "root_stack",
-  "type": "VStack",
-  "props": {
-    "padding": 16,
-    "spacing": 12
-  },
-  "events": {},
-  "children": [
-    {
-      "id": "title_text",
-      "type": "Text",
-      "props": {
-        "text": "Welcome to SDUIEngine",
-        "fontSize": 24,
-        "fontWeight": "bold",
-        "color": "#1F2937"
-      },
-      "events": {},
-      "children": []
-    },
-    {
-      "id": "subtitle_text",
-      "type": "Text",
-      "props": {
-        "text": "This text can also be updated by event targets",
-        "fontSize": 16,
-        "color": "#4B5563"
-      },
-      "events": {},
-      "children": []
-    },
-    {
-      "id": "cta_button",
-      "type": "Button",
-      "props": {
-        "title": "Change Title Text",
-        "padding": 12,
-        "color": "#2563EB"
-      },
-      "events": {
-        "onTap": {
-          "target": "title_text",
-          "params": {
-            "action": "SET_TEXT",
-            "value": "Title changed from cta_button",
-            "actions": [
-              { "target": "title_text", "action": "SET_TEXT", "value": "Title changed from cta_button" }
-            ]
-          }
-        }
-      },
-      "children": []
-    },
-    {
-      "id": "color_button",
-      "type": "Button",
-      "props": {
-        "title": "Change Title Color",
-        "padding": 12,
-        "color": "#059669"
-      },
-      "events": {
-        "onTap": {
-          "target": "title_text",
-          "params": {
-            "action": "SET_COLOR",
-            "value": "#DC2626"
-          }
-        }
-      },
-      "children": []
-    },
-    {
-      "id": "text_and_color_button",
-      "type": "Button",
-      "props": {
-        "title": "Change Title Text + Color",
-        "padding": 12,
-        "color": "#D97706"
-      },
-      "events": {
-        "onTap": {
-          "targets": [
-            "title_text",
-            "subtitle_text"
-          ],
-          "params": {
-            "actions": [
-              {
-                "action": "SET_TEXT",
-                "value": "Title changed by combined action"
-              },
-              {
-                "action": "SET_COLOR",
-                "value": "#7C3AED"
-              }
-            ]
-          }
-        }
-      },
-      "children": []
-    },
-    {
-      "id": "go_demo_button",
-      "type": "Button",
-      "props": {
-        "title": "Open Second Screen",
-        "padding": 12,
-        "color": "#0EA5E9"
-      },
-      "events": {
-        "onTap": {
-       
-          "params": {
-         
-            "actions": [
-              { "target": "navigation", "action": "push", "route": "demo_screen" }
-            ]
-
-          }
-        }
-      },
-      "children": []
-    },
-    {
-      "id": "go_demo2_button",
-      "type": "Button",
-      "props": {
-        "title": "Open Demo Screen 2",
-        "padding": 12,
-        "color": "#14B8A6"
-      },
-      "events": {
-        "onTap": {
-       
-          "params": {
-          
-            "actions": [
-              { "target": "navigation", "action": "push", "route": "demo_screen2" }
-            ]
+   "id":"root_stack",
+   "type":"VStack",
+   "props":{
+      "padding":16,
+      "spacing":12
+   },
+   "events":{
+      
+   },
+   "children":[
+      {
+         "id":"title_text",
+         "type":"Text",
+         "props":{
+            "text":"Welcome to SDUIEngine",
+            "fontSize":24,
+            "fontWeight":"bold",
+            "color":"#1F2937"
+         },
+         "events":{
             
-          }
-        }
+         },
+         "children":[
+            
+         ]
       },
-      "children": []
-    },
-    {
-      "id": "go_invoices_grid_button",
-      "type": "Button",
-      "props": {
-        "title": "Open Invoices Grid",
-        "padding": 12,
-        "color": "#0284C7"
+      {
+         "id":"subtitle_text",
+         "type":"Text",
+         "props":{
+            "text":"This text can also be updated by event targets",
+            "fontSize":16,
+            "color":"#4B5563"
+         },
+         "events":{
+            
+         },
+         "children":[
+            
+         ]
       },
-      "events": {
-        "onTap": {
-        
-          "params": {
-         
-            "actions": [
-              { "target": "navigation", "action": "push", "route": "invoices_grid" }
-            ]
-          }
-        }
+      {
+         "id":"cta_button",
+         "type":"Button",
+         "props":{
+            "title":"Change Title Text",
+            "padding":12,
+            "color":"#2563EB"
+         },
+         "events":{
+            "onTap":{
+               "target":"title_text",
+               "params":{
+                  "action":"SET_TEXT",
+                  "value":"Title changed from cta_button",
+                  "actions":[
+                     {
+                        "target":"title_text",
+                        "action":"SET_TEXT",
+                        "value":"Title changed from cta_button"
+                     }
+                  ]
+               }
+            }
+         },
+         "children":[
+            
+         ]
       },
-      "children": []
-    }
-  ]
+      {
+         "id":"color_button",
+         "type":"Button",
+         "props":{
+            "title":"Change Title Color",
+            "padding":12,
+            "color":"#059669"
+         },
+         "events":{
+            "onTap":{
+               "target":"title_text",
+               "params":{
+                  "action":"SET_COLOR",
+                  "value":"#DC2626"
+               }
+            }
+         },
+         "children":[
+            
+         ]
+      },
+      {
+         "id":"text_and_color_button",
+         "type":"Button",
+         "props":{
+            "title":"Change Title Text + Color",
+            "padding":12,
+            "color":"#D97706"
+         },
+         "events":{
+            "onTap":{
+               "targets":[
+                  "title_text",
+                  "subtitle_text"
+               ],
+               "params":{
+                  "actions":[
+                     {
+                        "action":"SET_TEXT",
+                        "value":"Title changed by combined action"
+                     },
+                     {
+                        "action":"SET_COLOR",
+                        "value":"#7C3AED"
+                     }
+                  ]
+               }
+            }
+         },
+         "children":[
+            
+         ]
+      },
+      {
+         "id":"go_demo_button",
+         "type":"Button",
+         "props":{
+            "title":"Open Second Screen",
+            "padding":12,
+            "color":"#0EA5E9"
+         },
+         "events":{
+            "onTap":{
+               "params":{
+                  "actions":[
+                     {
+                        "target":"navigation",
+                        "action":"push",
+                        "route":"demo_screen"
+                     }
+                  ]
+               }
+            }
+         },
+         "children":[
+            
+         ]
+      },
+      {
+         "id":"go_demo2_button",
+         "type":"Button",
+         "props":{
+            "title":"Open Demo Screen 2",
+            "padding":12,
+            "color":"#14B8A6"
+         },
+         "events":{
+            "onTap":{
+               "params":{
+                  "actions":[
+                     {
+                        "target":"navigation",
+                        "action":"push",
+                        "route":"demo_screen2"
+                     }
+                  ]
+               }
+            }
+         },
+         "children":[
+            
+         ]
+      },
+      {
+         "id":"go_invoices_grid_button",
+         "type":"Button",
+         "props":{
+            "title":"Open Invoices Grid",
+            "padding":12,
+            "color":"#0284C7"
+         },
+         "events":{
+            "onTap":{
+               "params":{
+                  "actions":[
+                     {
+                        "target":"navigation",
+                        "action":"push",
+                        "route":"invoices_grid"
+                     }
+                  ]
+               }
+            }
+         },
+         "children":[
+            
+         ]
+      }
+   ]
 }

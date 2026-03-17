@@ -1,202 +1,200 @@
 {
-  "id": "invoices_grid_root",
-  "type": "VStack",
-  "props": {
-    "padding": 16
-  },
-  "children": [
-    {
-      "id": "invoices_title",
-      "type": "Text",
-      "props": {
-        "text": "Invoices DBGrid Demo",
-        "fontSize": 24,
-        "fontWeight": "bold",
-        "color": "#1F2937"
-      }
-    },
-    {
-      "id": "invoices_subtitle",
-      "type": "Text",
-      "props": {
-        "text": "DataSource + DBGrid with defaults for filtering, sorting and paging",
-        "fontSize": 13,
-        "color": "#64748B"
-      }
-    },
-    {
-      "id": "invoices_rest_ds",
-      "type": "DataSource",
-      "props": {
-        "endpoint": "https://oracleapex.com/ords/yakiev/sdui_example/invoices",
-        "pageSize": 20,
-        "queryParam": "q",
-        "cursorParam": "offset",
-        "keyField": "uuid"
-      }
-    },
-    {
-      "id": "invoices_grid",
-      "type": "DBGrid",
-      "props": {
-        "dataSourceId": "invoices_rest_ds",
-        "selectedIdStateKey": "invoiceForm.id",
-        "rowComponent": {
-          "id": "invoice_row_card",
-          "type": "VStack",
-          "props": {
-            "compositingGroup": 1
-          },
-          "children": [
+   "id":"invoice_form_screen",
+   "type":"VStack",
+   "children":[
+      {
+         "id":"_root_scroll",
+         "type":"ScrollView",
+         "props":{
+            "navigationTitle":"Invoices",
+            "showsIndicators":false
+         },
+         "children":[
             {
-              "id": "invoice_row_top",
-              "type": "HStack",
-              "children": [
-                {
-                  "id": "invoice_row_title",
-                  "type": "Text",
-                  "props": {
-                    "text": "Invoice {{doc_number}}",
-                    "fontSize": 16,
-                    "fontWeight": "semibold",
-                    "color": "#0F172A",
-                    "fixedSizeVertical": 1
+               "id":"_content_vstack",
+               "type":"VStack",
+               "children":[
+                  {
+                     "id":"invoices_rest_ds",
+                     "type":"DataSource",
+                     "props":{
+                        "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices",
+                        "pageSize":20,
+                        "queryParam":"q",
+                        "cursorParam":"offset",
+                        "keyField":"uuid"
+                     }
+                  },
+                  {
+                     "id":"invoices_grid",
+                     "type":"DBGrid",
+                     "props":{
+                        "dataSourceId":"invoices_rest_ds",
+                        "selectedIdStateKey":"invoiceForm.id",
+                        "rowComponent":{
+                           "id":"invoice_row_card",
+                           "type":"VStack",
+                           "props":{
+                              "compositingGroup":1
+                           },
+                           "children":[
+                              {
+                                 "id":"invoice_row_top",
+                                 "type":"HStack",
+                                 "children":[
+                                    {
+                                       "id":"invoice_row_title",
+                                       "type":"Text",
+                                       "props":{
+                                          "text":"Invoice {{doc_number}}",
+                                          "fontSize":16,
+                                          "fontWeight":"semibold",
+                                          "color":"#0F172A",
+                                          "fixedSizeVertical":1
+                                       }
+                                    },
+                                    {
+                                       "id":"invoice_row_status",
+                                       "type":"Text",
+                                       "props":{
+                                          "text":"{{status}}",
+                                          "fontSize":12,
+                                          "color":"#1D4ED8",
+                                          "inputLike":1,
+                                          "borderColor":"#BFDBFE",
+                                          "backgroundColor":"#EFF6FF",
+                                          "cornerRadius":8,
+                                          "inputPaddingVertical":4,
+                                          "inputPaddingHorizontal":8
+                                       }
+                                    }
+                                 ]
+                              },
+                              {
+                                 "id":"invoice_row_customer",
+                                 "type":"Text",
+                                 "props":{
+                                    "text":"Customer: {{customer_name}}",
+                                    "fontSize":14,
+                                    "color":"#334155",
+                                    "fixedSizeVertical":1
+                                 }
+                              },
+                              {
+                                 "id":"invoice_row_amount_due",
+                                 "type":"HStack",
+                                 "children":[
+                                    {
+                                       "id":"invoice_row_amount",
+                                       "type":"Text",
+                                       "props":{
+                                          "text":"Amount: {{amount}} {{currency}}",
+                                          "fontSize":12,
+                                          "color":"#475569",
+                                          "fixedSizeVertical":1
+                                       }
+                                    },
+                                    {
+                                       "id":"invoice_row_due",
+                                       "type":"Text",
+                                       "props":{
+                                          "text":"Doc date: {{doc_date}}",
+                                          "fontSize":12,
+                                          "color":"#475569",
+                                          "fixedSizeVertical":1
+                                       }
+                                    }
+                                 ]
+                              },
+                              {
+                                 "id":"invoice_row_description",
+                                 "type":"Text",
+                                 "props":{
+                                    "text":"{{description}}",
+                                    "fontSize":12,
+                                    "color":"#64748B",
+                                    "fixedSizeVertical":1,
+                                    "drawingGroup":1
+                                 }
+                              }
+                           ]
+                        },
+                        "columns":[
+                           {
+                              "field":"doc_number",
+                              "title":"Invoice",
+                              "sortable":1
+                           },
+                           {
+                              "field":"customer_name",
+                              "title":"Customer",
+                              "sortable":1
+                           },
+                           {
+                              "field":"status",
+                              "title":"Status",
+                              "sortable":1
+                           },
+                           {
+                              "field":"amount",
+                              "title":"Amount",
+                              "sortable":1
+                           },
+                           {
+                              "field":"doc_date",
+                              "title":"Doc Date",
+                              "sortable":1
+                           },
+                           {
+                              "field":"updated_at",
+                              "title":"Updated At",
+                              "sortable":1
+                           }
+                        ]
+                     },
+                     "events":{
+                        "onTap":{
+                           "params":{
+                              "actions":[
+                                 {
+                                    "target":"navigation",
+                                    "action":"push",
+                                    "route":"invoice_edit_form"
+                                 }
+                              ]
+                           }
+                        }
+                     }
+                  },
+                  {
+                     "id":"invoices_back_main",
+                     "type":"Button",
+                     "props":{
+                        "title":"Back To Main Screen",
+                        "padding":12,
+                        "color":"#0EA5E9",
+                        "borderColor":"#0EA5E9",
+                        "borderWidth":1,
+                        "cornerRadius":12,
+                        "backgroundColor":"#FFFFFF"
+                     },
+                     "events":{
+                        "onTap":{
+                           "params":{
+                              "actions":[
+                                 {
+                                    "target":"navigation",
+                                    "action":"push",
+                                    "route":"main"
+                                 }
+                              ]
+                           }
+                        }
+                     }
                   }
-                },
-                {
-                  "id": "invoice_row_status",
-                  "type": "Text",
-                  "props": {
-                    "text": "{{status}}",
-                    "fontSize": 12,
-                    "color": "#1D4ED8",
-                    "inputLike": 1,
-                    "borderColor": "#BFDBFE",
-                    "backgroundColor": "#EFF6FF",
-                    "cornerRadius": 8,
-                    "inputPaddingVertical": 4,
-                    "inputPaddingHorizontal": 8
-                  }
-                }
-              ]
-            },
-            {
-              "id": "invoice_row_customer",
-              "type": "Text",
-              "props": {
-                "text": "Customer: {{customer_name}}",
-                "fontSize": 14,
-                "color": "#334155",
-                "fixedSizeVertical": 1
-              }
-            },
-            {
-              "id": "invoice_row_amount_due",
-              "type": "HStack",
-              "children": [
-                {
-                  "id": "invoice_row_amount",
-                  "type": "Text",
-                  "props": {
-                    "text": "Amount: {{amount}} {{currency}}",
-                    "fontSize": 12,
-                    "color": "#475569",
-                    "fixedSizeVertical": 1
-                  }
-                },
-                {
-                  "id": "invoice_row_due",
-                  "type": "Text",
-                  "props": {
-                    "text": "Doc date: {{doc_date}}",
-                    "fontSize": 12,
-                    "color": "#475569",
-                    "fixedSizeVertical": 1
-                  }
-                }
-              ]
-            },
-            {
-              "id": "invoice_row_description",
-              "type": "Text",
-              "props": {
-                "text": "{{description}}",
-                "fontSize": 12,
-                "color": "#64748B",
-                "fixedSizeVertical": 1,
-                "drawingGroup": 1
-              }
+               ]
             }
-          ]
-        },
-        "columns": [
-          {
-            "field": "doc_number",
-            "title": "Invoice",
-            "sortable": 1
-          },
-          {
-            "field": "customer_name",
-            "title": "Customer",
-            "sortable": 1
-          },
-          {
-            "field": "status",
-            "title": "Status",
-            "sortable": 1
-          },
-          {
-            "field": "amount",
-            "title": "Amount",
-            "sortable": 1
-          },
-          {
-            "field": "doc_date",
-            "title": "Doc Date",
-            "sortable": 1
-          },
-          {
-            "field": "updated_at",
-            "title": "Updated At",
-            "sortable": 1
-          }
-        ]
-      },
-      "events": {
-        "onTap": {
-       
-          "params": {
-           
-            "actions": [
-              { "target": "navigation", "action": "push", "route": "invoice_edit_form" }
-            ]
-          }
-        }
+         ]
       }
-    },
-    {
-      "id": "invoices_back_main",
-      "type": "Button",
-      "props": {
-        "title": "Back To Main Screen",
-        "padding": 12,
-        "color": "#0EA5E9",
-        "borderColor": "#0EA5E9",
-        "borderWidth": 1,
-        "cornerRadius": 12,
-        "backgroundColor": "#FFFFFF"
-      },
-      "events": {
-        "onTap": {
-       
-          "params": {
-           
-            "actions": [
-              { "target": "navigation", "action": "push", "route": "main" }
-            ]
-          }
-        }
-      }
-    }
-  ]
+   ]
 }
