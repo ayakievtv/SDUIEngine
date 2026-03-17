@@ -27,7 +27,7 @@ struct DataSourceConfig: Equatable {
             localFiltering: true,
             remoteFiltering: true,
             debounceMs: 450,
-            sorting: true,
+            sorting: false,
             defaultSortField: nil,
             defaultSortAscending: true,
             prefetchThreshold: 3,

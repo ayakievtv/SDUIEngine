@@ -183,74 +183,6 @@ private final class DBGridRowTemplateCache {
     }
 }
 
-private struct DBGridPlainCardContent: View, Equatable {
-    let title: String
-    let subtitle: String?
-    let caption: String?
-    let badge: String?
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 8) {
-                Text(title)
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-
-                if let badge, !badge.isEmpty {
-                    Text(badge)
-                        .font(.caption)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 4)
-                        .background(Color.blue.opacity(0.12))
-                        .cornerRadius(8)
-                }
-            }
-
-            if let subtitle, !subtitle.isEmpty {
-                Text(subtitle)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-
-            if let caption, !caption.isEmpty {
-                Text(caption)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-        }
-        .padding(12)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.gray.opacity(0.25), lineWidth: 1)
-        )
-    }
-}
-
-private final class DBGridRowComponentCache {
-    static let shared = DBGridRowComponentCache()
-    private var storage: [String: ComponentModel] = [:]
-    private let maxCount = 600
-
-    func resolve(key: String, builder: () -> ComponentModel) -> ComponentModel {
-        if let cached = storage[key] {
-            return cached
-        }
-
-        let built = builder()
-        if storage.count >= maxCount, let firstKey = storage.keys.first {
-            storage.removeValue(forKey: firstKey)
-        }
-        storage[key] = built
-        return built
-    }
-}
 
 struct DBGridComponent: UIComponent {
     let model: ComponentModel
@@ -284,7 +216,6 @@ struct DBGridComponent: UIComponent {
         let rowComponentTemplate = parsedRowComponentTemplate
         let cfg = activeConfig ?? resolvedDataSourceConfig(props: props)
         let showControls = props.bool("showControls") ?? true
-        let showHeader = props.bool("showHeader") ?? true
 
         return VStack(alignment: .leading, spacing: 10) {
             if showControls {
@@ -343,10 +274,6 @@ struct DBGridComponent: UIComponent {
                     .font(.footnote)
                     .foregroundColor(.secondary)
             } else {
-                if showHeader {
-                    headerView(columns: columns)
-                }
-
                 LazyVStack(alignment: .leading, spacing: 4) {
                     ForEach(visibleRows, id: \.id) { row in
                         rowCard(row: row, template: rowTemplate, rowComponentTemplate: rowComponentTemplate)
@@ -392,19 +319,7 @@ struct DBGridComponent: UIComponent {
         }
     }
 
-    private func headerView(columns: [DBGridColumn]) -> some View {
-        HStack(spacing: 8) {
-            ForEach(columns, id: \.field) { column in
-                Text(column.title)
-                    .font(.caption)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-        }
-        .padding(.horizontal, 2)
-    }
-
+    
     private func rowCard(
         row: DBGridRow,
         template: DBGridRowTemplateSpec,
@@ -443,13 +358,19 @@ struct DBGridComponent: UIComponent {
             Button {
                 handleRowTap(row: row)
             } label: {
-                DBGridPlainCardContent(
-                    title: cached.title,
-                    subtitle: cached.subtitle,
-                    caption: cached.caption,
-                    badge: cached.badge
-                )
-                .equatable()
+                Text("No row template")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.gray.opacity(0.1))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                    )
             }
             .buttonStyle(.plain)
         )
@@ -545,11 +466,7 @@ struct DBGridComponent: UIComponent {
     }
 
     private func resolvedRowComponentModel(template: ComponentModel, row: DBGridRow) -> ComponentModel {
-        let updatedAt = row.payload["updatedAt"]?.stringValue ?? row.payload["clientUpdatedAt"]?.stringValue ?? ""
-        let cacheKey = "\(row.id)|\(updatedAt)|\(template.id)|\(template.type)"
-        return DBGridRowComponentCache.shared.resolve(key: cacheKey) {
-            resolveComponentModel(template: template, row: row)
-        }
+        return resolveComponentModel(template: template, row: row)
     }
 
     private func resolveComponentModel(template: ComponentModel, row: DBGridRow) -> ComponentModel {

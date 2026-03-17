@@ -30,87 +30,174 @@
             {
                "id":"invoice_edit_root_stack",
                "type":"VStack",
+               "props":{
+                  "padding":10
+               },
                "children":[
                   {
-                     "id":"invoice_edit_hint",
-                     "type":"Text",
-                     "props":{
-                        "text":"GET: /invoices/{id}, SAVE: POST/PUT via offline queue",
-                        "fontSize":12,
-                        "color":"#64748B"
-                     }
+                     "id":"invgsdsp",
+                     "type":"HStack",
+                     "children":[
+                        {
+                           "id":"invfsle",
+                           "type":"Text",
+                           "props":{
+                              "text":"Document Number",
+                              "fontSize":12,
+                              "fontWeight":"semibold",
+                              "color":"#0F172A",
+                              "fixedSizeVertical":1
+                           }
+                        },
+                        {
+                           "id":"deber1",
+                           "type":"Spacer",
+                           "props":{
+                              "height":8
+                           }
+                        },
+                        {
+                           "id":"invoifield",
+                           "type":"TextField",
+                           "props":{
+                              "placeholder":"Document Number",
+                              "stateKey":"invoiceForm.doc_number",
+                              "padding":10
+                           }
+                        }
+                     ]
                   },
                   {
-                     "id":"invoice_open_form_error",
-                     "type":"Text",
-                     "props":{
-                        "text":"Open form error: {{invoiceForm._openFormError}}",
-                        "fontSize":12,
-                        "color":"#DC2626"
-                     }
+                     "id":"invfovdsdsp",
+                     "type":"HStack",
+                     "children":[
+                        {
+                           "id":"invoibfle",
+                           "type":"Text",
+                           "props":{
+                              "text":"Customer Name",
+                              "fontSize":12,
+                              "fontWeight":"semibold",
+                              "color":"#0F172A",
+                              "fixedSizeVertical":1
+                           }
+                        },
+                        {
+                           "id":"demfser1",
+                           "type":"Spacer",
+                           "props":{
+                              "height":8
+                           }
+                        },
+                        {
+                           "id":"invfffield",
+                           "type":"TextField",
+                           "props":{
+                              "placeholder":"Customer Name",
+                              "stateKey":"invoiceForm.customer_name",
+                              "padding":10
+                           }
+                        }
+                     ]
                   },
                   {
-                     "id":"invoice_open_form_endpoint",
-                     "type":"Text",
-                     "props":{
-                        "text":"Last detail endpoint: {{invoiceForm._lastOpenFormEndpoint}}",
-                        "fontSize":11,
-                        "color":"#64748B"
-                     }
+                     "id":"invoice_row_tosdsp",
+                     "type":"HStack",
+                     "children":[
+                        {
+                           "id":"invoice_row_title",
+                           "type":"Text",
+                           "props":{
+                              "text":"Amount",
+                              "fontSize":12,
+                              "fontWeight":"semibold",
+                              "color":"#0F172A",
+                              "fixedSizeVertical":1
+                           }
+                        },
+                        {
+                           "id":"demo_spacdser1",
+                           "type":"Spacer",
+                           "props":{
+                              "height":8
+                           }
+                        },
+                        {
+                           "id":"invoice_amount_field",
+                           "type":"TextField",
+                           "props":{
+                              "placeholder":"Amount",
+                              "stateKey":"invoiceForm.amount",
+                              "padding":10
+                           }
+                        }
+                     ]
                   },
                   {
-                     "id":"invoice_id_field",
-                     "type":"TextField",
-                     "props":{
-                        "placeholder":"Invoice UUID",
-                        "stateKey":"invoiceForm.id",
-                        "padding":10
-                     }
+                     "id":"invortsdsp",
+                     "type":"HStack",
+                     "children":[
+                        {
+                           "id":"invoewle",
+                           "type":"Text",
+                           "props":{
+                              "text":"Document Date",
+                              "fontSize":12,
+                              "fontWeight":"semibold",
+                              "color":"#0F172A",
+                              "fixedSizeVertical":1
+                           }
+                        },
+                        {
+                           "id":"dtrer1",
+                           "type":"Spacer",
+                           "props":{
+                              "height":8
+                           }
+                        },
+                        {
+                           "id":"int_field",
+                           "type":"TextField",
+                           "props":{
+                              "placeholder":"Document Date (ISO)",
+                              "stateKey":"invoiceForm.due_date",
+                              "padding":10
+                           }
+                        }
+                     ]
                   },
                   {
-                     "id":"invoice_doc_number_field",
-                     "type":"TextField",
-                     "props":{
-                        "placeholder":"Document Number",
-                        "stateKey":"invoiceForm.doc_number",
-                        "padding":10
-                     }
-                  },
-                  {
-                     "id":"invoice_customer_field",
-                     "type":"TextField",
-                     "props":{
-                        "placeholder":"Customer Name",
-                        "stateKey":"invoiceForm.customer_name",
-                        "padding":10
-                     }
-                  },
-                  {
-                     "id":"invoice_amount_field",
-                     "type":"TextField",
-                     "props":{
-                        "placeholder":"Amount",
-                        "stateKey":"invoiceForm.amount",
-                        "padding":10
-                     }
-                  },
-                  {
-                     "id":"invoice_due_date_field",
-                     "type":"TextField",
-                     "props":{
-                        "placeholder":"Document Date (ISO)",
-                        "stateKey":"invoiceForm.due_date",
-                        "padding":10
-                     }
-                  },
-                  {
-                     "id":"invoice_status_field",
-                     "type":"TextField",
-                     "props":{
-                        "placeholder":"Status",
-                        "stateKey":"invoiceForm.status",
-                        "padding":10
-                     }
+                     "id":"invor65sp",
+                     "type":"HStack",
+                     "children":[
+                        {
+                           "id":"in4wle",
+                           "type":"Text",
+                           "props":{
+                              "text":"Status",
+                              "fontSize":12,
+                              "fontWeight":"semibold",
+                              "color":"#0F172A",
+                              "fixedSizeVertical":1
+                           }
+                        },
+                        {
+                           "id":"dt34rer1",
+                           "type":"Spacer",
+                           "props":{
+                              "height":8
+                           }
+                        },
+                        {
+                           "id":"invoice5ield",
+                           "type":"TextField",
+                           "props":{
+                              "placeholder":"Status",
+                              "stateKey":"invoiceForm.status",
+                              "padding":10
+                           }
+                        }
+                     ]
                   },
                   {
                      "id":"invoice_load_actions",
