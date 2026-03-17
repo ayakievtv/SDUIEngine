@@ -27,7 +27,8 @@
                            "id":"invoice_row_card",
                            "type":"VStack",
                            "props":{
-                              "compositingGroup":1
+                              "compositingGroup":1,
+                              "spacing":2
                            },
                            "children":[
                               {
@@ -41,7 +42,6 @@
                                           "text":"Invoice {{doc_number}}",
                                           "fontSize":16,
                                           "fontWeight":"semibold",
-                                          "color":"#0F172A",
                                           "fixedSizeVertical":1
                                        }
                                     },
@@ -58,10 +58,10 @@
                                        "props":{
                                           "text":"{{status}}",
                                           "fontSize":12,
-                                          "color":"#1D4ED8",
+                                          "color":"blue",
                                           "inputLike":1,
-                                          "borderColor":"#BFDBFE",
-                                          "backgroundColor":"#EFF6FF",
+                                          "borderColor":"systemGray5",
+                                          "backgroundColor":"systemBackground",
                                           "cornerRadius":8,
                                           "inputPaddingVertical":4,
                                           "inputPaddingHorizontal":8
@@ -75,7 +75,6 @@
                                  "props":{
                                     "text":"Customer: {{customer_name}}",
                                     "fontSize":14,
-                                    "color":"#334155",
                                     "fixedSizeVertical":1
                                  }
                               },
@@ -89,7 +88,6 @@
                                        "props":{
                                           "text":"Amount: {{amount}} {{currency}}",
                                           "fontSize":12,
-                                          "color":"#475569",
                                           "fixedSizeVertical":1
                                        }
                                     },
@@ -106,7 +104,6 @@
                                        "props":{
                                           "text":"Doc date: {{doc_date}}",
                                           "fontSize":12,
-                                          "color":"#475569",
                                           "fixedSizeVertical":1
                                        }
                                     }
@@ -118,7 +115,6 @@
                                  "props":{
                                     "text":"{{description}}",
                                     "fontSize":12,
-                                    "color":"#64748B",
                                     "fixedSizeVertical":1,
                                     "drawingGroup":1
                                  }

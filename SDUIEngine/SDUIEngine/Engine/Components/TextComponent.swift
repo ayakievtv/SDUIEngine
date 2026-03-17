@@ -32,7 +32,7 @@ struct TextComponent: UIComponent {
         let value = interpolateStateTokens(in: rawText)
         let isInputLike = props.bool("inputLike") ?? false
         let borderColor = Color.sduiColor(props.string("borderColor") ?? "#D1D5DB") ?? Color.gray.opacity(0.5)
-        let backgroundColor = Color.sduiColor(props.string("backgroundColor") ?? "#FFFFFF") ?? Color.white
+        let backgroundColor = Color.sduiColor(props.string("backgroundColor") ?? "#F9FAFB") ?? Color(.systemBackground)
         let cornerRadius = CGFloat(props.double("cornerRadius") ?? 8)
         let verticalPadding = CGFloat(props.double("inputPaddingVertical") ?? 10)
         let horizontalPadding = CGFloat(props.double("inputPaddingHorizontal") ?? 12)
@@ -42,6 +42,7 @@ struct TextComponent: UIComponent {
         if isInputLike {
             renderedText = AnyView(
                 baseText
+                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, verticalPadding)
                     .padding(.horizontal, horizontalPadding)
@@ -55,7 +56,7 @@ struct TextComponent: UIComponent {
                     )
             )
         } else {
-            renderedText = baseText
+            renderedText = AnyView(baseText.foregroundColor(.black))
         }
 
         return renderedText

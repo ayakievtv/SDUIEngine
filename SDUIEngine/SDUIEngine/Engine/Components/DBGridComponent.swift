@@ -217,7 +217,7 @@ struct DBGridComponent: UIComponent {
         let cfg = activeConfig ?? resolvedDataSourceConfig(props: props)
         let showControls = props.bool("showControls") ?? true
 
-        return VStack(alignment: .leading, spacing: 10) {
+        return VStack(alignment: .leading, spacing: 6) {
             if showControls {
                 HStack(spacing: 8) {
                     TextField("Filter...", text: $filterText)
@@ -274,7 +274,7 @@ struct DBGridComponent: UIComponent {
                     .font(.footnote)
                     .foregroundColor(.secondary)
             } else {
-                LazyVStack(alignment: .leading, spacing: 4) {
+                LazyVStack(alignment: .leading, spacing: 2) {
                     ForEach(visibleRows, id: \.id) { row in
                         rowCard(row: row, template: rowTemplate, rowComponentTemplate: rowComponentTemplate)
                             .onAppear {

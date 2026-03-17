@@ -11,8 +11,9 @@ struct VStackComponent: UIComponent {
 
     var body: some View {
         let style = Style(props: model.resolvedProps)
+        let spacing = model.resolvedProps["spacing"]?.numberValue ?? 0
 
-        VStack {
+        VStack(spacing: spacing) {
             ForEach(model.resolvedChildren) { child in
                 ComponentRenderer(model: child, context: context, registry: context.componentRegistry)
             }

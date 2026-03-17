@@ -76,6 +76,36 @@ struct PendingOperation: Codable, Equatable {
 
 actor EntityStore {
     private var records: [UUID: EntityRecord] = [:]
+    private let cacheFileURL: URL
+    
+    init() {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        cacheFileURL = documentsPath.appendingPathComponent("entity_store.json")
+        Task {
+            await loadFromDisk()
+        }
+    }
+    
+    private func loadFromDisk() {
+        guard FileManager.default.fileExists(atPath: cacheFileURL.path) else { return }
+        
+        do {
+            let data = try Data(contentsOf: cacheFileURL)
+            let decoded = try JSONDecoder().decode([UUID: EntityRecord].self, from: data)
+            records = decoded
+        } catch {
+            print("Failed to load entity store: \(error)")
+        }
+    }
+    
+    private func saveToDisk() {
+        do {
+            let data = try JSONEncoder().encode(records)
+            try data.write(to: cacheFileURL)
+        } catch {
+            print("Failed to save entity store: \(error)")
+        }
+    }
 
     func upsert(payload: [String: JSONValue], syncState: EntitySyncState = .clean) -> EntityRecord {
         let now = Timestamp.now()
@@ -88,6 +118,7 @@ actor EntityStore {
             existing.clientUpdatedAt = now
             existing.syncState = syncState
             records[id] = existing
+            saveToDisk()
             return existing
         }
 
@@ -108,6 +139,7 @@ actor EntityStore {
             syncState: syncState
         )
         records[id] = newRecord
+        saveToDisk()
         return newRecord
     }
 
@@ -256,9 +288,40 @@ actor FormDraftStore {
 
 actor SyncQueueStore {
     private var operations: [PendingOperation] = []
+    private let cacheFileURL: URL
+    
+    init() {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        cacheFileURL = documentsPath.appendingPathComponent("sync_queue.json")
+        Task {
+            await loadFromDisk()
+        }
+    }
+    
+    private func loadFromDisk() {
+        guard FileManager.default.fileExists(atPath: cacheFileURL.path) else { return }
+        
+        do {
+            let data = try Data(contentsOf: cacheFileURL)
+            let decoded = try JSONDecoder().decode([PendingOperation].self, from: data)
+            operations = decoded
+        } catch {
+            print("Failed to load sync queue: \(error)")
+        }
+    }
+    
+    private func saveToDisk() {
+        do {
+            let data = try JSONEncoder().encode(operations)
+            try data.write(to: cacheFileURL)
+        } catch {
+            print("Failed to save sync queue: \(error)")
+        }
+    }
 
     func enqueue(_ operation: PendingOperation) {
         operations.append(operation)
+        saveToDisk()
     }
 
     func nextQueued() -> PendingOperation? {
@@ -270,10 +333,12 @@ actor SyncQueueStore {
             return
         }
         operations[index] = operation
+        saveToDisk()
     }
 
     func remove(opID: UUID) {
         operations.removeAll(where: { $0.opID == opID })
+        saveToDisk()
     }
 
     func all() -> [PendingOperation] {
@@ -283,9 +348,40 @@ actor SyncQueueStore {
 
 actor LocalResponseStore {
     private var storage: [String: JSONValue] = [:]
+    private let cacheFileURL: URL
+    
+    init() {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        cacheFileURL = documentsPath.appendingPathComponent("local_response_cache.json")
+        Task {
+            await loadFromDisk()
+        }
+    }
+    
+    private func loadFromDisk() {
+        guard FileManager.default.fileExists(atPath: cacheFileURL.path) else { return }
+        
+        do {
+            let data = try Data(contentsOf: cacheFileURL)
+            let decoded = try JSONDecoder().decode([String: JSONValue].self, from: data)
+            storage = decoded
+        } catch {
+            print("Failed to load local response cache: \(error)")
+        }
+    }
+    
+    private func saveToDisk() {
+        do {
+            let data = try JSONEncoder().encode(storage)
+            try data.write(to: cacheFileURL)
+        } catch {
+            print("Failed to save local response cache: \(error)")
+        }
+    }
 
     func set(_ value: JSONValue, for endpoint: String) {
         storage[endpoint] = value
+        saveToDisk()
     }
 
     func get(for endpoint: String) -> JSONValue? {

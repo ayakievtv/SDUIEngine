@@ -31,7 +31,8 @@
                "id":"invoice_edit_root_stack",
                "type":"VStack",
                "props":{
-                  "padding":10
+                  "padding":10,
+                  "spacing":0
                },
                "children":[
                   {
@@ -45,7 +46,7 @@
                               "text":"Document Number",
                               "fontSize":12,
                               "fontWeight":"semibold",
-                              "color":"#0F172A",
+                              "color":"#5F676A",
                               "fixedSizeVertical":1
                            }
                         },
@@ -62,7 +63,8 @@
                            "props":{
                               "placeholder":"Document Number",
                               "stateKey":"invoiceForm.doc_number",
-                              "padding":10
+                              "padding":10, "multilineTextAlignment":"right",
+                              "maxLength": 100
                            }
                         }
                      ]
@@ -78,7 +80,7 @@
                               "text":"Customer Name",
                               "fontSize":12,
                               "fontWeight":"semibold",
-                              "color":"#0F172A",
+                              "color":"#5F676A",
                               "fixedSizeVertical":1
                            }
                         },
@@ -95,7 +97,8 @@
                            "props":{
                               "placeholder":"Customer Name",
                               "stateKey":"invoiceForm.customer_name",
-                              "padding":10
+                              "padding":10, "multilineTextAlignment":"right"
+                           
                            }
                         }
                      ]
@@ -111,7 +114,7 @@
                               "text":"Amount",
                               "fontSize":12,
                               "fontWeight":"semibold",
-                              "color":"#0F172A",
+                              "color":"#5F676A",
                               "fixedSizeVertical":1
                            }
                         },
@@ -128,7 +131,8 @@
                            "props":{
                               "placeholder":"Amount",
                               "stateKey":"invoiceForm.amount",
-                              "padding":10
+                              "padding":10, "multilineTextAlignment":"right"
+                        
                            }
                         }
                      ]
@@ -144,7 +148,7 @@
                               "text":"Document Date",
                               "fontSize":12,
                               "fontWeight":"semibold",
-                              "color":"#0F172A",
+                              "color":"#5F676A",
                               "fixedSizeVertical":1
                            }
                         },
@@ -161,7 +165,10 @@
                            "props":{
                               "placeholder":"Document Date (ISO)",
                               "stateKey":"invoiceForm.due_date",
-                              "padding":10
+                              "padding":10,
+                              "maxLength": 200, "multilineTextAlignment":"right",
+                              "multilineTextAlignment": "trailing"
+                            
                            }
                         }
                      ]
@@ -177,7 +184,7 @@
                               "text":"Status",
                               "fontSize":12,
                               "fontWeight":"semibold",
-                              "color":"#0F172A",
+                              "color":"#5F676A",
                               "fixedSizeVertical":1
                            }
                         },
@@ -194,7 +201,9 @@
                            "props":{
                               "placeholder":"Status",
                               "stateKey":"invoiceForm.status",
-                              "padding":10
+                              "padding":10,
+                              "multilineTextAlignment":"right"
+                            
                            }
                         }
                      ]
@@ -321,7 +330,9 @@
                      "type":"Button",
                      "props":{
                         "title":"Close Without Save",
-                        "padding":12,
+                        "padding":12,       "borderColor":"#0EA5E9",
+                        "borderWidth":1,
+                        "cornerRadius":12,
                         "color":"#DC2626"
                      },
                      "events":{

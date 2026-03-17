@@ -17,15 +17,23 @@ struct TextFieldComponent: UIComponent {
     var body: some View {
         let style = Style(props: model.resolvedProps)
         let placeholder = model.resolvedProps.string("placeholder") ?? ""
+        let borderWidth = model.resolvedProps["borderWidth"]?.numberValue ?? 0
+        let borderColor = model.resolvedProps.string("borderColor") ?? Color.gray.description
+        let cornerRadius = model.resolvedProps["cornerRadius"]?.numberValue ?? 0
+        let maxLength = model.resolvedProps["maxLength"]?.numberValue ?? 100
+        let textAlignment = model.resolvedProps.string("multilineTextAlignment") ?? "leading"
         let textBinding = Binding<String>(
             get: { localText },
             set: { newValue in
-                localText = newValue
-                context.setState(key: stateKey, value: .string(newValue))
+                // Ограничиваем текст до maxLength символов
+                let truncatedValue = String(newValue.prefix(Int(maxLength)))
+                localText = truncatedValue
+                context.setState(key: stateKey, value: .string(truncatedValue))
             }
         )
 
         return TextField(placeholder, text: textBinding)
+            .multilineTextAlignment(parseTextAlignment(textAlignment))
             .onChange(of: textBinding.wrappedValue) { value in
                 guard let event = model.event(for: .onChange) else { return }
                 var params = event.params
@@ -73,5 +81,48 @@ struct TextFieldComponent: UIComponent {
                 ComponentStore.shared.unregister(componentID: model.id)
             }
             .applyStyle(style)
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .stroke(Color(hex: borderColor), lineWidth: borderWidth)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+    }
+}
+
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (1, 0, 0, 0)
+        }
+
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue:  Double(b) / 255,
+            opacity: Double(a) / 255
+        )
+    }
+}
+
+private func parseTextAlignment(_ alignment: String) -> TextAlignment {
+    switch alignment.lowercased() {
+    case "center":
+        return .center
+    case "trailing", "right":
+        return .trailing
+    default:
+        return .leading
     }
 }

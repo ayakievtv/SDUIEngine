@@ -83,6 +83,11 @@ extension Color {
         case "yellow": return .yellow
         case "pink": return .pink
         case "purple": return .purple
+        case "primary": return Color(.label)
+        case "secondary": return Color(.secondaryLabel)
+        case "tertiary": return Color(.tertiaryLabel)
+        case "systembackground": return Color(.systemBackground)
+        case "systemgray5": return Color(.systemGray5)
         default:
             break
         }
