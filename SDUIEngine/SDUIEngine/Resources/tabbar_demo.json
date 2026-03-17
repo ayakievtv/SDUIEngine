@@ -1,0 +1,116 @@
+{
+  "screen": {
+    "id": "tabbar_demo",
+    "type": "VStack",
+    "props": {
+      "padding": 0,
+      "spacing": 0
+    },
+    "children": [
+      {
+        "id": "main_tabbar",
+        "type": "TabBar",
+        "props": {
+          "selectedIndex": 0
+        },
+        "children": [
+          {
+            "id": "home_tab",
+            "type": "VStack",
+            "props": {
+              "title": "Главная",
+              "systemImage": "house.fill"
+            },
+            "children": [
+              {
+                "id": "home_title",
+                "type": "Text",
+                "props": {
+                  "text": "Главная страница",
+                  "fontSize": 24,
+                  "fontWeight": "bold",
+                  "padding": 20
+                }
+              },
+              {
+                "id": "home_content",
+                "type": "Text",
+                "props": {
+                  "text": "Добро пожаловать в приложение!",
+                  "fontSize": 16,
+                  "padding": 20
+                }
+              }
+            ]
+          },
+          {
+            "id": "invoices_tab",
+            "type": "VStack",
+            "props": {
+              "title": "Счета",
+              "systemImage": "doc.text.fill"
+            },
+            "children": [
+              {
+                "id": "invoices_title",
+                "type": "Text",
+                "props": {
+                  "text": "Список счетов",
+                  "fontSize": 24,
+                  "fontWeight": "bold",
+                  "padding": 20
+                }
+              },
+              {
+                "id": "invoices_button",
+                "type": "Button",
+                "props": {
+                  "text": "Открыть счета",
+                  "padding": 20,
+                  "color": "#0EA5E9",
+                  "backgroundColor": "#EFF6FF",
+                  "cornerRadius": 8
+                },
+                "events": {
+                  "onTap": {
+                    "action": "navigate",
+                    "target": "invoices_grid"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "id": "profile_tab",
+            "type": "VStack",
+            "props": {
+              "title": "Профиль",
+              "systemImage": "person.fill"
+            },
+            "children": [
+              {
+                "id": "profile_title",
+                "type": "Text",
+                "props": {
+                  "text": "Профиль пользователя",
+                  "fontSize": 24,
+                  "fontWeight": "bold",
+                  "padding": 20
+                }
+              },
+              {
+                "id": "profile_info",
+                "type": "Text",
+                "props": {
+                  "text": "Здесь будет информация о профиле",
+                  "fontSize": 16,
+                  "padding": 20
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

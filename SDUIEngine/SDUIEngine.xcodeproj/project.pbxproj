@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0097CB9A2F69DD46002E5CFD /* tabbar_demo.json in Resources */ = {isa = PBXBuildFile; fileRef = 0097CB992F69DD45002E5CFD /* tabbar_demo.json */; };
+		0097CB9C2F69DD56002E5CFD /* TabBarComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0097CB9B2F69DD56002E5CFD /* TabBarComponent.swift */; };
 		00BE5B992F65F01400ACC29D /* codex.md in Resources */ = {isa = PBXBuildFile; fileRef = 00BE5B982F65F01300ACC29D /* codex.md */; };
 		A00000000000000000000001 /* SDUIEngineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* SDUIEngineApp.swift */; };
 		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012 /* ContentView.swift */; };
@@ -41,6 +43,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0097CB992F69DD45002E5CFD /* tabbar_demo.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tabbar_demo.json; sourceTree = "<group>"; };
+		0097CB9B2F69DD56002E5CFD /* TabBarComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarComponent.swift; sourceTree = "<group>"; };
 		00BE5B982F65F01300ACC29D /* codex.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = codex.md; sourceTree = "<group>"; };
 		A00000000000000000000010 /* SDUIEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDUIEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000011 /* SDUIEngineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDUIEngineApp.swift; sourceTree = "<group>"; };
@@ -144,6 +148,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000913 /* ButtonComponent.swift */,
+				0097CB9B2F69DD56002E5CFD /* TabBarComponent.swift */,
 				A00000000000000000000914 /* ImageComponent.swift */,
 				A00000000000000000000915 /* SpacerComponent.swift */,
 				A00000000000000000000912 /* TextComponent.swift */,
@@ -219,6 +224,7 @@
 		A00000000000000000000111 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				0097CB992F69DD45002E5CFD /* tabbar_demo.json */,
 				A00000000000000000001311 /* demo_screen.json */,
 				A00000000000000000001411 /* main.json */,
 				A00000000000000000001511 /* demo_screen2.json */,
@@ -288,6 +294,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00BE5B992F65F01400ACC29D /* codex.md in Resources */,
+				0097CB9A2F69DD46002E5CFD /* tabbar_demo.json in Resources */,
 				A00000000000000000001301 /* demo_screen.json in Resources */,
 				A00000000000000000001401 /* main.json in Resources */,
 				A00000000000000000001501 /* demo_screen2.json in Resources */,
@@ -320,6 +327,7 @@
 				A00000000000000000000903 /* ButtonComponent.swift in Sources */,
 				A00000000000000000000904 /* ImageComponent.swift in Sources */,
 				A00000000000000000000905 /* SpacerComponent.swift in Sources */,
+				0097CB9C2F69DD56002E5CFD /* TabBarComponent.swift in Sources */,
 				A00000000000000000000906 /* TextFieldComponent.swift in Sources */,
 				A00000000000000000000907 /* DataSourceComponent.swift in Sources */,
 				A00000000000000000000908 /* DBGridComponent.swift in Sources */,
