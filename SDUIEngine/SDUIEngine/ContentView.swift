@@ -158,8 +158,7 @@ private func registerDefaultComponents(in registry: ComponentRegistry) {
     registry.register(type: "TextField", component: TextFieldComponent.self)
     registry.register(type: "DataSource", component: DataSourceComponent.self)
     registry.register(type: "DBGrid", component: DBGridComponent.self)
-    // TODO: Add TabBarComponent.swift to Xcode project
-     registry.register(type: "TabBar", component: TabBarComponent.self)
+    registry.register(type: "TabBar", component: TabBarComponent.self)
 }
 
 // MARK: - Preview

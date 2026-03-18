@@ -183,6 +183,34 @@ private final class DBGridRowTemplateCache {
     }
 }
 
+private final class DBGridResolvedComponentBox: NSObject {
+    let model: ComponentModel
+
+    init(model: ComponentModel) {
+        self.model = model
+    }
+}
+
+private final class DBGridRowComponentCache {
+    static let shared = DBGridRowComponentCache()
+    private let cache = NSCache<NSString, DBGridResolvedComponentBox>()
+
+    private init() {
+        cache.countLimit = 400
+    }
+
+    func resolve(cacheKey: String, build: () -> ComponentModel) -> ComponentModel {
+        let key = cacheKey as NSString
+        if let cached = cache.object(forKey: key) {
+            return cached.model
+        }
+
+        let resolved = build()
+        cache.setObject(DBGridResolvedComponentBox(model: resolved), forKey: key)
+        return resolved
+    }
+}
+
 
 struct DBGridComponent: UIComponent {
     let model: ComponentModel
@@ -278,10 +306,10 @@ struct DBGridComponent: UIComponent {
                     ForEach(visibleRows, id: \.id) { row in
                         rowCard(row: row, template: rowTemplate, rowComponentTemplate: rowComponentTemplate)
                             .onAppear {
-                                // Проверяем только последнюю строку для дозагрузки
-                                if let lastId = visibleRows.last?.id, row.id == lastId {
-                                    let threshold = max(cfg.prefetchThreshold, 1)
-                                    let shouldPrefetch = hasMore && !isLoadingMore
+                                let threshold = max(cfg.prefetchThreshold, 1)
+                                let prefetchStartIndex = max(visibleRows.count - threshold, 0)
+                                if let rowIndex = visibleRows.firstIndex(where: { $0.id == row.id }) {
+                                    let shouldPrefetch = rowIndex >= prefetchStartIndex && hasMore && !isLoadingMore
                                     if shouldPrefetch {
                                         Task { await loadMore(config: cfg) }
                                     }
@@ -335,11 +363,11 @@ struct DBGridComponent: UIComponent {
                         .padding(12)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .fill(Color.white)
+                                .fill(Color(.secondarySystemBackground))
                         )
                         .overlay(
                             RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.gray.opacity(0.25), lineWidth: 1)
+                                .stroke(Color(.systemGray4), lineWidth: 1)
                         )
                 }
                 .buttonStyle(.plain)
@@ -466,7 +494,11 @@ struct DBGridComponent: UIComponent {
     }
 
     private func resolvedRowComponentModel(template: ComponentModel, row: DBGridRow) -> ComponentModel {
-        return resolveComponentModel(template: template, row: row)
+        let rowVersion = rowVersionToken(payload: row.payload)
+        let cacheKey = "\(template.id)|\(template.type)|\(row.id)|\(rowVersion)"
+        return DBGridRowComponentCache.shared.resolve(cacheKey: cacheKey) {
+            resolveComponentModel(template: template, row: row)
+        }
     }
 
     private func resolveComponentModel(template: ComponentModel, row: DBGridRow) -> ComponentModel {
@@ -482,6 +514,34 @@ struct DBGridComponent: UIComponent {
             events: events,
             children: children
         )
+    }
+
+    private func rowVersionToken(payload: [String: JSONValue]) -> String {
+        let versionKeys = [
+            "updatedAt",
+            "updated_at",
+            "clientUpdatedAt",
+            "client_updated_at",
+            "timestamp",
+            "ts",
+        ]
+
+        for key in versionKeys {
+            if let value = payloadStringValue(payload: payload, key: key), !value.isEmpty {
+                return value
+            }
+        }
+
+        let fingerprint = payload
+            .keys
+            .sorted()
+            .map { key in
+                let value = valueAsString(payload[key])
+                return "\(key)=\(value)"
+            }
+            .joined(separator: "|")
+
+        return fingerprint
     }
 
     private func resolveValue(_ value: JSONValue, payload: [String: JSONValue]) -> JSONValue {
@@ -590,7 +650,7 @@ struct DBGridComponent: UIComponent {
             let response = try await context.callAPI(endpoint: endpoint, method: .get, body: nil)
             let parsed = parseRows(response: response, keyField: config.keyField, pageSize: config.pageSize)
             allRows.append(contentsOf: parsed.rows)
-            visibleRows = allRows // Добавлено обновление visibleRows
+            visibleRows = allRows
             nextCursor = parsed.nextCursor
             hasMore = parsed.hasMore
             applyLocalFilterAndSort(columns: resolvedColumns(props: model.resolvedProps), config: config)

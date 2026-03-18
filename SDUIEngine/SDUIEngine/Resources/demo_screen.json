@@ -1,5 +1,5 @@
 {
-   "id":"demo_screen_root",
+   "id":"demo_screen",
    "type":"VStack",
    "children":[
       {

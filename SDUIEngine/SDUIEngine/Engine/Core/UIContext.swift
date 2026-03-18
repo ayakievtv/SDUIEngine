@@ -292,18 +292,23 @@ final class UIContext {
 
         // Standard tap action path: component event -> ServerAction -> router
         dispatcher.register(.onTap) { event, context in
-            print("🔍 DEBUG: onTap event received: \(event)")
+            context.dispatchComponentAction(event)
+          
+            if event.params["actions"]?.arrayValue != nil {
+                return
+            }
             if let action = ServerAction.from(event: event) {
-                print("🔍 DEBUG: ServerAction created: \(action)")
+              
                 context.handle(action: action)
-            } else {
-                print("❌ DEBUG: Failed to create ServerAction from event")
             }
         }
 
         // Submit actions can navigate as well (for forms/search flows)
         dispatcher.register(.onSubmit) { event, context in
             context.dispatchComponentAction(event)
+            if event.params["actions"]?.arrayValue != nil {
+                return
+            }
             guard let action = ServerAction.from(event: event) else { return }
             context.handle(action: action)
         }
@@ -311,6 +316,9 @@ final class UIContext {
         // Change actions support "event chains", e.g. TextField value update -> target component update.
         dispatcher.register(.onChange) { event, context in
             context.dispatchComponentAction(event)
+            if event.params["actions"]?.arrayValue != nil {
+                return
+            }
             guard let action = ServerAction.from(event: event) else { return }
             context.handle(action: action)
         }
@@ -333,15 +341,27 @@ final class UIContext {
         for actionValue in actions {
             guard let actionData = actionValue.objectValue,
                   let actionName = actionData["action"]?.stringValue else { continue }
-                  
-            // Ищем таргет сначала в экшене, потом в событии
-            let targetID = actionData["target"]?.stringValue ?? event.targets.first ?? ""
             let params = flattenJSONParams(actionData)
-            
-            if isSystemTarget(targetID) {
-                handleSystemAction(targetID, action: actionName, params: params)
+
+            let explicitTargets = actionData["targets"]?.arrayValue?
+                .compactMap(\.stringValue)
+                .filter { !$0.isEmpty } ?? []
+
+            let resolvedTargets: [String]
+            if !explicitTargets.isEmpty {
+                resolvedTargets = explicitTargets
+            } else if let singleTarget = actionData["target"]?.stringValue, !singleTarget.isEmpty {
+                resolvedTargets = [singleTarget]
             } else {
-                dispatchToComponent(targetID, event: event)
+                resolvedTargets = event.targets
+            }
+
+            for targetID in resolvedTargets where !targetID.isEmpty {
+                if isSystemTarget(targetID) {
+                    handleSystemAction(targetID, action: actionName, params: params)
+                } else {
+                    dispatchToComponent(targetID, action: actionName, params: params)
+                }
             }
         }
     }
@@ -383,6 +403,12 @@ final class UIContext {
                 
             case "SAVE_FORM":
                 await performSaveForm(params)
+
+            case "DISCARD_FORM":
+                performDiscardForm(params)
+                if params["goBack"]?.lowercased() == "true" || params["close"]?.lowercased() == "true" {
+                    goBack()
+                }
                 
             case "REFRESH_DATA":
                 // For manual DataSource refresh
@@ -395,6 +421,16 @@ final class UIContext {
             }
         }
     }
+
+    private func performDiscardForm(_ params: [String: String]) {
+        let prefix = params["formStatePrefix"] ?? params["formKey"] ?? "main"
+        let keyPrefix = prefix.hasSuffix(".") ? prefix : "\(prefix)."
+
+        let keysToClear = stateStore.state.keys.filter { $0.hasPrefix(keyPrefix) }
+        for key in keysToClear {
+            setState(.string(""), for: key)
+        }
+    }
     
     /// Perform open form action
     private func performOpenForm(_ params: [String: String]) async {
@@ -402,7 +438,7 @@ final class UIContext {
         guard let rawEndpoint = params["endpoint"] else { return }
 
         let idStateKey = params["idStateKey"] ?? "invoiceForm.id"
-        let formPrefix = params["formStatePrefix"] ?? String(idStateKey.split(separator: ".").first ?? "invoiceForm")
+        let formPrefix = params["formStatePrefix"] ?? String(idStateKey.split(separator: ".").first ?? "main")
         
         // Generate keys for ID and UUID synchronization
         let uuidStateKey = idStateKey.hasSuffix(".id")
@@ -496,155 +532,37 @@ final class UIContext {
         }
     }
     
-    private func performOpenFormOLD (_ params: [String: JSONValue]) async {
-        guard let rawEndpoint = params["endpoint"]?.stringValue else {
-            return
-        }
-
-        let idStateKey = params["idStateKey"]?.stringValue ?? "invoiceForm.id"
-        let formPrefix = params["formStatePrefix"]?.stringValue ?? String(idStateKey.split(separator: ".").first ?? "invoiceForm")
-        let uuidStateKey = idStateKey.hasSuffix(".id")
-            ? String(idStateKey.dropLast(3)) + ".uuid"
-            : (idStateKey.hasSuffix(".uuid") ? idStateKey : "\(formPrefix).uuid")
-        let idValue = stateValue(for: idStateKey)?.stringValue
-            ?? stateValue(for: uuidStateKey)?.stringValue
-            ?? ""
-        let endpoint = rawEndpoint.replacingOccurrences(of: "{id}", with: idValue)
-        if rawEndpoint.contains("{id}") && idValue.isEmpty {
-            setState(.string("OPEN_FORM: id is empty for endpoint with {id}"), for: "\(formPrefix)._openFormError")
-            return
-        }
-        let clearPreviousDraft = params["clearPreviousDraft"]?.stringValue?.lowercased() == "true"
-            || params["clearPreviousDraft"]?.boolValue == true
-        let keyPrefix = formPrefix.hasSuffix(".") ? formPrefix : "\(formPrefix)."
-
-        openFormRequestSerial += 1
-        let requestToken = openFormRequestSerial
-        activeOpenFormTokenByPrefix[formPrefix] = requestToken
-
-        if clearPreviousDraft {
-            let keysToClear = stateStore.state.keys.filter { $0.hasPrefix(keyPrefix) }
-            for key in keysToClear {
-                setState(.string(""), for: key)
-            }
-        }
-
-        if !idValue.isEmpty {
-            setState(.string(idValue), for: idStateKey)
-            setState(.string(idValue), for: uuidStateKey)
-        }
-        setState(.string(""), for: "\(formPrefix)._openFormError")
-        setState(.string(endpoint), for: "\(formPrefix)._lastOpenFormEndpoint")
-
-        do {
-            let response = try await callAPI(endpoint: endpoint, method: .get, body: nil)
-            guard activeOpenFormTokenByPrefix[formPrefix] == requestToken else {
-                return
-            }
-            guard let payload = response.objectValue else {
-                setState(.string("OPEN_FORM: response is not an object"), for: "\(formPrefix)._openFormError")
-                return
-            }
-
-            let items = payload["items"]?.arrayValue
-            let firstRecord = items?.first?.objectValue ?? payload
-            for (key, value) in firstRecord {
-                setState(value, for: "\(formPrefix).\(key)")
-            }
-
-            if let uuid = firstRecord["uuid"]?.stringValue, !uuid.isEmpty {
-                setState(.string(uuid), for: "\(formPrefix).uuid")
-                setState(.string(uuid), for: "\(formPrefix).id")
-            } else if let id = firstRecord["id"]?.stringValue, !id.isEmpty {
-                setState(.string(id), for: "\(formPrefix).id")
-                setState(.string(id), for: "\(formPrefix).uuid")
-            }
-
-            if let docDate = firstRecord["doc_date"] {
-                setState(docDate, for: "\(formPrefix).due_date")
-            } else if let dueDate = firstRecord["due_date"] {
-                setState(dueDate, for: "\(formPrefix).doc_date")
-            }
-
-            if !idValue.isEmpty {
-                setState(.string(idValue), for: idStateKey)
-                setState(.string(idValue), for: uuidStateKey)
-            }
-        } catch {
-            guard activeOpenFormTokenByPrefix[formPrefix] == requestToken else {
-                return
-            }
-            setState(.string(error.localizedDescription), for: "\(formPrefix)._openFormError")
-        }
-    }
     
     private func performSaveForm(_ params: [String: String]) async {
-        guard let rawEndpoint = params["endpoint"],
-              let prefix = params["formStatePrefix"] else { return }
+        guard let rawEndpoint = params["endpoint"] else { return }
+        let idStateKey = params["idStateKey"] ?? "invoiceForm.id"
+        let inferredPrefix = String(idStateKey.split(separator: ".").first ?? "main")
+        let prefix = params["formStatePrefix"] ?? params["formKey"] ?? inferredPrefix
         
         // Collect data. If getValues is not yet in protocol,
         // it needs to be added there (implementation below)
         let formData = stateStore.getValues(forPrefix: prefix)
         
-        let idValue = stateStore.getValue(for: "\(prefix).id")?.stringValue ?? ""
+        let idValue = stateStore.getValue(for: idStateKey)?.stringValue
+            ?? stateStore.getValue(for: "\(prefix).id")?.stringValue
+            ?? ""
         let endpoint = rawEndpoint.replacingOccurrences(of: "{id}", with: idValue)
         
         let method: HTTPMethod = (params["method"]?.uppercased() == "POST") ? .post : .put
         
         do {
             _ = try await callAPI(endpoint: endpoint, method: method, body: formData)
-            print("✅ SDUI: Data saved successfully")
+         
         } catch {
             print("❌ SDUI: Save error: \(error)")
         }
     }
     
-    
-    /// Navigation engine (interprets navigate parameters)
-    private func handleNavigationAction(_ event: EventModel) {
-        // In new JSON parameters are in params directly or inside actions
-        // For compatibility we check both options
-        let navType = event.params["type"]?.stringValue ?? event.params["action"]?.stringValue
-        let route = event.params["route"]?.stringValue ?? ""
-        let mode = event.params["mode"]?.stringValue ?? "push"
 
-        guard !route.isEmpty || navType == "pop" || navType == "dismiss" else { return }
 
-        switch navType?.lowercased() {
-        case "navigate", "push":
-            self.push(route)
-        case "modal":
-            self.modal(route)
-        case "replace":
-            self.replace(with: route)
-        case "pop", "back":
-            self.goBack()
-        case "dismiss":
-            self.dismissModal()
-        default:
-            // If type is not specified but there's route, treat as regular push
-            if !route.isEmpty { self.push(route) }
-        }
-    }
-
-    /// Send command to specific UI component (Text, Button, TextField...)
-    private func dispatchToComponent(_ targetID: String, event: EventModel) {
-        // 1. Handle multiple actions array (actions)
-        if let actions = event.params["actions"]?.arrayValue {
-            for actionDefinition in actions {
-                guard let payload = actionDefinition.objectValue,
-                      let actionName = payload["action"]?.stringValue else { continue }
-                
-                let params = flattenJSONParams(payload)
-                componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
-            }
-            return
-        }
-
-        // 2. Handle single action
-        guard let actionName = event.params["action"]?.stringValue else { return }
-        let params = flattenJSONParams(event.params)
-        componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
+    /// Send resolved action command to specific UI component by ID.
+    private func dispatchToComponent(_ targetID: String, action: String, params: [String: String]) {
+        componentStore.get(componentID: targetID)?.handle(action: action, params: params)
     }
 
     /// Helper function to convert JSONValue to [String: String]
@@ -684,7 +602,7 @@ final class UIContext {
         let methodRaw = params["method"]?.stringValue?.uppercased() ?? "POST"
         let method = HTTPMethod(rawValue: methodRaw) ?? .post
         let idStateKey = params["idStateKey"]?.stringValue ?? "invoiceForm.id"
-        let formPrefix = params["formStatePrefix"]?.stringValue ?? String(idStateKey.split(separator: ".").first ?? "invoiceForm")
+        let formPrefix = params["formStatePrefix"]?.stringValue ?? String(idStateKey.split(separator: ".").first ?? "main")
         let idValue = stateValue(for: idStateKey)?.stringValue ?? ""
         let endpoint = rawEndpoint.replacingOccurrences(of: "{id}", with: idValue)
         let keyPrefix = formPrefix.hasSuffix(".") ? formPrefix : "\(formPrefix)."

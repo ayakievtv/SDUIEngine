@@ -1,5 +1,5 @@
 {
-   "id":"root_stack",
+   "id":"main",
    "type":"VStack",
    "props":{
       "padding":16,
@@ -7,7 +7,7 @@
    },
    "children":[
       {
-         "id":"_root_scwqwqroll",
+         "id":"main_root_scroll",
          "type":"ScrollView",
          "props":{
             "navigationTitle":"Main",
@@ -44,10 +44,7 @@
                         ]
                      }
                   }
-               },
-               "children":[
-                  
-               ]
+               }
             },
             {
                "id":"go_demo2_button",
@@ -69,10 +66,7 @@
                         ]
                      }
                   }
-               },
-               "children":[
-                  
-               ]
+               }
             },
             {
                "id":"go_invoices_grid_button",
@@ -94,10 +88,7 @@
                         ]
                      }
                   }
-               },
-               "children":[
-                  
-               ]
+               }
             }
             
          ]

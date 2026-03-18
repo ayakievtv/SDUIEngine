@@ -1,5 +1,5 @@
 {
-   "id":"invoice_form_screen",
+   "id":"invoices_grid",
    "type":"VStack",
    "children":[
       {
@@ -18,7 +18,18 @@
                },
                "children":[
                   {
-                     "id":"invoices_grid",
+                     "id":"invoices_rest_ds",
+                     "type":"DataSource",
+                     "props":{
+                        "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices",
+                        "pageSize":20,
+                        "queryParam":"q",
+                        "cursorParam":"offset",
+                        "keyField":"uuid"
+                     }
+                  },
+                  {
+                     "id":"invoices_dbgrid",
                      "type":"DBGrid",
                      "props":{
                         "dataSourceId":"invoices_rest_ds",
@@ -166,17 +177,6 @@
                               ]
                            }
                         }
-                     }
-                  },
-                  {
-                     "id":"invoices_rest_ds",
-                     "type":"DataSource",
-                     "props":{
-                        "endpoint":"https://oracleapex.com/ords/yakiev/sdui_example/invoices",
-                        "pageSize":20,
-                        "queryParam":"q",
-                        "cursorParam":"offset",
-                        "keyField":"uuid"
                      }
                   },
                   {

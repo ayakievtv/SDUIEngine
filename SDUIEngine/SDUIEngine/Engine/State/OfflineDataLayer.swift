@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 enum EntitySyncState: String, Codable {
     case clean
@@ -81,9 +82,7 @@ actor EntityStore {
     init() {
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         cacheFileURL = documentsPath.appendingPathComponent("entity_store.json")
-        Task {
-            await loadFromDisk()
-        }
+        loadFromDisk()
     }
     
     private func loadFromDisk() {
@@ -109,8 +108,7 @@ actor EntityStore {
 
     func upsert(payload: [String: JSONValue], syncState: EntitySyncState = .clean) -> EntityRecord {
         let now = Timestamp.now()
-        let idString = payload["id"]?.stringValue
-        let id = idString.flatMap(UUID.init(uuidString:)) ?? UUID()
+        let id = resolvedEntityID(payload: payload) ?? UUID()
 
         if var existing = records[id] {
             existing.data.merge(payload) { _, new in new }
@@ -126,6 +124,9 @@ actor EntityStore {
         let updatedAt = payload["updatedAt"]?.stringValue ?? now
         var data = payload
         data["id"] = .string(id.uuidString)
+        if data["uuid"] == nil {
+            data["uuid"] = .string(id.uuidString)
+        }
         data["createdAt"] = .string(createdAt)
         data["updatedAt"] = .string(updatedAt)
         data["clientUpdatedAt"] = .string(now)
@@ -157,6 +158,44 @@ actor EntityStore {
 
     func clear() {
         records.removeAll()
+        saveToDisk()
+    }
+
+    private func resolvedEntityID(payload: [String: JSONValue]) -> UUID? {
+        if let raw = identifierString(payload: payload), !raw.isEmpty {
+            if let uuid = UUID(uuidString: raw) {
+                return uuid
+            }
+            return deterministicUUID(from: raw)
+        }
+        return nil
+    }
+
+    private func identifierString(payload: [String: JSONValue]) -> String? {
+        let candidateKeys = Set(["id", "uuid"])
+
+        for (key, value) in payload where candidateKeys.contains(key.lowercased()) {
+            if let string = value.stringValue, !string.isEmpty {
+                return string
+            }
+            if let number = value.numberValue {
+                return String(number)
+            }
+        }
+
+        return nil
+    }
+
+    private func deterministicUUID(from source: String) -> UUID {
+        let digest = SHA256.hash(data: Data(source.utf8))
+        let bytes = Array(digest.prefix(16))
+        let value = (
+            bytes[0], bytes[1], bytes[2], bytes[3],
+            bytes[4], bytes[5], bytes[6], bytes[7],
+            bytes[8], bytes[9], bytes[10], bytes[11],
+            bytes[12], bytes[13], bytes[14], bytes[15]
+        )
+        return UUID(uuid: value)
     }
 }
 
@@ -293,9 +332,7 @@ actor SyncQueueStore {
     init() {
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         cacheFileURL = documentsPath.appendingPathComponent("sync_queue.json")
-        Task {
-            await loadFromDisk()
-        }
+        loadFromDisk()
     }
     
     private func loadFromDisk() {
@@ -353,9 +390,7 @@ actor LocalResponseStore {
     init() {
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         cacheFileURL = documentsPath.appendingPathComponent("local_response_cache.json")
-        Task {
-            await loadFromDisk()
-        }
+        loadFromDisk()
     }
     
     private func loadFromDisk() {
@@ -453,6 +488,13 @@ actor OfflineDataLayer {
     let queryStore: QueryStore
     let formDraftStore: FormDraftStore
     let syncQueue: SyncQueueStore
+    private var isFlushing = false
+    private var scheduledRetryTask: Task<Void, Never>?
+    private var scheduledRetryAt: Date?
+
+    private let maxOperationsPerFlush = 25
+    private let minBackoffSeconds: TimeInterval = 2
+    private let maxBackoffSeconds: TimeInterval = 120
 
     init(
         remote: RemoteRequesting,
@@ -487,10 +529,19 @@ actor OfflineDataLayer {
         filterText: String = "",
         sort: String = "",
         append: Bool = false,
-        pageSize: Int = 20
+        pageSize: Int = 20,
+        itemsPath: String = "items",
+        nextCursorPath: String = "nextCursor",
+        hasMorePath: String = "hasMore"
     ) async throws -> [EntityRecord] {
         let response = try await networkFirstGet(endpoint: endpoint)
-        let parsed = await parseGridResponse(response: response)
+        let parsed = await parseGridResponse(
+            response: response,
+            itemsPath: itemsPath,
+            nextCursorPath: nextCursorPath,
+            hasMorePath: hasMorePath,
+            pageSize: pageSize
+        )
 
         if append {
             await queryStore.appendPage(
@@ -559,7 +610,6 @@ actor OfflineDataLayer {
         let body = draft.draft
         let response = await queueFirstSave(endpoint: endpoint, method: method, body: body)
         await formDraftStore.markQueued()
-        await formDraftStore.clear()
         return response
     }
 
@@ -568,10 +618,23 @@ actor OfflineDataLayer {
     }
 
     func flushQueue() async {
-        while var operation = await syncQueue.nextQueued() {
+        guard !isFlushing else { return }
+        isFlushing = true
+        defer { isFlushing = false }
+
+        var processed = 0
+        var nextRetryDelayNs: UInt64?
+
+        while processed < maxOperationsPerFlush, var operation = await syncQueue.nextQueued() {
+            if let remaining = remainingBackoffNanos(for: operation) {
+                nextRetryDelayNs = minRetryDelay(current: nextRetryDelayNs, candidate: remaining)
+                break
+            }
+
             operation.status = .syncing
             operation.updatedAt = Timestamp.now()
             await syncQueue.update(operation)
+            processed += 1
 
             do {
                 let response = try await remote.request(
@@ -588,8 +651,18 @@ actor OfflineDataLayer {
                 operation.lastError = error.localizedDescription
                 operation.updatedAt = Timestamp.now()
                 await syncQueue.update(operation)
+                let delayNs = backoffDelayNanos(forAttempt: operation.attempt)
+                nextRetryDelayNs = minRetryDelay(current: nextRetryDelayNs, candidate: delayNs)
                 break
             }
+        }
+
+        if processed >= maxOperationsPerFlush, await syncQueue.nextQueued() != nil {
+            nextRetryDelayNs = minRetryDelay(current: nextRetryDelayNs, candidate: 200_000_000)
+        }
+
+        if let delay = nextRetryDelayNs {
+            scheduleRetry(after: delay)
         }
     }
 
@@ -627,7 +700,7 @@ actor OfflineDataLayer {
         )
 
         await syncQueue.enqueue(operation)
-        Task { await self.flushQueue() }
+        scheduleRetry(after: 0)
 
         return .object([
             "status": .string("queued"),
@@ -637,13 +710,20 @@ actor OfflineDataLayer {
         ])
     }
 
-    private func parseGridResponse(response: JSONValue) async -> (ids: [UUID], nextCursor: String?, hasMore: Bool) {
-        guard let object = response.objectValue else {
-            return ([], nil, false)
-        }
-
-        guard let rows = object["items"]?.arrayValue else {
-            if let single = object["id"]?.stringValue, let id = UUID(uuidString: single) {
+    private func parseGridResponse(
+        response: JSONValue,
+        itemsPath: String,
+        nextCursorPath: String,
+        hasMorePath: String,
+        pageSize: Int
+    ) async -> (ids: [UUID], nextCursor: String?, hasMore: Bool) {
+        let rowsValue = value(at: itemsPath, in: response) ?? value(at: "items", in: response)
+        let rows = rowsValue?.arrayValue ?? response.arrayValue
+        guard let rows else {
+            if let object = response.objectValue,
+               let singlePayload = object["id"] ?? object["uuid"],
+               let raw = singlePayload.stringValue,
+               let id = UUID(uuidString: raw) {
                 return ([id], nil, false)
             }
             return ([], nil, false)
@@ -656,11 +736,51 @@ actor OfflineDataLayer {
             ids.append(record.id)
         }
 
+        let nextCursor = (
+            value(at: nextCursorPath, in: response)?.stringValue ??
+            value(at: "nextCursor", in: response)?.stringValue ??
+            value(at: "offset", in: response)?.stringValue ??
+            value(at: "cursor", in: response)?.stringValue
+        )
+        let hasMore = (
+            value(at: hasMorePath, in: response)?.boolValue ??
+            value(at: "hasMore", in: response)?.boolValue ??
+            ((nextCursor != nil) || ids.count >= max(pageSize, 1))
+        )
+
         return (
             ids,
-            object["nextCursor"]?.stringValue,
-            object["hasMore"]?.boolValue ?? false
+            nextCursor,
+            hasMore
         )
+    }
+
+    private func value(at path: String, in root: JSONValue) -> JSONValue? {
+        let trimmed = path.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty || trimmed == "$" || trimmed == "." {
+            return root
+        }
+
+        let normalized = trimmed.hasPrefix("$.") ? String(trimmed.dropFirst(2)) : trimmed
+        let segments = normalized.split(separator: ".").map(String.init)
+        if segments.isEmpty {
+            return root
+        }
+
+        var current: JSONValue? = root
+        for segment in segments {
+            guard let value = current else { return nil }
+            if let object = value.objectValue {
+                current = object[segment]
+                continue
+            }
+            if let array = value.arrayValue, let index = Int(segment), array.indices.contains(index) {
+                current = array[index]
+                continue
+            }
+            return nil
+        }
+        return current
     }
 
     private func ingest(response: JSONValue) async {
@@ -677,6 +797,55 @@ actor OfflineDataLayer {
         }
 
         _ = await entityStore.upsert(payload: object, syncState: .clean)
+    }
+
+    private func backoffDelayNanos(forAttempt attempt: Int) -> UInt64 {
+        let safeAttempt = max(attempt, 1)
+        let exponent = Double(min(safeAttempt - 1, 8))
+        let delaySeconds = min(maxBackoffSeconds, minBackoffSeconds * pow(2, exponent))
+        return UInt64(delaySeconds * 1_000_000_000)
+    }
+
+    private func remainingBackoffNanos(for operation: PendingOperation) -> UInt64? {
+        guard operation.status == .failed, operation.attempt > 0 else {
+            return nil
+        }
+        guard let failedAt = Timestamp.date(from: operation.updatedAt) else {
+            return nil
+        }
+
+        let requiredNs = backoffDelayNanos(forAttempt: operation.attempt)
+        let elapsedSeconds = Date().timeIntervalSince(failedAt)
+        let elapsedNs = max(0, UInt64(elapsedSeconds * 1_000_000_000))
+        if elapsedNs >= requiredNs {
+            return nil
+        }
+        return requiredNs - elapsedNs
+    }
+
+    private func minRetryDelay(current: UInt64?, candidate: UInt64) -> UInt64 {
+        guard let current else { return candidate }
+        return min(current, candidate)
+    }
+
+    private func scheduleRetry(after delayNs: UInt64) {
+        let targetDate = Date().addingTimeInterval(Double(delayNs) / 1_000_000_000)
+        if let scheduledRetryAt, scheduledRetryAt <= targetDate {
+            return
+        }
+
+        scheduledRetryTask?.cancel()
+        scheduledRetryAt = targetDate
+        scheduledRetryTask = Task {
+            try? await Task.sleep(nanoseconds: delayNs)
+            await self.runScheduledRetry()
+        }
+    }
+
+    private func runScheduledRetry() async {
+        scheduledRetryTask = nil
+        scheduledRetryAt = nil
+        await flushQueue()
     }
 }
 
@@ -702,5 +871,9 @@ enum Timestamp {
 
     static func now() -> String {
         formatter.string(from: Date())
+    }
+
+    static func date(from string: String) -> Date? {
+        formatter.date(from: string)
     }
 }

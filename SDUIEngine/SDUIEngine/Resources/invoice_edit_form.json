@@ -1,5 +1,5 @@
 {
-   "id":"demo_screen2_root",
+   "id":"invoice_edit_form",
    "type":"VStack",
    "children":[
       {
@@ -36,11 +36,11 @@
                },
                "children":[
                   {
-                     "id":"invgsdsp",
+                     "id":"invoice_doc_number_row",
                      "type":"HStack",
                      "children":[
                         {
-                           "id":"invfsle",
+                           "id":"invoice_doc_number_label",
                            "type":"Text",
                            "props":{
                               "text":"Document Number",
@@ -51,14 +51,14 @@
                            }
                         },
                         {
-                           "id":"deber1",
+                           "id":"invoice_doc_number_spacer",
                            "type":"Spacer",
                            "props":{
                               "height":8
                            }
                         },
                         {
-                           "id":"invoifield",
+                           "id":"invoice_doc_number_field",
                            "type":"TextField",
                            "props":{
                               "placeholder":"Document Number",
@@ -70,11 +70,11 @@
                      ]
                   },
                   {
-                     "id":"invfovdsdsp",
+                     "id":"invoice_customer_row",
                      "type":"HStack",
                      "children":[
                         {
-                           "id":"invoibfle",
+                           "id":"invoice_customer_label",
                            "type":"Text",
                            "props":{
                               "text":"Customer Name",
@@ -85,14 +85,14 @@
                            }
                         },
                         {
-                           "id":"demfser1",
+                           "id":"invoice_customer_spacer",
                            "type":"Spacer",
                            "props":{
                               "height":8
                            }
                         },
                         {
-                           "id":"invfffield",
+                           "id":"invoice_customer_field",
                            "type":"TextField",
                            "props":{
                               "placeholder":"Customer Name",
@@ -104,7 +104,7 @@
                      ]
                   },
                   {
-                     "id":"invoice_row_tosdsp",
+                     "id":"invoice_amount_row",
                      "type":"HStack",
                      "children":[
                         {
@@ -119,7 +119,7 @@
                            }
                         },
                         {
-                           "id":"demo_spacdser1",
+                           "id":"invoice_amount_spacer",
                            "type":"Spacer",
                            "props":{
                               "height":8
@@ -138,11 +138,11 @@
                      ]
                   },
                   {
-                     "id":"invortsdsp",
+                     "id":"invoice_doc_date_row",
                      "type":"HStack",
                      "children":[
                         {
-                           "id":"invoewle",
+                           "id":"invoice_doc_date_label",
                            "type":"Text",
                            "props":{
                               "text":"Document Date",
@@ -153,20 +153,19 @@
                            }
                         },
                         {
-                           "id":"dtrer1",
+                           "id":"invoice_doc_date_spacer",
                            "type":"Spacer",
                            "props":{
                               "height":8
                            }
                         },
                         {
-                           "id":"int_field",
+                           "id":"invoice_doc_date_field",
                            "type":"TextField",
                            "props":{
                               "placeholder":"Document Date (ISO)",
                               "stateKey":"invoiceForm.due_date",
                               "padding":10,
-                              "maxLength": 200, "multilineTextAlignment":"right",
                               "multilineTextAlignment": "trailing"
                             
                            }
@@ -174,11 +173,11 @@
                      ]
                   },
                   {
-                     "id":"invor65sp",
+                     "id":"invoice_status_row",
                      "type":"HStack",
                      "children":[
                         {
-                           "id":"in4wle",
+                           "id":"invoice_status_label",
                            "type":"Text",
                            "props":{
                               "text":"Status",
@@ -189,14 +188,14 @@
                            }
                         },
                         {
-                           "id":"dt34rer1",
+                           "id":"invoice_status_spacer",
                            "type":"Spacer",
                            "props":{
                               "height":8
                            }
                         },
                         {
-                           "id":"invoice5ield",
+                           "id":"invoice_status_field",
                            "type":"TextField",
                            "props":{
                               "placeholder":"Status",
@@ -341,7 +340,8 @@
                               "actions":[
                                  {
                                     "target":"backend_data",
-                                    "action":"DISCARD_FORM"
+                                    "action":"DISCARD_FORM",
+                                    "goBack":"true"
                                  }
                               ]
                            }

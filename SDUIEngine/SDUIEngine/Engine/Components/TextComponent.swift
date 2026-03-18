@@ -44,7 +44,6 @@ struct TextComponent: UIComponent {
         if isInputLike {
             renderedText = AnyView(
                 baseText
-                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.vertical, verticalPadding)
                     .padding(.horizontal, horizontalPadding)
@@ -58,7 +57,7 @@ struct TextComponent: UIComponent {
                     )
             )
         } else {
-            renderedText = AnyView(baseText.foregroundColor(.black))
+            renderedText = baseText
         }
 
         return renderedText

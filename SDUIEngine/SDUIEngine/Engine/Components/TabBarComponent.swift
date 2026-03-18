@@ -48,6 +48,9 @@ struct TabBarView: View {
                 })
             )
         }
+        .onDisappear {
+            ComponentStore.shared.unregister(componentID: model.id)
+        }
     }
     
     /// Render child component
