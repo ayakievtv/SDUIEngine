@@ -6,18 +6,18 @@ private struct DBGridColumn: Hashable {
     let sortable: Bool
 }
 
-private struct DBGridRow: Identifiable {
+struct DBGridRow: Identifiable {
     let id: String
     let payload: [String: JSONValue]
 }
 
-private struct DBGridRowTemplateSpec {
+struct DBGridRowTemplateSpec {
     let title: String
     let subtitle: String?
     let caption: String?
     let badge: String?
 
-    static func from(props: [String: JSONValue], columns: [DBGridColumn]) -> DBGridRowTemplateSpec {
+    fileprivate static func from(props: [String: JSONValue], columns: [DBGridColumn]) -> DBGridRowTemplateSpec {
         if let row = props["row"]?.objectValue {
             return DBGridRowTemplateSpec(
                 title: row["title"]?.stringValue ?? "{{id}}",
@@ -51,7 +51,7 @@ private struct DBGridRowTemplateSpec {
     )
 }
 
-private final class DBGridCachedRow: NSObject {
+final class DBGridCachedRow: NSObject {
     let title: String
     let subtitle: String?
     let caption: String?
@@ -65,7 +65,7 @@ private final class DBGridCachedRow: NSObject {
     }
 }
 
-private final class DBGridRowTemplateCache {
+final class DBGridRowTemplateCache {
     static let shared = DBGridRowTemplateCache()
     private let cache = NSCache<NSString, DBGridCachedRow>()
 
@@ -210,7 +210,6 @@ private final class DBGridRowComponentCache {
         return resolved
     }
 }
-
 
 struct DBGridComponent: UIComponent {
     let model: ComponentModel

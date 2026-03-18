@@ -14,6 +14,12 @@
 		0097CBA42F6A7FF5002E5CFD /* SESSION_HANDOFF.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CB9F2F6A7FF5002E5CFD /* SESSION_HANDOFF.md */; };
 		0097CBA52F6A7FF5002E5CFD /* WORK_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CBA02F6A7FF5002E5CFD /* WORK_CONTEXT.md */; };
 		0097CBA72F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CBA62F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md */; };
+		B10000000000000000000101 /* UIContextEventDispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001111 /* UIContextEventDispatchTests.swift */; };
+		B10000000000000000000102 /* UIContextBackendDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001112 /* UIContextBackendDataTests.swift */; };
+		B10000000000000000000103 /* DBGridParsingInterpolationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001113 /* DBGridParsingInterpolationTests.swift */; };
+		B10000000000000000000104 /* OfflineQueueBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001114 /* OfflineQueueBehaviorTests.swift */; };
+		B10000000000000000000105 /* TestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001115 /* TestDoubles.swift */; };
+		B10000000000000000000301 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10000000000000000000302 /* XCTest.framework */; };
 		A00000000000000000000001 /* SDUIEngineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* SDUIEngineApp.swift */; };
 		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012 /* ContentView.swift */; };
 		A00000000000000000000201 /* ComponentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000211 /* ComponentModel.swift */; };
@@ -46,6 +52,16 @@
 		A00000000000000000001701 /* invoice_edit_form.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001711 /* invoice_edit_form.json */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B10000000000000000000401 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000080 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000060;
+			remoteInfo = SDUIEngine;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		0097CB992F69DD45002E5CFD /* tabbar_demo.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tabbar_demo.json; sourceTree = "<group>"; };
 		0097CB9B2F69DD56002E5CFD /* TabBarComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarComponent.swift; sourceTree = "<group>"; };
@@ -54,6 +70,13 @@
 		0097CB9F2F6A7FF5002E5CFD /* SESSION_HANDOFF.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = SESSION_HANDOFF.md; sourceTree = "<group>"; };
 		0097CBA02F6A7FF5002E5CFD /* WORK_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = WORK_CONTEXT.md; sourceTree = "<group>"; };
 		0097CBA62F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROJECT_SHORTCOMINGS.md; sourceTree = "<group>"; };
+		B10000000000000000000010 /* SDUIEngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SDUIEngineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B10000000000000000000302 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		B10000000000000000001111 /* UIContextEventDispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIContextEventDispatchTests.swift; sourceTree = "<group>"; };
+		B10000000000000000001112 /* UIContextBackendDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIContextBackendDataTests.swift; sourceTree = "<group>"; };
+		B10000000000000000001113 /* DBGridParsingInterpolationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBGridParsingInterpolationTests.swift; sourceTree = "<group>"; };
+		B10000000000000000001114 /* OfflineQueueBehaviorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineQueueBehaviorTests.swift; sourceTree = "<group>"; };
+		B10000000000000000001115 /* TestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDoubles.swift; sourceTree = "<group>"; };
 		A00000000000000000000010 /* SDUIEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDUIEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000011 /* SDUIEngineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDUIEngineApp.swift; sourceTree = "<group>"; };
 		A00000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -95,6 +118,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B10000000000000000000030 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000301 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -114,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000041 /* SDUIEngine */,
+				B10000000000000000000201 /* SDUIEngineTests */,
 				A00000000000000000000050 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -137,8 +169,29 @@
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000010 /* SDUIEngine.app */,
+				B10000000000000000000010 /* SDUIEngineTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B10000000000000000000202 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000001115 /* TestDoubles.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		B10000000000000000000201 /* SDUIEngineTests */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000001111 /* UIContextEventDispatchTests.swift */,
+				B10000000000000000001112 /* UIContextBackendDataTests.swift */,
+				B10000000000000000001113 /* DBGridParsingInterpolationTests.swift */,
+				B10000000000000000001114 /* OfflineQueueBehaviorTests.swift */,
+				B10000000000000000000202 /* Support */,
+			);
+			path = SDUIEngineTests;
 			sourceTree = "<group>";
 		};
 		A00000000000000000000101 /* Engine */ = {
@@ -274,6 +327,24 @@
 			productReference = A00000000000000000000010 /* SDUIEngine.app */;
 			productType = "com.apple.product-type.application";
 		};
+		B10000000000000000000060 /* SDUIEngineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B10000000000000000000070 /* Build configuration list for PBXNativeTarget "SDUIEngineTests" */;
+			buildPhases = (
+				B10000000000000000000020 /* Sources */,
+				B10000000000000000000030 /* Frameworks */,
+				B10000000000000000000021 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B10000000000000000000411 /* PBXTargetDependency */,
+			);
+			name = SDUIEngineTests;
+			productName = SDUIEngineTests;
+			productReference = B10000000000000000000010 /* SDUIEngineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -286,6 +357,10 @@
 				TargetAttributes = {
 					A00000000000000000000060 = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					B10000000000000000000060 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = A00000000000000000000060;
 					};
 				};
 			};
@@ -304,6 +379,7 @@
 			projectRoot = "";
 			targets = (
 				A00000000000000000000060 /* SDUIEngine */,
+				B10000000000000000000060 /* SDUIEngineTests */,
 			);
 		};
 /* End PBXProject section */
@@ -324,6 +400,13 @@
 				A00000000000000000001601 /* invoices_grid.json in Resources */,
 				A00000000000000000001701 /* invoice_edit_form.json in Resources */,
 				0097CBA72F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B10000000000000000000021 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,7 +446,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B10000000000000000000020 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000101 /* UIContextEventDispatchTests.swift in Sources */,
+				B10000000000000000000102 /* UIContextBackendDataTests.swift in Sources */,
+				B10000000000000000000103 /* DBGridParsingInterpolationTests.swift in Sources */,
+				B10000000000000000000104 /* OfflineQueueBehaviorTests.swift in Sources */,
+				B10000000000000000000105 /* TestDoubles.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B10000000000000000000411 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000060 /* SDUIEngine */;
+			targetProxy = B10000000000000000000401 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A00000000000000000000090 /* Debug */ = {
@@ -471,6 +574,52 @@
 			};
 			name = Release;
 		};
+		B10000000000000000000092 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZU2Y59P54L;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.SDUIEngineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SDUIEngine.app/SDUIEngine";
+				TEST_TARGET_NAME = SDUIEngine;
+			};
+			name = Debug;
+		};
+		B10000000000000000000093 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZU2Y59P54L;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.SDUIEngineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SDUIEngine.app/SDUIEngine";
+				TEST_TARGET_NAME = SDUIEngine;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -488,6 +637,15 @@
 			buildConfigurations = (
 				A00000000000000000000090 /* Debug */,
 				A00000000000000000000091 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B10000000000000000000070 /* Build configuration list for PBXNativeTarget "SDUIEngineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B10000000000000000000092 /* Debug */,
+				B10000000000000000000093 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

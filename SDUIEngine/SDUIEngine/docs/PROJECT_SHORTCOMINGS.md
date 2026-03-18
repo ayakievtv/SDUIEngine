@@ -52,13 +52,7 @@
 
 ## 7. Тестовое покрытие и проверяемость
 
-1. В проекте нет unit/integration тестов для критичных путей:
-   - event-dispatch и action-chain,
-   - OPEN_FORM/SAVE_FORM/DISCARD_FORM,
-   - DBGrid parsing/interpolation,
-   - Offline queue retries/conflict behavior.
-
-2. Нет контрактных тестов для JSON-схем экранов (`Resources/*.json`), поэтому неконсистентные структуры попадают в mainline.
+1. Нет контрактных тестов для JSON-схем экранов (`Resources/*.json`), поэтому неконсистентные структуры попадают в mainline.
 
 ---
 
