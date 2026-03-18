@@ -1,5 +1,7 @@
 import SwiftUI
 
+// MARK: - TextField Component
+
 struct TextFieldComponent: UIComponent {
     let model: ComponentModel
     let context: UIContext
@@ -25,7 +27,7 @@ struct TextFieldComponent: UIComponent {
         let textBinding = Binding<String>(
             get: { localText },
             set: { newValue in
-                // Ограничиваем текст до maxLength символов
+                // Limit text to maxLength characters
                 let truncatedValue = String(newValue.prefix(Int(maxLength)))
                 localText = truncatedValue
                 context.setState(key: stateKey, value: .string(truncatedValue))
@@ -37,7 +39,7 @@ struct TextFieldComponent: UIComponent {
             .onChange(of: textBinding.wrappedValue) { value in
                 guard let event = model.event(for: .onChange) else { return }
                 var params = event.params
-                // Keep JSON-defined value if provided; otherwise pass current field value.
+                // Keep JSON-defined value if provided; otherwise pass current field value
                 if params["value"] == nil {
                     params["value"] = .string(value)
                 }
@@ -89,7 +91,10 @@ struct TextFieldComponent: UIComponent {
     }
 }
 
+// MARK: - Color Extension
+
 extension Color {
+    /// Initialize color from hex string
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
@@ -110,12 +115,15 @@ extension Color {
             .sRGB,
             red: Double(r) / 255,
             green: Double(g) / 255,
-            blue:  Double(b) / 255,
+            blue: Double(b) / 255,
             opacity: Double(a) / 255
         )
     }
 }
 
+// MARK: - Text Alignment Helper
+
+/// Parse text alignment from string
 private func parseTextAlignment(_ alignment: String) -> TextAlignment {
     switch alignment.lowercased() {
     case "center":

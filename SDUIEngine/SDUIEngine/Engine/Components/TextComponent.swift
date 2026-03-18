@@ -1,5 +1,7 @@
 import SwiftUI
 
+// MARK: - Text Component
+
 struct TextComponent: UIComponent {
     let model: ComponentModel
     let context: UIContext
@@ -76,6 +78,7 @@ struct TextComponent: UIComponent {
             }
     }
 
+    /// Interpolate state tokens in text ({{key}} → value)
     private func interpolateStateTokens(in text: String) -> String {
         var output = text
         while let open = output.range(of: "{{"),
@@ -102,6 +105,9 @@ struct TextComponent: UIComponent {
     }
 }
 
+// MARK: - Text Action Controller
+
+/// Controller for handling text component actions
 @MainActor
 final class TextActionController: ObservableObject, EventActionHandler {
     let componentID: String
@@ -114,6 +120,7 @@ final class TextActionController: ObservableObject, EventActionHandler {
         colorOverride = initialColor
     }
 
+    /// Handle component actions (SET_TEXT, SET_COLOR)
     func handle(action: String, params: [String: String]?) {
         switch action.uppercased() {
         case "SET_TEXT":

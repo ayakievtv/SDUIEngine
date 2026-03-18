@@ -1,6 +1,8 @@
 import SwiftUI
 
-// Root container for backend-driven navigation and initial screen bootstrap.
+// MARK: - Main Content View
+
+/// Root container for backend-driven navigation and initial screen bootstrap
 struct ContentView: View {
     @StateObject private var router: NavigationRouter
     private let context: UIContext
@@ -12,11 +14,11 @@ struct ContentView: View {
     @State private var selectedTab = 0
 
     init() {
-        // A single router instance is shared by the whole app tree.
+        // A single router instance is shared by the whole app tree
         let router = NavigationRouter()
         _router = StateObject(wrappedValue: router)
 
-        // UIContext is the runtime "engine" used by components.
+        // UIContext is the runtime "engine" used by components
         let context = UIContext(navigation: router)
         registerDefaultComponents(in: context.componentRegistry)
         self.context = context
@@ -37,20 +39,20 @@ struct ContentView: View {
                             .padding(16)
                     }
                 }
-                // A single destination resolver for every AppRoute.
+                // A single destination resolver for every AppRoute
                 .navigationDestination(for: AppRoute.self) { route in
                     ScreenView(name: route.screenName, service: service, context: context)
                 }
             }
             .tabItem {
-                Label("Главная", systemImage: "house.fill")
+                Label("Main", systemImage: "house.fill")
             }
             .tag(0)
             
             // Settings Tab
             SettingsView()
                 .tabItem {
-                    Label("Настройки", systemImage: "gear")
+                    Label("Settings", systemImage: "gear")
                 }
                 .tag(1)
         }
@@ -59,13 +61,14 @@ struct ContentView: View {
         }
     }
 
+    /// Load main screen from backend
     @MainActor
     private func loadMainScreen() async {
         isLoading = true
         errorMessage = nil
 
         do {
-            // Backend-driven entry point.
+            // Backend-driven entry point
             rootComponent = try await service.loadScreen("main")
         } catch {
             rootComponent = nil
@@ -76,33 +79,38 @@ struct ContentView: View {
     }
 }
 
-// Native Settings View
+// MARK: - Settings View
+
+/// Native Settings View
 struct SettingsView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Text("Настройки")
+                Text("Settings")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding()
                 
                 VStack(alignment: .leading, spacing: 15) {
-                    SettingsRow(title: "Профиль", subtitle: "Управление профилем пользователя", icon: "person.circle")
-                    SettingsRow(title: "Уведомления", subtitle: "Настройки push-уведомлений", icon: "bell")
-                    SettingsRow(title: "Безопасность", subtitle: "Пароль и аутентификация", icon: "lock.shield")
-                    SettingsRow(title: "Язык", subtitle: "Русский", icon: "globe")
-                    SettingsRow(title: "О приложении", subtitle: "Версия 1.0.0", icon: "info.circle")
+                    SettingsRow(title: "Profile", subtitle: "User profile management", icon: "person.circle")
+                    SettingsRow(title: "Notifications", subtitle: "Push notification settings", icon: "bell")
+                    SettingsRow(title: "Security", subtitle: "Password and authentication", icon: "lock.shield")
+                    SettingsRow(title: "Language", subtitle: "English", icon: "globe")
+                    SettingsRow(title: "About", subtitle: "Version 1.0.0", icon: "info.circle")
                 }
                 .padding()
                 
                 Spacer()
             }
-            .navigationTitle("Настройки")
+            .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
         }
     }
 }
 
+// MARK: - Settings Row
+
+/// Settings row component
 struct SettingsRow: View {
     let title: String
     let subtitle: String
@@ -135,8 +143,11 @@ struct SettingsRow: View {
     }
 }
 
+// MARK: - Component Registration
+
+/// Register default components in registry
 private func registerDefaultComponents(in registry: ComponentRegistry) {
-    // Default mapping between JSON "type" and SwiftUI implementation.
+    // Default mapping between JSON "type" and SwiftUI implementation
     registry.register(type: "VStack", component: VStackComponent.self)
     registry.register(type: "HStack", component: HStackComponent.self)
     registry.register(type: "ScrollView", component: ScrollViewComponent.self)
@@ -150,6 +161,8 @@ private func registerDefaultComponents(in registry: ComponentRegistry) {
     // TODO: Add TabBarComponent.swift to Xcode project
      registry.register(type: "TabBar", component: TabBarComponent.self)
 }
+
+// MARK: - Preview
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

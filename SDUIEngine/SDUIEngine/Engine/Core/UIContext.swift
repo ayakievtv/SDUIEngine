@@ -1,10 +1,14 @@
-import Foundation
 import SwiftUI
+
+// MARK: - Notification Extensions
 
 extension Notification.Name {
     static let sduiStateDidChange = Notification.Name("sdui.state.didChange")
 }
 
+// MARK: - State Management Protocols
+
+/// Protocol for managing component state storage
 protocol StateStoreManaging: AnyObject {
     var state: [String: JSONValue] { get }
     func getValue(for key: String) -> JSONValue?
@@ -13,6 +17,7 @@ protocol StateStoreManaging: AnyObject {
     func getValues(forPrefix prefix: String) -> [String: JSONValue]
 }
 
+/// In-memory implementation of state store
 final class InMemoryStateStore: StateStoreManaging {
     private(set) var state: [String: JSONValue] = [:]
 
@@ -45,13 +50,17 @@ final class InMemoryStateStore: StateStoreManaging {
     }
 }
 
+// MARK: - Event Dispatching
+
+/// Type alias for event handler closure
+typealias EventHandler = (EventModel, UIContext) -> Void
+
+/// Protocol for dispatching component events
 protocol EventDispatching: AnyObject {
     func dispatch(_ event: EventModel, context: UIContext)
 }
 
-typealias EventHandler = (EventModel, UIContext) -> Void
-
-// Dispatches both local UI events and backend dynamic actions.
+/// Dispatches both local UI events and backend dynamic actions
 final class EventDispatcher: EventDispatching {
     private var handlers: [EventType: EventHandler] = [:]
     private let componentStore: ComponentStore
@@ -73,7 +82,7 @@ final class EventDispatcher: EventDispatching {
         handlers[event.type]?(event, context)
     }
 
-    // Executes one dynamic action if trigger matches current lifecycle/user trigger.
+    /// Executes one dynamic action if trigger matches current lifecycle/user trigger
     func dispatch(_ componentEvent: ComponentEvent, for trigger: ComponentEventTrigger? = nil) {
         if let trigger, componentEvent.trigger != trigger.rawValue {
             return
@@ -85,12 +94,15 @@ final class EventDispatcher: EventDispatching {
         }
     }
 
-    // Executes all actions for a given trigger.
+    /// Executes all actions for a given trigger
     func dispatch(events: [ComponentEvent], for trigger: ComponentEventTrigger) {
         events.forEach { dispatch($0, for: trigger) }
     }
 }
 
+// MARK: - HTTP Client
+
+/// HTTP methods for API requests
 enum HTTPMethod: String, Codable {
     case get = "GET"
     case post = "POST"
@@ -99,10 +111,12 @@ enum HTTPMethod: String, Codable {
     case delete = "DELETE"
 }
 
+/// Protocol for making API requests
 protocol APIClient: AnyObject {
     func request(endpoint: String, method: HTTPMethod, body: [String: JSONValue]?) async throws -> JSONValue
 }
 
+/// Mock API client for testing
 final class MockAPIClient: APIClient {
     func request(endpoint: String, method: HTTPMethod, body: [String: JSONValue]?) async throws -> JSONValue {
         .object([
@@ -113,14 +127,17 @@ final class MockAPIClient: APIClient {
     }
 }
 
+/// Creates default API client with offline data layer
 func makeDefaultAPIClient() -> APIClient {
     let remote = URLSessionRemoteClient()
     let dataLayer = OfflineDataLayer(remote: remote)
     return OfflineAPIClient(dataLayer: dataLayer)
 }
 
+// MARK: - UI Context
+
+/// Runtime context shared by every component: state, events, navigation and API
 @MainActor
-// Runtime context shared by every component: state, events, navigation and API.
 final class UIContext {
     let stateStore: StateStoreManaging
     let eventDispatcher: EventDispatching
@@ -149,10 +166,13 @@ final class UIContext {
         self.dataSourceRegistry = dataSourceRegistry
         self.componentStore = componentStore
 
-        // Bridge common component events to backend-driven navigation actions.
+        // Bridge common component events to backend-driven navigation actions
         registerDefaultEventHandlers()
     }
 
+    // MARK: - State Management
+
+    /// Set state value and post notification
     func setState(_ value: JSONValue, for key: String) {
         stateStore.set(value, for: key)
         NotificationCenter.default.post(
@@ -162,16 +182,19 @@ final class UIContext {
         )
     }
 
+    /// Set state value with string key
     func setState(key: String, value: JSONValue) {
         setState(value, for: key)
     }
 
+    /// Get state value
     func stateValue(for key: String) -> JSONValue? {
         stateStore.getValue(for: key)
     }
 
+    /// Create two-way binding for string state values
     func bindingString(for key: String, default defaultValue: String = "") -> Binding<String> {
-        // Two-way binding between UI controls and state store string values.
+        // Two-way binding between UI controls and state store string values
         Binding(
             get: {
                 guard let value = self.stateValue(for: key) else { return defaultValue }
@@ -184,81 +207,107 @@ final class UIContext {
         )
     }
 
+    /// Create two-way binding for boolean state values
     func bindingBool(for key: String, default defaultValue: Bool = false) -> Binding<Bool> {
-        // Two-way binding between UI controls and state store bool values.
+        // Two-way binding between UI controls and state store bool values
         Binding(
             get: { self.stateValue(for: key)?.boolValue ?? defaultValue },
             set: { self.setState(key: key, value: .bool($0)) }
         )
     }
 
+    // MARK: - Event Handling
+
+    /// Dispatch event through event dispatcher
     func dispatch(_ event: EventModel) {
         eventDispatcher.dispatch(event, context: self)
     }
 
+    /// Trigger event (alias for dispatch)
     func trigger(_ event: EventModel) {
         dispatch(event)
     }
 
+    // MARK: - Navigation
+
+    /// Navigate to route by name
     func navigate(to route: String) {
         navigation.navigate(to: AppRoute(screenName: route), mode: .push)
     }
 
+    /// Navigate to route (alias)
     func navigate(_ route: String) {
         navigate(to: route)
     }
 
+    /// Push route onto navigation stack
     func push(_ route: String) {
         navigation.push(AppRoute(screenName: route))
     }
 
+    /// Present route modally
     func modal(_ route: String) {
         navigation.modal(AppRoute(screenName: route))
     }
 
+    /// Replace current route
     func replace(with route: String) {
         navigation.replace(with: AppRoute(screenName: route))
     }
 
+    /// Handle server navigation action
     func handle(action: ServerAction) {
         navigation.handle(action: action)
     }
 
+    /// Dismiss current modal
     func dismissModal() {
         navigation.dismissModal()
     }
 
+    /// Go back in navigation
     func goBack() {
         navigation.pop()
     }
 
+    // MARK: - API Calls
+
+    /// Make API call with GET method
     func callAPI(endpoint: String, method: HTTPMethod = .get, body: [String: JSONValue]? = nil) async throws -> JSONValue {
         try await apiClient.request(endpoint: endpoint, method: method, body: body)
     }
 
+    /// Make API call with any method
     func callAPI(_ endpoint: String, method: HTTPMethod = .get, body: [String: JSONValue]? = nil) async throws -> JSONValue {
         try await callAPI(endpoint: endpoint, method: method, body: body)
     }
 
+    // MARK: - Default Event Handlers
+
+    /// Register default event handlers for common component events
     private func registerDefaultEventHandlers() {
         guard let dispatcher = eventDispatcher as? EventDispatcher else {
             return
         }
 
-        // Standard tap action path: component event -> ServerAction -> router.
+        // Standard tap action path: component event -> ServerAction -> router
         dispatcher.register(.onTap) { event, context in
-            context.dispatchComponentAction(event)
-            guard let action = ServerAction.from(event: event) else { return }
-            context.handle(action: action)
+            print("🔍 DEBUG: onTap event received: \(event)")
+            if let action = ServerAction.from(event: event) {
+                print("🔍 DEBUG: ServerAction created: \(action)")
+                context.handle(action: action)
+            } else {
+                print("❌ DEBUG: Failed to create ServerAction from event")
+            }
         }
 
-        // Submit actions can navigate as well (for forms/search flows).
+        // Submit actions can navigate as well (for forms/search flows)
         dispatcher.register(.onSubmit) { event, context in
             context.dispatchComponentAction(event)
             guard let action = ServerAction.from(event: event) else { return }
             context.handle(action: action)
         }
-
+        
         // Change actions support "event chains", e.g. TextField value update -> target component update.
         dispatcher.register(.onChange) { event, context in
             context.dispatchComponentAction(event)
@@ -276,22 +325,6 @@ final class UIContext {
         }
     }
 
-    // MARK: - Event Dispatching Logic
-
-//    private func dispatchComponentAction(_ event: EventModel) {
-//        let targets = event.targets
-//        guard !targets.isEmpty else { return }
-//
-//        for targetID in targets {
-//            if isSystemTarget(targetID) {
-//                // Обработка системных сервисов (Навигация, Данные, Логи)
-//                handleSystemAction(targetID, event: event)
-//            } else {
-//                // Обработка обычных UI-компонентов
-//                dispatchToComponent(targetID, event: event)
-//            }
-//        }
-//    }
 
     
     func dispatchComponentAction(_ event: EventModel) {
@@ -307,41 +340,24 @@ final class UIContext {
             
             if isSystemTarget(targetID) {
                 handleSystemAction(targetID, action: actionName, params: params)
-//                handleSystemAction(targetID, event: event)
             } else {
-//                componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
                 dispatchToComponent(targetID, event: event)
             }
         }
     }
     
     
-    /// Проверка, является ли таргет системным ключевым словом
+    /// Check if target is a system keyword
     private func isSystemTarget(_ id: String) -> Bool {
         let systemTargets = ["navigation", "backend_data", "backend_logger"]
         return systemTargets.contains(id)
     }
 
-    /// Маршрутизатор системных действий
-//    private func handleSystemAction11(_ targetID: String, event: EventModel) {
-//        switch targetID {
-//        case "navigation":
-//            handleNavigationAction(event)
-//        case "backend_data":
-//            Task { [weak self] in
-//                await self?.handleBackendDataAction(event)
-//            }
-//        case "backend_logger":
-//            print("SDUI Log [\(event.type)]: \(event.params)")
-//        default:
-//            break
-//        }
-//    }
-    
+    /// Router for system actions
     private func handleSystemAction(_ targetID: String, action: String, params: [String: String]) {
         switch targetID {
         case "navigation":
-            // Теперь ориентируемся только на action (push, pop, modal)
+            // Now we only focus on action (push, pop, modal)
             switch action.lowercased() {
             case "push", "navigate": self.push(params["route"] ?? "")
             case "modal":   self.modal(params["route"] ?? "")
@@ -351,33 +367,14 @@ final class UIContext {
             }
             
         case "backend_data":
-            // Передаем параметры в существующие методы OPEN_FORM / SAVE_FORM
-            // Нужно будет слегка адаптировать их под [String: String] или обратно в JSONValue
+            // Pass parameters to existing OPEN_FORM / SAVE_FORM methods
+            // Need to slightly adapt them for [String: String] or back to JSONValue
             handleDataAction(action: action, params: params)
-//            Task { [weak self] in
-//                await self?.handleBackendDataAction(event)
-//            }
         default: break
         }
     }
     
-//    private func handleBackendDataAction(_ event: EventModel) async {
-//        guard let action = event.params["action"]?.stringValue?.uppercased() else {
-//            return
-//        }
-//
-//        switch action {
-//        case "OPEN_FORM":
-//            await performOpenForm(event.params)
-//        case "SAVE_FORM":
-//            await performSaveForm(event.params)
-//        case "DISCARD_FORM":
-//            performDiscardForm(event.params)
-//        default:
-//            break
-//        }
-//    }
-    
+    /// Handle data actions (OPEN_FORM, SAVE_FORM, etc.)
     private func handleDataAction(action: String, params: [String: String]) {
         Task { @MainActor in
             switch action.uppercased() {
@@ -388,9 +385,9 @@ final class UIContext {
                 await performSaveForm(params)
                 
             case "REFRESH_DATA":
-                // Например, для ручного обновления DataSource
+                // For manual DataSource refresh
                 if let dsId = params["dataSourceId"] {
-                    // Логика уведомления DataSource о необходимости перезагрузки
+                    // Logic to notify DataSource about refresh need
                 }
                 
             default:
@@ -399,51 +396,27 @@ final class UIContext {
         }
     }
     
-    
-//    private func performOpenForm(_ params: [String: String]) async {
-//        guard let rawEndpoint = params["endpoint"] else { return }
-//        
-//        // 1. Извлекаем ID из стейта, если он указан
-//        var idValue = ""
-//        if let idKey = params["idStateKey"] {
-//            idValue = stateStore.getValue(for: idKey)?.stringValue ?? ""
-//        }
-//        
-//        // 2. Формируем финальный URL
-//        let endpoint = rawEndpoint.replacingOccurrences(of: "{id}", with: idValue)
-//        
-//        do {
-//            // 3. Выполняем запрос
-//            let response = try await callAPI(endpoint: endpoint, method: .get)
-//            
-//            // 4. Записываем результат в стейт с префиксом (например, "invoiceForm")
-//            if let prefix = params["formStatePrefix"] {
-//                stateStore.merge(response, withPrefix: prefix)
-//            }
-//        } catch {
-//            print("❌ SDUI: Open form error: \(error)")
-//        }
-//    }
+    /// Perform open form action
     private func performOpenForm(_ params: [String: String]) async {
-        // 1. Извлекаем базовые параметры из плоского словаря
+        // 1. Extract basic parameters from flat dictionary
         guard let rawEndpoint = params["endpoint"] else { return }
 
         let idStateKey = params["idStateKey"] ?? "invoiceForm.id"
         let formPrefix = params["formStatePrefix"] ?? String(idStateKey.split(separator: ".").first ?? "invoiceForm")
         
-        // Формируем ключи для синхронизации ID и UUID
+        // Generate keys for ID and UUID synchronization
         let uuidStateKey = idStateKey.hasSuffix(".id")
             ? String(idStateKey.dropLast(3)) + ".uuid"
             : (idStateKey.hasSuffix(".uuid") ? idStateKey : "\(formPrefix).uuid")
 
-        // Получаем текущее значение ID из стейта для подстановки в URL
+        // Get current ID value from state for URL substitution
         let idValue = stateValue(for: idStateKey)?.stringValue
             ?? stateValue(for: uuidStateKey)?.stringValue
             ?? ""
 
         let endpoint = rawEndpoint.replacingOccurrences(of: "{id}", with: idValue)
 
-        // Валидация: если в URL нужен ID, а его нет — стоп
+        // Validation: if URL needs ID and it's empty - stop
         if rawEndpoint.contains("{id}") && idValue.isEmpty {
             setState(.string("OPEN_FORM: id is empty for endpoint with {id}"), for: "\(formPrefix)._openFormError")
             return
@@ -452,12 +425,12 @@ final class UIContext {
         let clearPreviousDraft = params["clearPreviousDraft"] == "true"
         let keyPrefix = formPrefix.hasSuffix(".") ? formPrefix : "\(formPrefix)."
 
-        // 2. Управление сессией запроса (Anti-race condition)
+        // 2. Request session management (Anti-race condition)
         openFormRequestSerial += 1
         let requestToken = openFormRequestSerial
         activeOpenFormTokenByPrefix[formPrefix] = requestToken
 
-        // Очистка старых данных, если требуется
+        // Clear old data if required
         if clearPreviousDraft {
             let keysToClear = stateStore.state.keys.filter { $0.hasPrefix(keyPrefix) }
             for key in keysToClear {
@@ -465,7 +438,7 @@ final class UIContext {
             }
         }
 
-        // Предварительная установка ID в стейт (чтобы UI знал, что мы грузим)
+        // Pre-set ID in state (so UI knows we're loading)
         if !idValue.isEmpty {
             setState(.string(idValue), for: idStateKey)
             setState(.string(idValue), for: uuidStateKey)
@@ -474,11 +447,11 @@ final class UIContext {
         setState(.string(""), for: "\(formPrefix)._openFormError")
         setState(.string(endpoint), for: "\(formPrefix)._lastOpenFormEndpoint")
 
-        // 3. Сетевой запрос
+        // 3. Network request
         do {
             let response = try await callAPI(endpoint: endpoint, method: .get, body: nil)
             
-            // Проверка: актуален ли еще этот ответ?
+            // Check: is this response still relevant?
             guard activeOpenFormTokenByPrefix[formPrefix] == requestToken else { return }
             
             guard let payload = response.objectValue else {
@@ -486,16 +459,16 @@ final class UIContext {
                 return
             }
 
-            // Распаковка данных (Oracle ORDS "items" или плоский объект)
+            // Unpack data (Oracle ORDS "items" or flat object)
             let items = payload["items"]?.arrayValue
             let firstRecord = items?.first?.objectValue ?? payload
             
-            // Массовое обновление стейта
+            // Bulk state update
             for (key, value) in firstRecord {
                 setState(value, for: "\(formPrefix).\(key)")
             }
 
-            // Синхронизация системных полей ID/UUID
+            // Synchronize system ID/UUID fields
             if let uuid = firstRecord["uuid"]?.stringValue, !uuid.isEmpty {
                 setState(.string(uuid), for: "\(formPrefix).uuid")
                 setState(.string(uuid), for: "\(formPrefix).id")
@@ -504,14 +477,14 @@ final class UIContext {
                 setState(.string(id), for: "\(formPrefix).uuid")
             }
 
-            // Маппинг дат (если одна из них отсутствует)
+            // Date mapping (if one of them is missing)
             if let docDate = firstRecord["doc_date"] {
                 setState(docDate, for: "\(formPrefix).due_date")
             } else if let dueDate = firstRecord["due_date"] {
                 setState(dueDate, for: "\(formPrefix).doc_date")
             }
 
-            // Финальная проверка ID
+            // Final ID check
             if !idValue.isEmpty {
                 setState(.string(idValue), for: idStateKey)
                 setState(.string(idValue), for: uuidStateKey)
@@ -609,8 +582,8 @@ final class UIContext {
         guard let rawEndpoint = params["endpoint"],
               let prefix = params["formStatePrefix"] else { return }
         
-        // Собираем данные. Если getValues еще нет в протоколе,
-        // его нужно туда добавить (реализация ниже)
+        // Collect data. If getValues is not yet in protocol,
+        // it needs to be added there (implementation below)
         let formData = stateStore.getValues(forPrefix: prefix)
         
         let idValue = stateStore.getValue(for: "\(prefix).id")?.stringValue ?? ""
@@ -627,20 +600,10 @@ final class UIContext {
     }
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    /// Навигационный движок (интерпретирует параметры navigate)
+    /// Navigation engine (interprets navigate parameters)
     private func handleNavigationAction(_ event: EventModel) {
-        // В новом JSON параметры лежат в params напрямую или внутри actions
-        // Для совместимости проверяем оба варианта
+        // In new JSON parameters are in params directly or inside actions
+        // For compatibility we check both options
         let navType = event.params["type"]?.stringValue ?? event.params["action"]?.stringValue
         let route = event.params["route"]?.stringValue ?? ""
         let mode = event.params["mode"]?.stringValue ?? "push"
@@ -659,14 +622,14 @@ final class UIContext {
         case "dismiss":
             self.dismissModal()
         default:
-            // Если тип не указан, но есть route, считаем это обычным push
+            // If type is not specified but there's route, treat as regular push
             if !route.isEmpty { self.push(route) }
         }
     }
 
-    /// Отправка команды конкретному UI-компоненту (Text, Button, TextField...)
+    /// Send command to specific UI component (Text, Button, TextField...)
     private func dispatchToComponent(_ targetID: String, event: EventModel) {
-        // 1. Обработка массива множественных действий (actions)
+        // 1. Handle multiple actions array (actions)
         if let actions = event.params["actions"]?.arrayValue {
             for actionDefinition in actions {
                 guard let payload = actionDefinition.objectValue,
@@ -678,14 +641,14 @@ final class UIContext {
             return
         }
 
-        // 2. Обработка одиночного действия
+        // 2. Handle single action
         guard let actionName = event.params["action"]?.stringValue else { return }
         let params = flattenJSONParams(event.params)
         componentStore.get(componentID: targetID)?.handle(action: actionName, params: params)
     }
 
-    /// Вспомогательная функция для приведения JSONValue к [String: String]
-    /// (именно такой формат ожидает метод handle у компонентов)
+    /// Helper function to convert JSONValue to [String: String]
+    /// (this is the format expected by component handle method)
     private func flattenJSONParams(_ dict: [String: JSONValue]) -> [String: String] {
         dict.reduce(into: [String: String]()) { result, pair in
             switch pair.value {

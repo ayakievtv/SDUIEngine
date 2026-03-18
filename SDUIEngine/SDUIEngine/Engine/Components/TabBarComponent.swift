@@ -1,5 +1,7 @@
 import SwiftUI
 
+// MARK: - TabBar Component
+
 struct TabBarComponent: UIComponent {
     let model: ComponentModel
     let context: UIContext
@@ -13,6 +15,8 @@ struct TabBarComponent: UIComponent {
         TabBarView(model: model, context: context)
     }
 }
+
+// MARK: - TabBar View
 
 struct TabBarView: View {
     let model: ComponentModel
@@ -36,7 +40,7 @@ struct TabBarView: View {
             }
         }
         .onAppear {
-            // Регистрация компонента для событий
+            // Register component for events
             ComponentStore.shared.register(
                 componentID: model.id,
                 component: AnyComponent(actionHandler: { action, params in
@@ -46,11 +50,13 @@ struct TabBarView: View {
         }
     }
     
+    /// Render child component
     @ViewBuilder
     private func renderChild(_ child: ComponentModel, index: Int) -> some View {
         ComponentRenderer(model: child, context: context, registry: context.componentRegistry)
     }
     
+    /// Create tab item for child component
     @ViewBuilder
     private func tabItemForChild(_ child: ComponentModel, index: Int) -> some View {
         let props = child.props
@@ -61,15 +67,16 @@ struct TabBarView: View {
         if let systemImage = systemImage {
             Label(title, systemImage: systemImage)
         } else if let iconName = iconName {
-            // Для кастомных иконок можно использовать Image
+            // For custom icons can use Image
             Label(title, image: iconName)
         } else {
             Text(title)
         }
     }
     
+    /// Handle TabBar events (selectTab)
     private func handle(action: String, params: [String: String]?) {
-        // Обработка событий для TabBar
+        // Handle TabBar events
         if action == "selectTab", let index = params?["index"], let tabIndex = Int(index) {
             selectedTab = tabIndex
         }

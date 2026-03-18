@@ -1,5 +1,7 @@
 import SwiftUI
 
+// MARK: - Button Component
+
 struct ButtonComponent: UIComponent {
     let model: ComponentModel
     let context: UIContext
@@ -36,6 +38,7 @@ struct ButtonComponent: UIComponent {
         .applyStyle(style)
     }
 
+    /// Create tap event for button interaction
     private func tapEvent() -> EventModel {
         model.event(for: .onTap) ?? EventModel(type: .onTap, target: model.id)
     }

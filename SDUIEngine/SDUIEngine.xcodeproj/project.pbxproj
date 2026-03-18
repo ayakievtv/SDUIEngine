@@ -9,7 +9,10 @@
 /* Begin PBXBuildFile section */
 		0097CB9A2F69DD46002E5CFD /* tabbar_demo.json in Resources */ = {isa = PBXBuildFile; fileRef = 0097CB992F69DD45002E5CFD /* tabbar_demo.json */; };
 		0097CB9C2F69DD56002E5CFD /* TabBarComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0097CB9B2F69DD56002E5CFD /* TabBarComponent.swift */; };
-		00BE5B992F65F01400ACC29D /* codex.md in Resources */ = {isa = PBXBuildFile; fileRef = 00BE5B982F65F01300ACC29D /* codex.md */; };
+		0097CBA22F6A7FF5002E5CFD /* COMPONENT_PROPS.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CB9E2F6A7FF5002E5CFD /* COMPONENT_PROPS.md */; };
+		0097CBA32F6A7FF5002E5CFD /* codex.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CB9D2F6A7FF5002E5CFD /* codex.md */; };
+		0097CBA42F6A7FF5002E5CFD /* SESSION_HANDOFF.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CB9F2F6A7FF5002E5CFD /* SESSION_HANDOFF.md */; };
+		0097CBA52F6A7FF5002E5CFD /* WORK_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CBA02F6A7FF5002E5CFD /* WORK_CONTEXT.md */; };
 		A00000000000000000000001 /* SDUIEngineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* SDUIEngineApp.swift */; };
 		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012 /* ContentView.swift */; };
 		A00000000000000000000201 /* ComponentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000211 /* ComponentModel.swift */; };
@@ -45,7 +48,10 @@
 /* Begin PBXFileReference section */
 		0097CB992F69DD45002E5CFD /* tabbar_demo.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tabbar_demo.json; sourceTree = "<group>"; };
 		0097CB9B2F69DD56002E5CFD /* TabBarComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarComponent.swift; sourceTree = "<group>"; };
-		00BE5B982F65F01300ACC29D /* codex.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = codex.md; sourceTree = "<group>"; };
+		0097CB9D2F6A7FF5002E5CFD /* codex.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = codex.md; sourceTree = "<group>"; };
+		0097CB9E2F6A7FF5002E5CFD /* COMPONENT_PROPS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = COMPONENT_PROPS.md; sourceTree = "<group>"; };
+		0097CB9F2F6A7FF5002E5CFD /* SESSION_HANDOFF.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = SESSION_HANDOFF.md; sourceTree = "<group>"; };
+		0097CBA02F6A7FF5002E5CFD /* WORK_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = WORK_CONTEXT.md; sourceTree = "<group>"; };
 		A00000000000000000000010 /* SDUIEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDUIEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000011 /* SDUIEngineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDUIEngineApp.swift; sourceTree = "<group>"; };
 		A00000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -90,6 +96,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0097CBA12F6A7FF5002E5CFD /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				0097CB9D2F6A7FF5002E5CFD /* codex.md */,
+				0097CB9E2F6A7FF5002E5CFD /* COMPONENT_PROPS.md */,
+				0097CB9F2F6A7FF5002E5CFD /* SESSION_HANDOFF.md */,
+				0097CBA02F6A7FF5002E5CFD /* WORK_CONTEXT.md */,
+			);
+			path = docs;
+			sourceTree = "<group>";
+		};
 		A00000000000000000000040 = {
 			isa = PBXGroup;
 			children = (
@@ -101,7 +118,7 @@
 		A00000000000000000000041 /* SDUIEngine */ = {
 			isa = PBXGroup;
 			children = (
-				00BE5B982F65F01300ACC29D /* codex.md */,
+				0097CBA12F6A7FF5002E5CFD /* docs */,
 				A00000000000000000000101 /* Engine */,
 				A00000000000000000000108 /* Network */,
 				A00000000000000000000109 /* Screens */,
@@ -293,7 +310,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00BE5B992F65F01400ACC29D /* codex.md in Resources */,
+				0097CBA22F6A7FF5002E5CFD /* COMPONENT_PROPS.md in Resources */,
+				0097CBA32F6A7FF5002E5CFD /* codex.md in Resources */,
+				0097CBA42F6A7FF5002E5CFD /* SESSION_HANDOFF.md in Resources */,
+				0097CBA52F6A7FF5002E5CFD /* WORK_CONTEXT.md in Resources */,
 				0097CB9A2F69DD46002E5CFD /* tabbar_demo.json in Resources */,
 				A00000000000000000001301 /* demo_screen.json in Resources */,
 				A00000000000000000001401 /* main.json in Resources */,
