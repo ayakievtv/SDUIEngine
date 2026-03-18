@@ -149,17 +149,17 @@ This document provides comprehensive documentation for all available props in ea
 |------|------|---------|-------------|
 | `id` | String | `component.id` | Unique identifier for the data source |
 | `endpoint` | String | `required` | API endpoint URL for data fetching |
-| `fetchPolicy` | String | `"networkFirst"` | Fetch policy: "networkFirst", "cacheFirst", "cacheOnly" |
-| `pageSize` | Number | `20` | Number of items per page |
+| `fetchPolicy` | String | `"NETWORK_FIRST_LOCAL_FALLBACK"` | Fetch policy (current default in runtime) |
+| `pageSize` | Number | `25` | Number of items per page |
 | `queryParam` | String | `"q"` | Query parameter name for search |
-| `cursorParam` | String | `"cursor"` | Cursor parameter name for pagination |
+| `cursorParam` | String | `"offset"` | Cursor parameter name for pagination |
 | `localFiltering` | Boolean | `true` | Enable client-side filtering |
 | `remoteFiltering` | Boolean | `true` | Enable server-side filtering |
-| `debounceMs` | Number | `300` | Debounce delay for search in milliseconds |
-| `sorting` | Boolean | `true` | Enable sorting functionality |
+| `debounceMs` | Number | `450` | Debounce delay for search in milliseconds |
+| `sorting` | Boolean | `false` | Enable sorting functionality |
 | `defaultSortField` | String | `nil` | Default field for sorting |
 | `defaultSortAscending` | Boolean | `true` | Default sort direction |
-| `prefetchThreshold` | Number | `0.8` | Threshold for prefetching next page (0.0-1.0) |
+| `prefetchThreshold` | Number | `3` | Threshold (in rows to the end) for prefetching next page |
 | `keyField` | String | `"id"` | Field to use as unique key for items |
 
 ---

@@ -214,7 +214,7 @@ Defaults (if omitted):
 - `localFiltering = true`
 - `remoteFiltering = true`
 - `debounceMs = 450`
-- `sorting = true`
+- `sorting = false`
 - `prefetchThreshold = 3`
 - `keyField = id`
 
