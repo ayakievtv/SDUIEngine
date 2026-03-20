@@ -87,7 +87,47 @@ This document provides comprehensive documentation for all available props in ea
 
 ---
 
-## 🖼️ Image Component
+## � VStack Component
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `spacing` | Number | `0` | Vertical spacing between child components in points |
+
+### Usage
+Container component for vertical layout of child components with configurable spacing.
+
+---
+
+## 📦 HStack Component
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `spacing` | Number | `0` | Horizontal spacing between child components in points |
+
+### Usage
+Container component for horizontal layout of child components with configurable spacing.
+
+---
+
+## 📜 ScrollView Component
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `navigationTitle` | String | `nil` | Navigation bar title displayed when scrolling |
+| `showsIndicators` | Boolean | `true` | Whether to show scroll indicators |
+
+### Usage
+Scrollable container for child components with optional navigation title and scroll indicators.
+
+---
+
+## �🖼️ Image Component
 
 ### Props
 

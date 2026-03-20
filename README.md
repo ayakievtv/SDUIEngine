@@ -15,16 +15,17 @@ A SwiftUI-based runtime that allows backend to control iOS app screens and behav
 - **Real-time Updates**: Live UI changes without app restart
 
 ### 🧩 Components
-- **Text** - Adaptive colors, dark mode support
-- **Button** - Custom styling, event handling
-- **TextField** - Border, maxLength, text alignment
-- **VStack/HStack** - Layout containers with spacing
-- **ScrollView** - Scrollable content areas
-- **DBGrid** - Data grids with caching, pagination, filtering
-- **DataSource** - API integration with offline support
-- **TabBar** - Native and SDUI tab navigation
-- **Image** - Remote and local images
-- **Spacer** - Layout utilities
+- **Text** - Adaptive colors, dark mode support, state token interpolation
+- **Button** - Custom styling, event handling, navigation actions
+- **TextField** - Border, maxLength, text alignment, state binding
+- **VStack** - Vertical layout container with spacing and alignment
+- **HStack** - Horizontal layout container with spacing and alignment  
+- **ScrollView** - Scrollable content areas with navigation title
+- **DBGrid** - Data grids with caching, pagination, filtering, sorting
+- **DataSource** - API integration with offline support and data policies
+- **TabBar** - Native and SDUI tab navigation with system/custom icons
+- **Image** - Remote and local images with async loading and fallbacks
+- **Spacer** - Layout utilities for flexible spacing
 
 ### 📱 Architecture
 ```

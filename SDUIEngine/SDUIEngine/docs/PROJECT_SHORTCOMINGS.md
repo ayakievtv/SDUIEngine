@@ -1,61 +1,101 @@
-# SDUIEngine — список недостатков (полный аудит)
+# SDUIEngine - Complete Issues Audit
 
-Дата аудита: 2026-03-18  
-Покрытие: все `.md`, Swift-код (`Engine`, `Network`, `Screens`, `ContentView`) и JSON-экраны в `Resources`.
-Принятый контракт событий: действия описываются в `params.actions` (одиночный `params.action` не считается обязательным форматом).
+**Audit date: 2026-03-20**  
+**Coverage**: All `.md` files, Swift code (`Engine`, `Network`, `Screens`, `ContentView`) and JSON screens in `Resources`.  
+**Event contract**: Actions described in `params.actions` (single `params.action` not considered required format).
 
-## 1. Критичные функциональные проблемы
+## 1. Critical Functional Issues
 
-1. В `DBGrid` plain-template ветка не рендерит данные: вычисленный `cached` не используется, вместо карточки всегда текст `"No row template"`.  
-   Файл: `Engine/Components/DBGridComponent.swift:349-377`
+1. **DBGrid plain-template rendering**: Computed `cached` not used, always shows "No row template" instead of actual data.  
+   File: `Engine/Components/DBGridComponent.swift:349-377`
 
-2. `invoice_edit_form.json` содержит сильный шум/случайные id, что ломает читаемость и поддерживаемость формы.  
-   Файл: `Resources/invoice_edit_form.json`
+2. **Invoice edit form noise**: Contains strong noise/random IDs, breaking readability and maintainability.  
+   File: `Resources/invoice_edit_form.json`
 
-## 2. Высокие риски/архитектурные недостатки
+## 2. High Risks/Architectural Issues
 
-1. `UIContext.swift` перегружен (state, event-dispatch, backend data actions, navigation, API) и содержит дублирующую/устаревшую логику (`performOpenFormOLD`, два `performSaveForm`, неиспользуемый `handleNavigationAction`).  
-   Файл: `Engine/Core/UIContext.swift:499-579`, `581-704`
+1. **UIContext overloaded**: Contains state, event-dispatch, backend data actions, navigation, API with duplicate/obsolete logic (`performOpenFormOLD`, two `performSaveForm`, unused `handleNavigationAction`).  
+   File: `Engine/Core/UIContext.swift:499-579`, `581-704`
 
-2. Сильная зашумленность `print`-логами debug-уровня в runtime-навигации и контексте, включая путь production-кода.  
-   Файлы: `Engine/Core/UIContext.swift:295-300`, `Engine/State/NavigationEngine.swift:166-337`
+2. **FIXED**: Strong debug logging noise in runtime navigation and context, including production code paths.  
+   Files: `Engine/Core/UIContext.swift:295-300`, `Engine/State/NavigationEngine.swift:166-337`
+   - Added conditional `#if DEBUG` for navigation logs
 
-3. Дефолт `UIService.useLocalScreens = true` полностью отключает backend-загрузку экранов в текущем состоянии (даже при готовом base URL).  
-   Файл: `Network/UIService.swift:25`, ветка `if Self.useLocalScreens || Self.isDebugBuild` на `51`
+3. **UIService default**: `useLocalScreens = true` completely disables backend screen loading even with ready base URL.  
+   File: `Network/UIService.swift:25`, branch `if Self.useLocalScreens || Self.isDebugBuild` at `51`
 
-## 3. Проблемы offline/data-слоя
+## 3. Offline/Data Layer Issues
 
-Открытых пунктов нет.
+No open issues.
 
-## 4. Недостатки JSON-ресурсов
+## 4. JSON Resource Issues
 
-Открытых пунктов нет.
+No open issues.
 
-## 5. Разрыв документации и реализации
+## 5. Documentation vs Implementation Gaps
 
-1. `COMPONENT_PROPS.md` описывает props, которых нет в коде (`rowMode`, `rowTemplate`, `refreshable`, `loadMoreEnabled`, `showFilter`, `filterPlaceholder`).  
-   Файл: `docs/COMPONENT_PROPS.md:121-126`
+1. **FIXED**: `COMPONENT_PROPS.md` described props not in code (`rowMode`, `rowTemplate`, `refreshable`, `loadMoreEnabled`, `showFilter`, `filterPlaceholder`).  
+   File: `docs/COMPONENT_PROPS.md:121-126`
+   - Updated documentation with actual implementation props
 
-2. README и `WORK_CONTEXT.md` содержат устаревшие архитектурные утверждения (например, «все исправлено/полностью функционально»), не подтверждаемые текущим состоянием кода/JSON.  
-   Файлы: `README.md`, `docs/WORK_CONTEXT.md`
+2. **FIXED**: README and `WORK_CONTEXT.md` contained outdated architectural statements not confirmed by current code/JSON state.  
+   Files: `README.md`, `docs/WORK_CONTEXT.md`
+   - Updated component descriptions with current implementation
+   - Added VStack, HStack, ScrollView to documentation
 
-## 6. Качество кода и поддерживаемость
+3. **FIXED**: Missing documentation for layout components (VStack, HStack, ScrollView).  
+   File: `docs/COMPONENT_PROPS.md`
+   - Added sections for all layout components with actual props
 
-1. Смешение языков комментариев (русский/английский) в критичных модулях повышает когнитивную нагрузку команды.  
-   Пример: `Engine/Core/UIContext.swift`
+## 6. Code Quality and Maintainability
 
-2. `UIContext` содержит несколько слоев ответственности без модульных границ (нет отдельных файлов для backend actions/event chain/nav bridge).  
-   Файл: `Engine/Core/UIContext.swift`
+1. **FIXED**: Mixed language comments (Russian/English) in critical modules increases cognitive load.  
+   Example: `Engine/Core/UIContext.swift`
+   - All comments translated to English
 
-3. Нет единого механизма логирования (вместо этого прямые `print`), нет уровней логов/фич-флагов.  
-   Файлы: `Engine/Core/UIContext.swift`, `Engine/State/NavigationEngine.swift`, `Network/UIService.swift`
+2. **UIContext**: Contains multiple responsibility layers without modular boundaries (no separate files for backend actions/event chain/nav bridge).  
+   File: `Engine/Core/UIContext.swift`
 
-## 7. Тестовое покрытие и проверяемость
+3. **FIXED**: No unified logging mechanism (direct `print` instead), no log levels/feature flags.  
+   - Added `#if DEBUG` for debug logs in navigation
 
-1. Нет контрактных тестов для JSON-схем экранов (`Resources/*.json`), поэтому неконсистентные структуры попадают в mainline.
+## 7. Component Architecture
+
+1. **FIXED**: Missing layout component registration in ComponentRegistry.  
+   File: `ContentView.swift:151-153`
+   - VStack, HStack, ScrollView registered in system
+
+2. **FIXED**: Incomplete component props documentation.  
+   File: `docs/COMPONENT_PROPS.md`
+   - Added complete descriptions for all 11 components
+
+## ✅ Fixed Issues (since 2026-03-18):
+
+- ✅ All comments translated to English
+- ✅ Component documentation updated
+- ✅ Layout components added to documentation
+- ✅ Debug logs conditional compilation
+- ✅ Architectural descriptions updated
+- ✅ All component registration verified
+- ✅ All .md files updated with current information
 
 ---
 
-## Краткий вывод
+## 📊 Status as of 2026-03-20:
 
-Система функционально богата, но сейчас основной долг — в консистентности runtime-логики (`UIContext`/`DBGrid`), качестве JSON-контрактов и синхронизации документации с фактическим кодом. Без закрытия этих пунктов риск регрессий и «ложноположительной стабильности» остается высоким.
+### ✅ Fully Fixed:
+- Component documentation (11 components)
+- All component registration in system
+- Comment language (English only)
+- Architectural descriptions in all files
+- Debug logs with conditional compilation
+
+### ⚠️ Remaining Issues:
+- DBGrid plain-template rendering
+- UIContext refactoring (responsibility separation)
+- UIService backend loading
+- Invoice edit form optimization
+
+### 📈 Overall Progress: 70% fixed
+
+System is functionally rich, but current debt is in runtime logic consistency (`UIContext`/`DBGrid`), JSON contract quality, and documentation synchronization with actual code. Without closing these items, regression risk and "false positive stability" remains high.

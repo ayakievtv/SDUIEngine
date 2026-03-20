@@ -68,10 +68,17 @@ Data flow (simplified):
   - Runtime registry for `DataSource` component configurations used by `DBGrid`.
 
 ### Components
-- Existing primitives: `Text`, `Button`, `TextField`, `Image`, `Spacer`, layout stacks.
-- New data components:
-  - `DataSourceComponent.swift`
-  - `DBGridComponent.swift`
+- **UI Primitives**: `Text`, `Button`, `TextField`, `Image`, `Spacer`
+- **Layout Containers**: `VStack`, `HStack`, `ScrollView` with spacing and alignment
+- **Data Components**:
+  - `DataSourceComponent.swift` - API integration with offline policies
+  - `DBGridComponent.swift` - Data grids with caching, pagination, filtering
+- **Navigation**: `TabBarComponent.swift` - SDUI tab navigation
+
+### Layout Components
+- `Engine/Layout/VStackComponent.swift` - Vertical container with spacing
+- `Engine/Layout/HStackComponent.swift` - Horizontal container with spacing  
+- `Engine/Layout/ScrollViewComponent.swift` - Scrollable container with navigation title
 
 ---
 
