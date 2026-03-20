@@ -248,6 +248,14 @@ https://oracleapex.com/ords/yakiev/sdui_example/invoices
 
 ## 📝 Текущие задачи
 
+### Последнее обновление (2026-03-18):
+- ✅ Добавлен и стабилизирован unit-test контур (`SDUIEngineTests`)
+- ✅ Добавлены тесты для event-dispatch, backend form actions, DBGrid parsing/interpolation, offline queue
+- ✅ Устранена флаки-ситуация тестов очереди (изоляция persisted queue + polling ожидания)
+- ✅ Полный прогон тестов зеленый (8/8)
+- ✅ Подтверждены сборка и запуск приложения в симуляторе из CLI
+- ✅ Изменения отправлены в `main` (commit `f2c0c0e`)
+
 ### Выполнено:
 - ✅ Все UI компоненты исправлены и оптимизированы
 - ✅ Офлайн режим полностью функционален

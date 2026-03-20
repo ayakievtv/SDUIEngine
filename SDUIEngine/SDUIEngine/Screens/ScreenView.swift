@@ -53,7 +53,7 @@ struct ScreenView: View {
 
         do {
             // Delegates to UIService (backend first, local fallback).
-            rootComponent = try await service.loadScreen(name: name)
+            rootComponent = try await service.loadScreen(screenName: name)
         } catch {
             rootComponent = nil
             errorMessage = error.localizedDescription

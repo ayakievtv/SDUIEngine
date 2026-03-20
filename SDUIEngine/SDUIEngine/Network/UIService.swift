@@ -35,14 +35,6 @@ final class UIService {
         self.decoder = decoder
     }
 
-    func loadScreen(_ screenName: String) async throws -> ComponentModel {
-        try await loadScreen(screenName: screenName)
-    }
-
-    func loadScreen(name: String) async throws -> ComponentModel {
-        try await loadScreen(screenName: name)
-    }
-
     func loadScreen(screenName: String) async throws -> ComponentModel {
         // Fallback strategy:
         // 1) In development/local mode, always use bundle JSON.

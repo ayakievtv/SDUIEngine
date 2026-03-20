@@ -69,7 +69,7 @@ struct ContentView: View {
 
         do {
             // Backend-driven entry point
-            rootComponent = try await service.loadScreen("main")
+            rootComponent = try await service.loadScreen(screenName:"main")
         } catch {
             rootComponent = nil
             errorMessage = error.localizedDescription

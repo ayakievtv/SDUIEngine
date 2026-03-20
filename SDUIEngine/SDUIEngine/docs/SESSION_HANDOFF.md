@@ -1,5 +1,23 @@
 # Session Handoff (For Next Day)
 
+## Latest update (2026-03-18)
+
+1. Test infrastructure finalized:
+- Xcode unit-test target `SDUIEngineTests` added and wired to `SDUIEngine`.
+2. Critical runtime tests added/updated:
+- event chain dispatch,
+- backend form actions (`OPEN_FORM`, `SAVE_FORM`, `DISCARD_FORM`),
+- DBGrid parsing + interpolation,
+- offline queue retry/backoff behavior.
+3. Flaky behavior in offline queue tests fixed:
+- replaced strict timing assumptions with async polling,
+- added queue cleanup at test start to isolate persisted state between runs.
+4. Validation completed:
+- full `xcodebuild test` green (8 tests passed),
+- app builds and launches in iOS Simulator from CLI.
+5. Last pushed commit:
+- `f2c0c0e` on `main`.
+
 ## What was built
 
 1. Event system improvements
@@ -111,4 +129,3 @@ Grid JSON was updated to this schema (`keyField = uuid`, card and columns use `d
 4. Add offline queue policy controls
 - retry limit/backoff strategy
 - conflict strategy (`last-write-wins` vs merge)
-

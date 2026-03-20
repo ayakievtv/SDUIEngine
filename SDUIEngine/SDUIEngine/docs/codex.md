@@ -328,3 +328,25 @@ Screens:
 2. Data source + grid + cards: `invoices_grid.json`.
 3. Edit form contract: `invoice_edit_form.json`.
 4. Offline data runtime present in code and wired as default API path.
+
+---
+
+## 14) Latest Completed Work (2026-03-18)
+
+1. Added automated test target `SDUIEngineTests` in Xcode project and connected it to host app target.
+2. Added/updated critical tests:
+- `UIContextEventDispatchTests`
+- `UIContextBackendDataTests`
+- `DBGridParsingInterpolationTests`
+- `OfflineQueueBehaviorTests`
+3. Stabilized offline queue tests:
+- removed race assumptions around scheduled flush behavior,
+- added polling-based waits for async state transitions,
+- ensured test isolation by clearing persisted sync queue state at test start.
+4. Verified full test run is green (8/8).
+5. Verified app build and simulator launch from CLI:
+- build: `xcodebuild build ... -scheme SDUIEngine`,
+- launch: `xcrun simctl launch ... com.example.SDUIEngine`.
+6. Changes were committed and pushed to `origin/main`:
+- commit: `f2c0c0e`
+- message: `Stabilize test suite and finalize offline queue behavior`.
