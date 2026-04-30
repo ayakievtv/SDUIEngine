@@ -98,6 +98,64 @@
             endingLineNumber = "63"
             landmarkName = "loadFromBackend(screenName:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B8C4A428-6605-459A-9692-B9741796339F - b9c56f09be7dd54b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for SDUIEngine.UIService.loadFromBackend(screenName: Swift.String) async throws -&gt; Foundation.Data"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Network/UIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "63"
+                  endingLineNumber = "63">
+               </Location>
+               <Location
+                  uuid = "B8C4A428-6605-459A-9692-B9741796339F - 5e896c8c4088370a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) suspend resume partial function for SDUIEngine.UIService.loadFromBackend(screenName: Swift.String) async throws -&gt; Foundation.Data"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Network/UIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "63"
+                  endingLineNumber = "63">
+               </Location>
+               <Location
+                  uuid = "B8C4A428-6605-459A-9692-B9741796339F - 634d520352a310c9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for SDUIEngine.UIService.loadFromBackend(screenName: Swift.String) async throws -&gt; Foundation.Data"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Network/UIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "63"
+                  endingLineNumber = "63">
+               </Location>
+               <Location
+                  uuid = "B8C4A428-6605-459A-9692-B9741796339F - 634d520352a310c9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for SDUIEngine.UIService.loadFromBackend(screenName: Swift.String) async throws -&gt; Foundation.Data"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Network/UIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "63"
+                  endingLineNumber = "63">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -162,6 +220,50 @@
             endingLineNumber = "277"
             landmarkName = "callAPI(endpoint:method:body:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "BAE34E44-301B-49D0-A7F3-28DB390D843E - 590420c5999fcb4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for SDUIEngine.UIContext.callAPI(endpoint: Swift.String, method: SDUIEngine.HTTPMethod, body: Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, SDUIEngine.JSONValue&gt;&gt;) async throws -&gt; SDUIEngine.JSONValue"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Engine/Core/UIContext.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "277"
+                  endingLineNumber = "277">
+               </Location>
+               <Location
+                  uuid = "BAE34E44-301B-49D0-A7F3-28DB390D843E - fd8a4c078bd4d891"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for SDUIEngine.UIContext.callAPI(endpoint: Swift.String, method: SDUIEngine.HTTPMethod, body: Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, SDUIEngine.JSONValue&gt;&gt;) async throws -&gt; SDUIEngine.JSONValue"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Engine/Core/UIContext.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "277"
+                  endingLineNumber = "277">
+               </Location>
+               <Location
+                  uuid = "BAE34E44-301B-49D0-A7F3-28DB390D843E - 11617755e143a2b9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for SDUIEngine.UIContext.callAPI(endpoint: Swift.String, method: SDUIEngine.HTTPMethod, body: Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, SDUIEngine.JSONValue&gt;&gt;) async throws -&gt; SDUIEngine.JSONValue"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Engine/Core/UIContext.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "277"
+                  endingLineNumber = "277">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -178,6 +280,50 @@
             endingLineNumber = "860"
             landmarkName = "request(endpoint:method:body:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "2E67270F-4586-415A-B41F-8FB05C987FB1 - 30399e38d4dccb55"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for SDUIEngine.OfflineAPIClient.request(endpoint: Swift.String, method: SDUIEngine.HTTPMethod, body: Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, SDUIEngine.JSONValue&gt;&gt;) async throws -&gt; SDUIEngine.JSONValue"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Engine/State/OfflineDataLayer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "860"
+                  endingLineNumber = "860">
+               </Location>
+               <Location
+                  uuid = "2E67270F-4586-415A-B41F-8FB05C987FB1 - 494aaf175f15af33"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for SDUIEngine.OfflineAPIClient.request(endpoint: Swift.String, method: SDUIEngine.HTTPMethod, body: Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, SDUIEngine.JSONValue&gt;&gt;) async throws -&gt; SDUIEngine.JSONValue"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Engine/State/OfflineDataLayer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "860"
+                  endingLineNumber = "860">
+               </Location>
+               <Location
+                  uuid = "2E67270F-4586-415A-B41F-8FB05C987FB1 - cb5a43919e0b075b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for SDUIEngine.OfflineAPIClient.request(endpoint: Swift.String, method: SDUIEngine.HTTPMethod, body: Swift.Optional&lt;Swift.Dictionary&lt;Swift.String, SDUIEngine.JSONValue&gt;&gt;) async throws -&gt; SDUIEngine.JSONValue"
+                  moduleName = "SDUIEngine.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/iakiev90iakiev90/Documents/Playground/SDUIEngine/SDUIEngine/Engine/State/OfflineDataLayer.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "860"
+                  endingLineNumber = "860">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -193,6 +339,22 @@
             startingLineNumber = "87"
             endingLineNumber = "87"
             landmarkName = "request(endpoint:method:body:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C181939D-7C1A-4C87-BF30-453924971DCD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SDUIEngine/Engine/State/OfflineDataLayer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "442"
+            endingLineNumber = "442"
+            landmarkName = "init(baseURL:session:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

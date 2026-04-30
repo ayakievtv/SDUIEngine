@@ -340,6 +340,9 @@ The core structure of the project was generated using Codex, further developed a
 - [ ] Advanced animations
 - [ ] Custom themes
 - [ ] Push notifications
+- [ ] Server-driven form validation
+- [ ] Deep linking & navigation control
+- [ ] Role-based UI personalization
 - [ ] Biometric authentication
 - [ ] Real-time updates (WebSocket)
 
@@ -349,6 +352,7 @@ The core structure of the project was generated using Codex, further developed a
 - [ ] AR/VR components
 - [ ] Cross-platform support
 - [ ] Advanced analytics
+- [ ] Smart cache with predictive preloading
 
 ## 🤝 Contributing
 
