@@ -1,6 +1,6 @@
 import SwiftUI
 
-private struct DBGridColumn: Hashable {
+ struct DBGridColumn: Hashable {
     let field: String
     let title: String
     let sortable: Bool
@@ -17,7 +17,7 @@ struct DBGridRowTemplateSpec {
     let caption: String?
     let badge: String?
 
-    fileprivate static func from(props: [String: JSONValue], columns: [DBGridColumn]) -> DBGridRowTemplateSpec {
+     static func from(props: [String: JSONValue], columns: [DBGridColumn]) -> DBGridRowTemplateSpec {
         if let row = props["row"]?.objectValue {
             return DBGridRowTemplateSpec(
                 title: row["title"]?.stringValue ?? "{{id}}",
@@ -27,16 +27,26 @@ struct DBGridRowTemplateSpec {
             )
         }
 
+//        let primary = columns.first?.field ?? "id"
+//        let secondary = columns.dropFirst().first?.field
+//        let tertiary = columns.dropFirst(2).first?.field
+//
+//        return DBGridRowTemplateSpec(
+//            title: "{{\(primary)}}",
+//            subtitle: secondary.map { "{{\($0)}}" },
+//            caption: tertiary.map { "{{\($0)}}" },
+//            badge: nil
+//        )
+        
         let primary = columns.first?.field ?? "id"
-        let secondary = columns.dropFirst().first?.field
-        let tertiary = columns.dropFirst(2).first?.field
 
         return DBGridRowTemplateSpec(
             title: "{{\(primary)}}",
-            subtitle: secondary.map { "{{\($0)}}" },
-            caption: tertiary.map { "{{\($0)}}" },
+            subtitle: nil,
+            caption: nil,
             badge: nil
         )
+        
     }
 
     var signature: String {
@@ -403,7 +413,7 @@ struct DBGridComponent: UIComponent {
         )
     }
 
-    private func handleRowTap(row: DBGridRow) {
+     func handleRowTap(row: DBGridRow) {
         let selectedIDStateKey = model.resolvedProps.string("selectedIdStateKey")
             ?? model.resolvedProps.string("selectionStateKey")
             ?? "selectedRowId"
@@ -429,7 +439,7 @@ struct DBGridComponent: UIComponent {
         context.trigger(EventModel(type: .onTap, targets: event.targets, params: params))
     }
 
-    private func resolvedColumns(props: [String: JSONValue]) -> [DBGridColumn] {
+     func resolvedColumns(props: [String: JSONValue]) -> [DBGridColumn] {
         guard let array = props["columns"]?.arrayValue else {
             return [
                 DBGridColumn(field: "id", title: "ID", sortable: true),
@@ -450,7 +460,7 @@ struct DBGridComponent: UIComponent {
         return columns.isEmpty ? [DBGridColumn(field: "id", title: "ID", sortable: true)] : columns
     }
 
-    private func resolvedDataSourceConfig(props: [String: JSONValue]) -> DataSourceConfig {
+     func resolvedDataSourceConfig(props: [String: JSONValue]) -> DataSourceConfig {
         let dataSourceID = props.string("dataSourceId") ?? props.string("dataSource") ?? ""
         if !dataSourceID.isEmpty, let registered = context.dataSourceRegistry.get(dataSourceID) {
             return registered
@@ -480,7 +490,7 @@ struct DBGridComponent: UIComponent {
         return config
     }
 
-    private func buildRowComponentTemplate(from props: [String: JSONValue]) -> ComponentModel? {
+     func buildRowComponentTemplate(from props: [String: JSONValue]) -> ComponentModel? {
         guard let object = props["rowComponent"]?.objectValue else {
             return nil
         }
@@ -791,7 +801,19 @@ struct DBGridComponent: UIComponent {
     private func valueAsString(_ value: JSONValue?) -> String {
         guard let value else { return "" }
         if let string = value.stringValue { return string }
-        if let number = value.numberValue { return String(number) }
+        
+        
+        
+//        if let number = value.numberValue { return String(number) }
+        
+        if let number = value.numberValue {
+            let formatter = NumberFormatter()
+            formatter.minimumFractionDigits = 0
+            formatter.maximumFractionDigits = 10
+            return formatter.string(from: NSNumber(value: number)) ?? String(number)
+        }
+        
+        
         if let bool = value.boolValue { return bool ? "true" : "false" }
         return ""
     }

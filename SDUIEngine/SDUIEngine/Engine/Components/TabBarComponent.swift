@@ -61,7 +61,7 @@ struct TabBarView: View {
     
     /// Create tab item for child component
     @ViewBuilder
-    private func tabItemForChild(_ child: ComponentModel, index: Int) -> some View {
+     func tabItemForChild(_ child: ComponentModel, index: Int) -> some View {
         let props = child.props
         let title = props?.string("title") ?? "Tab \(index + 1)"
         let iconName = props?.string("iconName")

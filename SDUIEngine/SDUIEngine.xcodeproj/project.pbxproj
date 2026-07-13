@@ -14,12 +14,17 @@
 		0097CBA42F6A7FF5002E5CFD /* SESSION_HANDOFF.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CB9F2F6A7FF5002E5CFD /* SESSION_HANDOFF.md */; };
 		0097CBA52F6A7FF5002E5CFD /* WORK_CONTEXT.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CBA02F6A7FF5002E5CFD /* WORK_CONTEXT.md */; };
 		0097CBA72F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CBA62F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md */; };
-		B10000000000000000000101 /* UIContextEventDispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001111 /* UIContextEventDispatchTests.swift */; };
-		B10000000000000000000102 /* UIContextBackendDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001112 /* UIContextBackendDataTests.swift */; };
-		B10000000000000000000103 /* DBGridParsingInterpolationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001113 /* DBGridParsingInterpolationTests.swift */; };
-		B10000000000000000000104 /* OfflineQueueBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001114 /* OfflineQueueBehaviorTests.swift */; };
-		B10000000000000000000105 /* TestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001115 /* TestDoubles.swift */; };
-		B10000000000000000000301 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10000000000000000000302 /* XCTest.framework */; };
+		1960D1FE3003F4C0008CA182 /* JSONValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D1FC3003F4C0008CA182 /* JSONValueTests.swift */; };
+		1960D1FF3003F4C0008CA182 /* ComponentModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D1FB3003F4C0008CA182 /* ComponentModelTests.swift */; };
+		1960D2013003F536008CA182 /* EventModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D2003003F536008CA182 /* EventModelTests.swift */; };
+		1960D2033003F59A008CA182 /* TestUIContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D2023003F595008CA182 /* TestUIContext.swift */; };
+		1960D2053004215A008CA182 /* StyleParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D2043004215A008CA182 /* StyleParsingTests.swift */; };
+		1960D20D30042DC1008CA182 /* LayoutComponentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D20B30042DC1008CA182 /* LayoutComponentsTests.swift */; };
+		1960D20E30042DC1008CA182 /* ImageAndTabBarComponentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D20A30042DC1008CA182 /* ImageAndTabBarComponentsTests.swift */; };
+		1960D20F30042DC1008CA182 /* DataSourceComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D20830042DC1008CA182 /* DataSourceComponentTests.swift */; };
+		1960D21030042DC1008CA182 /* DBGridComponentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D20930042DC1008CA182 /* DBGridComponentTests.swift */; };
+		1960D21130042DC1008CA182 /* BasicComponentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D20630042DC1008CA182 /* BasicComponentsTests.swift */; };
+		1960D21230042DC1008CA182 /* ComponentRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D20730042DC1008CA182 /* ComponentRendererTests.swift */; };
 		A00000000000000000000001 /* SDUIEngineApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000011 /* SDUIEngineApp.swift */; };
 		A00000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000012 /* ContentView.swift */; };
 		A00000000000000000000201 /* ComponentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000211 /* ComponentModel.swift */; };
@@ -50,6 +55,12 @@
 		A00000000000000000001501 /* demo_screen2.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001511 /* demo_screen2.json */; };
 		A00000000000000000001601 /* invoices_grid.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001611 /* invoices_grid.json */; };
 		A00000000000000000001701 /* invoice_edit_form.json in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001711 /* invoice_edit_form.json */; };
+		B10000000000000000000101 /* UIContextEventDispatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001111 /* UIContextEventDispatchTests.swift */; };
+		B10000000000000000000102 /* UIContextBackendDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001112 /* UIContextBackendDataTests.swift */; };
+		B10000000000000000000103 /* DBGridParsingInterpolationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001113 /* DBGridParsingInterpolationTests.swift */; };
+		B10000000000000000000104 /* OfflineQueueBehaviorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001114 /* OfflineQueueBehaviorTests.swift */; };
+		B10000000000000000000105 /* TestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000001115 /* TestDoubles.swift */; };
+		B10000000000000000000301 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B10000000000000000000302 /* XCTest.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,13 +81,17 @@
 		0097CB9F2F6A7FF5002E5CFD /* SESSION_HANDOFF.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = SESSION_HANDOFF.md; sourceTree = "<group>"; };
 		0097CBA02F6A7FF5002E5CFD /* WORK_CONTEXT.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = WORK_CONTEXT.md; sourceTree = "<group>"; };
 		0097CBA62F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROJECT_SHORTCOMINGS.md; sourceTree = "<group>"; };
-		B10000000000000000000010 /* SDUIEngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SDUIEngineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B10000000000000000000302 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		B10000000000000000001111 /* UIContextEventDispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIContextEventDispatchTests.swift; sourceTree = "<group>"; };
-		B10000000000000000001112 /* UIContextBackendDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIContextBackendDataTests.swift; sourceTree = "<group>"; };
-		B10000000000000000001113 /* DBGridParsingInterpolationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBGridParsingInterpolationTests.swift; sourceTree = "<group>"; };
-		B10000000000000000001114 /* OfflineQueueBehaviorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineQueueBehaviorTests.swift; sourceTree = "<group>"; };
-		B10000000000000000001115 /* TestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDoubles.swift; sourceTree = "<group>"; };
+		1960D1FB3003F4C0008CA182 /* ComponentModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentModelTests.swift; sourceTree = "<group>"; };
+		1960D1FC3003F4C0008CA182 /* JSONValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONValueTests.swift; sourceTree = "<group>"; };
+		1960D2003003F536008CA182 /* EventModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModelTests.swift; sourceTree = "<group>"; };
+		1960D2023003F595008CA182 /* TestUIContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUIContext.swift; sourceTree = "<group>"; };
+		1960D2043004215A008CA182 /* StyleParsingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleParsingTests.swift; sourceTree = "<group>"; };
+		1960D20630042DC1008CA182 /* BasicComponentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicComponentsTests.swift; sourceTree = "<group>"; };
+		1960D20730042DC1008CA182 /* ComponentRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentRendererTests.swift; sourceTree = "<group>"; };
+		1960D20830042DC1008CA182 /* DataSourceComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceComponentTests.swift; sourceTree = "<group>"; };
+		1960D20930042DC1008CA182 /* DBGridComponentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBGridComponentTests.swift; sourceTree = "<group>"; };
+		1960D20A30042DC1008CA182 /* ImageAndTabBarComponentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAndTabBarComponentsTests.swift; sourceTree = "<group>"; };
+		1960D20B30042DC1008CA182 /* LayoutComponentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutComponentsTests.swift; sourceTree = "<group>"; };
 		A00000000000000000000010 /* SDUIEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SDUIEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00000000000000000000011 /* SDUIEngineApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDUIEngineApp.swift; sourceTree = "<group>"; };
 		A00000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -108,6 +123,13 @@
 		A00000000000000000001511 /* demo_screen2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = demo_screen2.json; sourceTree = "<group>"; };
 		A00000000000000000001611 /* invoices_grid.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = invoices_grid.json; sourceTree = "<group>"; };
 		A00000000000000000001711 /* invoice_edit_form.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = invoice_edit_form.json; sourceTree = "<group>"; };
+		B10000000000000000000010 /* SDUIEngineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SDUIEngineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B10000000000000000000302 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		B10000000000000000001111 /* UIContextEventDispatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIContextEventDispatchTests.swift; sourceTree = "<group>"; };
+		B10000000000000000001112 /* UIContextBackendDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIContextBackendDataTests.swift; sourceTree = "<group>"; };
+		B10000000000000000001113 /* DBGridParsingInterpolationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBGridParsingInterpolationTests.swift; sourceTree = "<group>"; };
+		B10000000000000000001114 /* OfflineQueueBehaviorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineQueueBehaviorTests.swift; sourceTree = "<group>"; };
+		B10000000000000000001115 /* TestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDoubles.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,12 +163,44 @@
 			path = docs;
 			sourceTree = "<group>";
 		};
+		1960D1F93003D21E008CA182 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000000302 /* XCTest.framework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		1960D1FD3003F4C0008CA182 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				1960D2023003F595008CA182 /* TestUIContext.swift */,
+				1960D1FB3003F4C0008CA182 /* ComponentModelTests.swift */,
+				1960D1FC3003F4C0008CA182 /* JSONValueTests.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		1960D20C30042DC1008CA182 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1960D20630042DC1008CA182 /* BasicComponentsTests.swift */,
+				1960D20730042DC1008CA182 /* ComponentRendererTests.swift */,
+				1960D20830042DC1008CA182 /* DataSourceComponentTests.swift */,
+				1960D20930042DC1008CA182 /* DBGridComponentTests.swift */,
+				1960D20A30042DC1008CA182 /* ImageAndTabBarComponentsTests.swift */,
+				1960D20B30042DC1008CA182 /* LayoutComponentsTests.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		A00000000000000000000040 = {
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000041 /* SDUIEngine */,
 				B10000000000000000000201 /* SDUIEngineTests */,
 				A00000000000000000000050 /* Products */,
+				1960D1F93003D21E008CA182 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -172,26 +226,6 @@
 				B10000000000000000000010 /* SDUIEngineTests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		B10000000000000000000202 /* Support */ = {
-			isa = PBXGroup;
-			children = (
-				B10000000000000000001115 /* TestDoubles.swift */,
-			);
-			path = Support;
-			sourceTree = "<group>";
-		};
-		B10000000000000000000201 /* SDUIEngineTests */ = {
-			isa = PBXGroup;
-			children = (
-				B10000000000000000001111 /* UIContextEventDispatchTests.swift */,
-				B10000000000000000001112 /* UIContextBackendDataTests.swift */,
-				B10000000000000000001113 /* DBGridParsingInterpolationTests.swift */,
-				B10000000000000000001114 /* OfflineQueueBehaviorTests.swift */,
-				B10000000000000000000202 /* Support */,
-			);
-			path = SDUIEngineTests;
 			sourceTree = "<group>";
 		};
 		A00000000000000000000101 /* Engine */ = {
@@ -305,6 +339,30 @@
 				A00000000000000000001711 /* invoice_edit_form.json */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		B10000000000000000000201 /* SDUIEngineTests */ = {
+			isa = PBXGroup;
+			children = (
+				1960D20C30042DC1008CA182 /* Components */,
+				1960D2043004215A008CA182 /* StyleParsingTests.swift */,
+				1960D2003003F536008CA182 /* EventModelTests.swift */,
+				B10000000000000000001111 /* UIContextEventDispatchTests.swift */,
+				B10000000000000000001112 /* UIContextBackendDataTests.swift */,
+				B10000000000000000001113 /* DBGridParsingInterpolationTests.swift */,
+				B10000000000000000001114 /* OfflineQueueBehaviorTests.swift */,
+				B10000000000000000000202 /* Support */,
+				1960D1FD3003F4C0008CA182 /* Core */,
+			);
+			path = SDUIEngineTests;
+			sourceTree = "<group>";
+		};
+		B10000000000000000000202 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				B10000000000000000001115 /* TestDoubles.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -450,10 +508,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1960D2053004215A008CA182 /* StyleParsingTests.swift in Sources */,
+				1960D1FE3003F4C0008CA182 /* JSONValueTests.swift in Sources */,
+				1960D1FF3003F4C0008CA182 /* ComponentModelTests.swift in Sources */,
 				B10000000000000000000101 /* UIContextEventDispatchTests.swift in Sources */,
 				B10000000000000000000102 /* UIContextBackendDataTests.swift in Sources */,
 				B10000000000000000000103 /* DBGridParsingInterpolationTests.swift in Sources */,
 				B10000000000000000000104 /* OfflineQueueBehaviorTests.swift in Sources */,
+				1960D20D30042DC1008CA182 /* LayoutComponentsTests.swift in Sources */,
+				1960D20E30042DC1008CA182 /* ImageAndTabBarComponentsTests.swift in Sources */,
+				1960D20F30042DC1008CA182 /* DataSourceComponentTests.swift in Sources */,
+				1960D21030042DC1008CA182 /* DBGridComponentTests.swift in Sources */,
+				1960D21130042DC1008CA182 /* BasicComponentsTests.swift in Sources */,
+				1960D21230042DC1008CA182 /* ComponentRendererTests.swift in Sources */,
+				1960D2033003F59A008CA182 /* TestUIContext.swift in Sources */,
+				1960D2013003F536008CA182 /* EventModelTests.swift in Sources */,
 				B10000000000000000000105 /* TestDoubles.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

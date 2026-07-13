@@ -9,11 +9,18 @@ struct DataSourceComponent: UIComponent {
         self.context = context
     }
 
+    // В DataSourceComponent
+    func registerDataSource() {
+        context.dataSourceRegistry.register(buildConfig(from: model.resolvedProps))
+    }
+
+    
     var body: some View {
         Color.clear
             .frame(height: 0)
             .onAppear {
-                context.dataSourceRegistry.register(buildConfig(from: model.resolvedProps))
+                registerDataSource()
+//                context.dataSourceRegistry.register(buildConfig(from: model.resolvedProps))
             }
     }
 

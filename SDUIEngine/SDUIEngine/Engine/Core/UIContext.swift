@@ -116,16 +116,16 @@ protocol APIClient: AnyObject {
     func request(endpoint: String, method: HTTPMethod, body: [String: JSONValue]?) async throws -> JSONValue
 }
 
-/// Mock API client for testing
-final class MockAPIClient: APIClient {
-    func request(endpoint: String, method: HTTPMethod, body: [String: JSONValue]?) async throws -> JSONValue {
-        .object([
-            "endpoint": .string(endpoint),
-            "method": .string(method.rawValue),
-            "body": .object(body ?? [:]),
-        ])
-    }
-}
+///// Mock API client for testing
+//final class MockAPIClient: APIClient {
+//    func request(endpoint: String, method: HTTPMethod, body: [String: JSONValue]?) async throws -> JSONValue {
+//        .object([
+//            "endpoint": .string(endpoint),
+//            "method": .string(method.rawValue),
+//            "body": .object(body ?? [:]),
+//        ])
+//    }
+//}
 
 /// Creates default API client with offline data layer
 func makeDefaultAPIClient() -> APIClient {
@@ -395,7 +395,7 @@ final class UIContext {
     }
     
     /// Handle data actions (OPEN_FORM, SAVE_FORM, etc.)
-    private func handleDataAction(action: String, params: [String: String]) {
+     func handleDataAction(action: String, params: [String: String]) {
         Task { @MainActor in
             switch action.uppercased() {
             case "OPEN_FORM":
