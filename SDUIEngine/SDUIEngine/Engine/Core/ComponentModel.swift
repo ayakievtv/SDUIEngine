@@ -45,3 +45,26 @@ extension ComponentModel {
     var resolvedEvents: [String: JSONValue] { events ?? [:] }
     var resolvedChildren: [ComponentModel] { children ?? [] }
 }
+
+
+extension JSONValue {
+    func resolvingVariables(using r: ParamResolver) -> JSONValue {
+        switch self {
+        case .string(let s): return .string(r.resolve(value: s))
+        case .array(let a):  return .array(a.map { $0.resolvingVariables(using: r) })
+        case .object(let o): return .object(o.mapValues { $0.resolvingVariables(using: r) })
+        default:             return self
+        }
+    }
+}
+
+extension ComponentModel {
+    func resolvingVariables(using r: ParamResolver) -> ComponentModel {
+        ComponentModel(
+            id: id, type: type,
+            props:    props?.mapValues { $0.resolvingVariables(using: r) },
+            events:   events?.mapValues { $0.resolvingVariables(using: r) },
+            children: children?.map { $0.resolvingVariables(using: r) }
+        )
+    }
+}

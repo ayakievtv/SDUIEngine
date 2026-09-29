@@ -263,7 +263,8 @@ struct DBGridComponent: UIComponent {
                             applyLocalFilterAndSort(columns: columns, config: cfg)
                             triggerRemoteSearchIfNeeded(value: value, config: cfg)
                         }
-
+                        .buttonStyle(.bordered)
+                    
                     Button("Reload") {
                         Task {
                             let resolved = await resolveDataSourceConfigWithRetry(props: props)
@@ -698,10 +699,13 @@ struct DBGridComponent: UIComponent {
 
     private func parseRows(response: JSONValue, keyField: String, pageSize: Int) -> (rows: [DBGridRow], nextCursor: String?, hasMore: Bool) {
         if let object = response.objectValue {
-            let items = object["items"]?.arrayValue
+            
+            let items = object["report"]?.arrayValue
             let rows = (items ?? []).enumerated().compactMap { index, item in
                 toGridRow(item: item, keyField: keyField, index: index)
             }
+            
+            
             let nextCursor = object["nextCursor"]?.stringValue
                 ?? object["offset"]?.stringValue
                 ?? object["cursor"]?.stringValue
@@ -725,6 +729,42 @@ struct DBGridComponent: UIComponent {
         return ([], nil, false)
     }
 
+    private func parseRows2(response: JSONValue, keyField: String, pageSize: Int) -> (rows: [DBGridRow], nextCursor: String?, hasMore: Bool) {
+        if let object = response.objectValue {
+            let items = object["items"]?.arrayValue
+            let rows = (items ?? []).enumerated().compactMap { index, item in
+                toGridRow(item: item, keyField: keyField, index: index)
+            }
+            
+            let items2 = object["report"]?.arrayValue
+            let rows2 = (items2 ?? []).enumerated().compactMap { index, item in
+                toGridRow(item: item, keyField: keyField, index: index)
+            }
+            
+            
+            let nextCursor = object["nextCursor"]?.stringValue
+                ?? object["offset"]?.stringValue
+                ?? object["cursor"]?.stringValue
+            let hasMore = object["hasMore"]?.boolValue ?? ((nextCursor != nil) || rows.count >= pageSize)
+            if !rows.isEmpty {
+                return (rows, nextCursor, hasMore)
+            }
+
+            if let single = toGridRow(item: .object(object), keyField: keyField, index: 0) {
+                return ([single], nil, false)
+            }
+        }
+
+        if let array = response.arrayValue {
+            let rows = array.enumerated().compactMap { index, item in
+                toGridRow(item: item, keyField: keyField, index: index)
+            }
+            return (rows, nil, rows.count >= pageSize)
+        }
+
+        return ([], nil, false)
+    }
+    
     private func toGridRow(item: JSONValue, keyField: String, index: Int) -> DBGridRow? {
         guard let sourcePayload = item.objectValue else {
             return nil

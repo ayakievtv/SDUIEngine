@@ -34,36 +34,36 @@ final class BasicComponentsTests: XCTestCase {
 
     // MARK: - Test Doubles
 
-    private final class MockStateStore: StateStoreManaging {
-        private var storage: [String: JSONValue] = [:]
-
-        var state: [String: JSONValue] { storage }
-
-        func getValue(for key: String) -> JSONValue? {
-            storage[key]
-        }
-
-        func set(_ value: JSONValue, for key: String) {
-            storage[key] = value
-        }
-
-        func merge(_ json: JSONValue, withPrefix prefix: String) {
-            guard let obj = json.objectValue else { return }
-            for (k, v) in obj {
-                set(v, for: "\(prefix).\(k)")
-            }
-        }
-
-        func getValues(forPrefix prefix: String) -> [String: JSONValue] {
-            var result: [String: JSONValue] = [:]
-            let searchPrefix = prefix.hasSuffix(".") ? prefix : "\(prefix)."
-            for (key, value) in storage where key.hasPrefix(searchPrefix) {
-                let cleanKey = String(key.dropFirst(searchPrefix.count))
-                result[cleanKey] = value
-            }
-            return result
-        }
-    }
+//    private final class MockStateStore: StateStoreManaging {
+//        private var storage: [String: JSONValue] = [:]
+//
+//        var state: [String: JSONValue] { storage }
+//
+//        func getValue(for key: String) -> JSONValue? {
+//            storage[key]
+//        }
+//
+//        func set(_ value: JSONValue, for key: String) {
+//            storage[key] = value
+//        }
+//
+//        func merge(_ json: JSONValue, withPrefix prefix: String) {
+//            guard let obj = json.objectValue else { return }
+//            for (k, v) in obj {
+//                set(v, for: "\(prefix).\(k)")
+//            }
+//        }
+//
+//        func getValues(forPrefix prefix: String) -> [String: JSONValue] {
+//            var result: [String: JSONValue] = [:]
+//            let searchPrefix = prefix.hasSuffix(".") ? prefix : "\(prefix)."
+//            for (key, value) in storage where key.hasPrefix(searchPrefix) {
+//                let cleanKey = String(key.dropFirst(searchPrefix.count))
+//                result[cleanKey] = value
+//            }
+//            return result
+//        }
+//    }
 
     private func makeTestContext(componentStore: ComponentStore = ComponentStore()) -> UIContext {
         let stateStore = MockStateStore()

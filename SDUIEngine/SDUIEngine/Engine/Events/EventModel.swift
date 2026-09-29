@@ -53,40 +53,61 @@ final class AnyComponent: EventActionHandler {
 }
 
 // Resolves dynamic placeholders used in backend params, e.g. @USERID.
+//final class ParamResolver {
+//    private let variableProviders: [String: () -> String]
+//
+//    init(
+//        currentUserIDProvider: @escaping () -> String = { "demo_user" },
+//        extraProviders: [String: () -> String] = [:]
+//    ) {
+//        var providers: [String: () -> String] = [
+//            "@USERID": currentUserIDProvider,
+//        ]
+//        extraProviders.forEach { key, provider in
+//            let token = key.hasPrefix("@") ? key.uppercased() : "@\(key.uppercased())"
+//            providers[token] = provider
+//        }
+//        variableProviders = providers
+//    }
+//
+//    func resolve(params: [String: String]?) -> [String: String]? {
+//        guard let params else { return nil }
+//        return params.reduce(into: [String: String]()) { result, pair in
+//            result[pair.key] = resolve(value: pair.value)
+//        }
+//    }
+//
+//    private func resolve(value: String) -> String {
+//        var resolved = value
+//        for (token, provider) in variableProviders {
+//            if resolved.contains(token) {
+//                resolved = resolved.replacingOccurrences(of: token, with: provider())
+//            }
+//        }
+//        return resolved
+//    }
+//}
 final class ParamResolver {
-    private let variableProviders: [String: () -> String]
+    private let store: GlobalVariablesStore
 
-    init(
-        currentUserIDProvider: @escaping () -> String = { "demo_user" },
-        extraProviders: [String: () -> String] = [:]
-    ) {
-        var providers: [String: () -> String] = [
-            "@USERID": currentUserIDProvider,
-        ]
-        extraProviders.forEach { key, provider in
-            let token = key.hasPrefix("@") ? key.uppercased() : "@\(key.uppercased())"
-            providers[token] = provider
-        }
-        variableProviders = providers
-    }
+    init(store: GlobalVariablesStore = .shared) { self.store = store }
 
-    func resolve(params: [String: String]?) -> [String: String]? {
-        guard let params else { return nil }
-        return params.reduce(into: [String: String]()) { result, pair in
-            result[pair.key] = resolve(value: pair.value)
-        }
-    }
-
-    private func resolve(value: String) -> String {
+    func resolve(value: String) -> String {          // было private
         var resolved = value
-        for (token, provider) in variableProviders {
-            if resolved.contains(token) {
-                resolved = resolved.replacingOccurrences(of: token, with: provider())
-            }
+        for (token, replacement) in store.all() {
+            resolved = resolved.replacingOccurrences(of: token, with: replacement)
         }
         return resolved
     }
+
+        func resolve(params: [String: String]?) -> [String: String]? {
+            guard let params else { return nil }
+            return params.reduce(into: [String: String]()) { result, pair in
+                result[pair.key] = resolve(value: pair.value)
+            }
+        }
 }
+
 
 // Event descriptor attached to components in JSON config.
 struct EventModel: Codable, Equatable {

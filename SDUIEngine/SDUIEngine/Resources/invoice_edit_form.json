@@ -63,7 +63,8 @@
                            "props":{
                               "placeholder":"Document Number",
                               "stateKey":"invoiceForm.doc_number",
-                              "padding":10, "multilineTextAlignment":"right",
+                              "padding":10,
+                              "multilineTextAlignment":"right",
                               "maxLength": 100
                            }
                         }
@@ -97,7 +98,8 @@
                            "props":{
                               "placeholder":"Customer Name",
                               "stateKey":"invoiceForm.customer_name",
-                              "padding":10, "multilineTextAlignment":"right"
+                              "padding":10,
+                              "multilineTextAlignment":"right"
                            
                            }
                         }
@@ -131,7 +133,8 @@
                            "props":{
                               "placeholder":"Amount",
                               "stateKey":"invoiceForm.amount",
-                              "padding":10, "multilineTextAlignment":"right"
+                              "padding":10,
+                              "multilineTextAlignment":"right"
                         
                            }
                         }

@@ -22,7 +22,7 @@ actor UIScreenCache {
 
 // Loads SDUI screen JSON from backend with local fallback and in-memory cache.
 final class UIService {
-    static let useLocalScreens = true
+    static let useLocalScreens = false //true
 
     private let baseURL: URL?
     private let session: URLSession
@@ -40,20 +40,28 @@ final class UIService {
         // 1) In development/local mode, always use bundle JSON.
         // 2) Otherwise try backend first.
         // 3) If backend fails for any reason, fallback to bundle JSON.
-        if Self.useLocalScreens || Self.isDebugBuild {
-            let localData = try loadLocalScreenData(screenName: screenName)
-            print("Loaded UI from local JSON fallback")
-            return try decodeComponent(from: localData)
-        }
+        
+        
+//        if Self.useLocalScreens || Self.isDebugBuild {
+//            let localData = try loadLocalScreenData(screenName: screenName)
+//            print("Loaded UI from local JSON fallback")
+//            return try decodeComponent(from: localData)
+//        }
 
         do {
             let backendData = try await loadFromBackend(screenName: screenName)
             await cache.set(screenName, data: backendData)
-            print("Loaded UI from backend")
+       
+            Log.d("Loaded UI from backend",screenName)
+            
             return try decodeComponent(from: backendData)
         } catch {
             let localData = try loadLocalScreenData(screenName: screenName)
-            print("Loaded UI from local JSON fallback")
+            
+            
+            Log.d("Loaded UI from local JSON fallback",screenName)
+            
+            
             return try decodeComponent(from: localData)
         }
     }
@@ -68,12 +76,33 @@ final class UIService {
             throw UIServiceError.invalidBackendBaseURL
         }
 
+
         let endpoint = baseURL
             .appendingPathComponent("api")
-            .appendingPathComponent("ui")
-            .appendingPathComponent(screenName)
+            .appendingPathComponent("run")
+//            .appendingPathComponent(screenName)
 
-        let (data, response) = try await session.data(from: endpoint)
+        
+        
+        guard var components = URLComponents(url: endpoint, resolvingAgainstBaseURL: true) else {
+                throw UIServiceError.invalidBackendBaseURL
+            }
+
+            components.queryItems = [
+                URLQueryItem(name: "1", value: "1"),
+                URLQueryItem(name: "module", value: "dsapi"),
+                URLQueryItem(name: "action", value: "GET_SCREEN"),
+                URLQueryItem(name: "screenId", value: screenName)
+            ]
+
+            guard let finalURL = components.url else {
+                throw UIServiceError.invalidBackendBaseURL
+            }
+        
+        
+        Log.d("Loading loadFromBackend: \(finalURL)",finalURL)
+        
+        let (data, response) = try await session.data(from: finalURL)
         guard let httpResponse = response as? HTTPURLResponse else {
             throw UIServiceError.invalidResponse
         }
@@ -91,6 +120,8 @@ final class UIService {
             withExtension: "json",
             subdirectory: "Resources"
         ) {
+            
+            Log.d("Loading screen data from local file: \(resourceURL)",resourceURL)
             return try Data(contentsOf: resourceURL)
         }
 

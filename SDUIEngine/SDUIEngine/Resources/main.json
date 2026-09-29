@@ -24,6 +24,57 @@
                   "color":"#5F2937"
                }
             },
+            
+            {
+               "id":"go_home",
+               "type":"Button",
+               "props":{
+                  "title":"Open Comments",
+                  "padding":12,
+                  "color":"#0EA5E9"
+               },
+               "events":{
+                  "onTap":{
+                     "params":{
+                        "actions":[
+                           {
+                              "target":"navigation",
+                              "action":"push",
+                              "route":"Comments"
+                           }
+                        ]
+                     }
+                  }
+               }
+            },
+            
+            
+            {
+               "id":"go_inbox_button",
+               "type":"Button",
+               "props":{
+                  "title":"Open All Docs",
+                  "padding":12,
+                  "color":"#0EA5E9"
+               },
+               "events":{
+                  "onTap":{
+                     "params":{
+                        "actions":[
+                           {
+                              "target":"navigation",
+                              "action":"push",
+                              "route":"alldocs"
+                           }
+                        ]
+                     }
+                  }
+               }
+            },
+           
+            
+            
+            
             {
                "id":"go_demo_button",
                "type":"Button",
@@ -46,6 +97,12 @@
                   }
                }
             },
+            
+            
+            
+            
+            
+            
             {
                "id":"go_demo2_button",
                "type":"Button",

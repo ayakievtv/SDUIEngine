@@ -149,6 +149,13 @@ final class UIContext {
     private var openFormRequestSerial = 0
     private var activeOpenFormTokenByPrefix: [String: Int] = [:]
 
+    let globalVariables: GlobalVariablesStore      // init: = .shared
+    let variableResolver: ParamResolver            // init: ParamResolver(store: globalVariables)
+
+    func resolveGlobalVariables(in model: ComponentModel) -> ComponentModel {
+        model.resolvingVariables(using: variableResolver)
+    }
+
     init(
         stateStore: StateStoreManaging = InMemoryStateStore(),
         eventDispatcher: EventDispatching = EventDispatcher(),
@@ -166,6 +173,9 @@ final class UIContext {
         self.dataSourceRegistry = dataSourceRegistry
         self.componentStore = componentStore
 
+        self.globalVariables = .shared
+        self.variableResolver = ParamResolver(store: globalVariables)
+        
         // Bridge common component events to backend-driven navigation actions
         registerDefaultEventHandlers()
     }
@@ -437,7 +447,7 @@ final class UIContext {
         // 1. Extract basic parameters from flat dictionary
         guard let rawEndpoint = params["endpoint"] else { return }
 
-        let idStateKey = params["idStateKey"] ?? "invoiceForm.id"
+        let idStateKey = params["idStateKey"] ?? "dummyForm.id"
         let formPrefix = params["formStatePrefix"] ?? String(idStateKey.split(separator: ".").first ?? "main")
         
         // Generate keys for ID and UUID synchronization

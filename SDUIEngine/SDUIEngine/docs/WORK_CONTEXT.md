@@ -146,7 +146,7 @@ SDUIEngine/
 ## 🎨 JSON Configurations
 
 ### Component Example:
-```json
+```json6
 {
   "type": "Button",
   "props": {

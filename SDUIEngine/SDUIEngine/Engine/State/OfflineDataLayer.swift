@@ -434,17 +434,29 @@ enum RemoteRequestError: Error {
     case badStatusCode(Int)
 }
 
+
+
+
+
 final class URLSessionRemoteClient: RemoteRequesting {
     private let baseURL: URL?
     private let session: URLSession
+    private let variables: GlobalVariablesStore
 
-    init(baseURL: URL? = nil, session: URLSession = .shared) {
+    init(
+        baseURL: URL? = nil,
+        session: URLSession = .shared,
+        variables: GlobalVariablesStore = .shared
+    ) {
         self.baseURL = baseURL
         self.session = session
+        self.variables = variables
     }
 
     func request(endpoint: String, method: HTTPMethod, body: [String: JSONValue]?) async throws -> JSONValue {
-        guard let url = buildURL(endpoint: endpoint) else {
+        let resolvedEndpoint = variables.resolve(endpoint)   // <- подстановка
+
+        guard let url = buildURL(endpoint: resolvedEndpoint) else {
             throw RemoteRequestError.invalidBaseURL
         }
 
@@ -455,6 +467,9 @@ final class URLSessionRemoteClient: RemoteRequesting {
             request.httpBody = try JSONEncoder().encode(body)
         }
 
+        Log.d("📕  URLSessionRemoteClient : \(resolvedEndpoint)", body)
+        
+        
         let (data, response) = try await session.data(for: request)
         guard let httpResponse = response as? HTTPURLResponse else {
             throw RemoteRequestError.invalidResponse

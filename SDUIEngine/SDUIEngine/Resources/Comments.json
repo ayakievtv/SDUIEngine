@@ -1,0 +1,291 @@
+{
+  "id": "Comments",
+  "type": "VStack",
+  "children": [
+    {
+      "id": "Comments_root_scroll",
+      "type": "ScrollView",
+      "props": {
+        "navigationTitle": "Comments",
+        "showsIndicators": false
+      },
+      "children": [
+        {
+          "id": "Comments_content_vstack",
+          "type": "VStack",
+          "props": {
+            "padding": 10
+          },
+          "children": [
+            {
+              "id": "m308870",
+              "type": "VStack",
+              "children": [
+                {
+                  "id": "Comments_ds",
+                  "type": "DataSource",
+                  "props": {
+                    "endpoint": "@BASE_URL?module=dsapi&action=QUERY&g=5C99544C1C1C04E8E063030014ACBFA9",
+                    "pageSize": 20,
+                    "queryParam": "q",
+                    "cursorParam": "OFFSET",
+                    "keyField": "rowid"
+                  }
+                },
+                {
+                  "id": "Comments_grid",
+                  "type": "DBGrid",
+                  "props": {
+                    "dataSourceId": "Comments_ds",
+                    "selectedIdStateKey": "CommentsForm.rowid",
+                    "rowComponent": {
+                      "id": "Comments_row",
+                      "type": "VStack",
+                      "props": {
+                        "padding": 2
+                      },
+                      "children": [
+                        {
+                          "id": "Comments_row_rowid",
+                          "type": "HStack",
+                          "children": [
+                            {
+                              "id": "Comments_row_rowid_label",
+                              "type": "Text",
+                              "props": {
+                                "text": "ROWID",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "id": "Comments_row_rowid_spacer",
+                              "type": "Spacer"
+                            },
+                            {
+                              "id": "Comments_row_rowid_value",
+                              "type": "Text",
+                              "props": {
+                                "text": "{{ROWID}}",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Comments_row_id",
+                          "type": "HStack",
+                          "children": [
+                            {
+                              "id": "Comments_row_id_label",
+                              "type": "Text",
+                              "props": {
+                                "text": "ID",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "id": "Comments_row_id_spacer",
+                              "type": "Spacer"
+                            },
+                            {
+                              "id": "Comments_row_id_value",
+                              "type": "Text",
+                              "props": {
+                                "text": "{{ID}}",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Comments_row_project_id",
+                          "type": "HStack",
+                          "children": [
+                            {
+                              "id": "Comments_row_project_id_label",
+                              "type": "Text",
+                              "props": {
+                                "text": "Project",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "id": "Comments_row_project_id_spacer",
+                              "type": "Spacer"
+                            },
+                            {
+                              "id": "Comments_row_project_id_value",
+                              "type": "Text",
+                              "props": {
+                                "text": "{{PROJECT_ID}}",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Comments_row_comment_text",
+                          "type": "HStack",
+                          "children": [
+                            {
+                              "id": "Comments_row_comment_text_label",
+                              "type": "Text",
+                              "props": {
+                                "text": "Comment",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "id": "Comments_row_comment_text_spacer",
+                              "type": "Spacer"
+                            },
+                            {
+                              "id": "Comments_row_comment_text_value",
+                              "type": "Text",
+                              "events": {
+                                "onTap": {
+                                  "params": {
+                                    "actions": [
+                                      {
+                                        "target": "navigation",
+                                        "action": "push",
+                                        "route": "Add_Comment",
+                                        "params": {
+                                          "P13_ID": {
+                                            "source": "row",
+                                            "field": "id"
+                                          }
+                                        }
+                                      }
+                                    ]
+                                  }
+                                }
+                              },
+                              "props": {
+                                "text": "{{COMMENT_TEXT}}",
+                                "fontSize": 12,
+                                "color": "#0EA5E9"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Comments_row_created",
+                          "type": "HStack",
+                          "children": [
+                            {
+                              "id": "Comments_row_created_label",
+                              "type": "Text",
+                              "props": {
+                                "text": "Created",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "id": "Comments_row_created_spacer",
+                              "type": "Spacer"
+                            },
+                            {
+                              "id": "Comments_row_created_value",
+                              "type": "Text",
+                              "props": {
+                                "text": "{{CREATED}}",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "id": "Comments_row_created_by",
+                          "type": "HStack",
+                          "children": [
+                            {
+                              "id": "Comments_row_created_by_label",
+                              "type": "Text",
+                              "props": {
+                                "text": "By",
+                                "fontSize": 12
+                              }
+                            },
+                            {
+                              "id": "Comments_row_created_by_spacer",
+                              "type": "Spacer"
+                            },
+                            {
+                              "id": "Comments_row_created_by_value",
+                              "type": "Text",
+                              "props": {
+                                "text": "{{CREATED_BY}}",
+                                "fontSize": 12
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "columns": [
+                      {
+                        "field": "rowid",
+                        "title": "ROWID",
+                        "sortable": 1
+                      },
+                      {
+                        "field": "id",
+                        "title": "ID",
+                        "sortable": 1
+                      },
+                      {
+                        "field": "project_id",
+                        "title": "Project",
+                        "sortable": 1
+                      },
+                      {
+                        "field": "comment_text",
+                        "title": "Comment",
+                        "sortable": 1
+                      },
+                      {
+                        "field": "created",
+                        "title": "Created",
+                        "sortable": 1
+                      },
+                      {
+                        "field": "created_by",
+                        "title": "By",
+                        "sortable": 1
+                      }
+                    ]
+                  },
+                  "events": {
+                    "onTap": {
+                      "params": {
+                        "actions": [
+                          {
+                            "target": "navigation",
+                            "action": "push",
+                            "route": "Add_Comment",
+                            "params": {
+                              "P13_ID": "AI_TODO: unresolved @ID"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                {
+                  "id": "DataSource_309159",
+                  "type": "Text",
+                  "props": {
+                    "text": "AI_TODO: DataSource",
+                    "color": "#D32F2F"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

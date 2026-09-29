@@ -22,7 +22,12 @@ struct ContentView: View {
         let context = UIContext(navigation: router)
         registerDefaultComponents(in: context.componentRegistry)
         self.context = context
-        self.service = UIService()
+      //  self.service = UIService()
+        
+        self.service =  UIService(baseURL:URL(string:AppConfig.baseURL))
+        
+//        self.service =  UIService(baseURL:URL(string:"http://192.168.2.104:8023/ords/yakiev"))
+       
     }
 
     var body: some View {

@@ -1,0 +1,267 @@
+{
+     "id": "Add_Comment",
+     "type": "VStack",
+     "children": [
+       {
+         "events": {
+           "onAppear": {
+             "params": {
+               "actions": [
+                 {
+                   "target": "backend_data",
+                   "action": "OPEN_FORM",
+                   "formStatePrefix": "Add_CommentForm",
+                   "endpoint": "http://localhost:8023/ords/yakiev/api/run?module=dsapi&action=QUERY&g=5C8C35127C0402F9E063020011AC11B5&ID={id}",
+                   "idStateKey": "Add_CommentForm.id",
+                   "clearPreviousDraft": "true"
+                 }
+               ]
+             }
+           }
+         },
+         "id": "Add_Comment_root_scroll",
+         "type": "ScrollView",
+         "props": {
+           "navigationTitle": "Add Comment",
+           "showsIndicators": false
+         },
+         "children": [
+           {
+             "id": "Add_Comment_content_vstack",
+             "type": "VStack",
+             "props": {
+               "padding": 10
+             },
+             "children": [
+               {
+                 "id": "m306182",
+                 "type": "VStack",
+                 "children": [
+                   {
+                     "id": "m306481",
+                     "type": "VStack",
+                     "children": [
+                       {
+                         "id": "m306483_row",
+                         "type": "HStack",
+                         "children": [
+                           {
+                             "id": "m306483_label",
+                             "type": "Text",
+                             "props": {
+                               "text": "P13_ID",
+                               "fontSize": 12,
+                               "fontWeight": "semibold",
+                               "color": "#5F676A",
+                               "fixedSizeVertical": 1
+                             }
+                           },
+                           {
+                             "id": "m306483_field",
+                             "type": "TextField",
+                             "props": {
+                               "placeholder": "P13_ID",
+                               "stateKey": "Add_CommentForm.p13_id",
+                               "padding": 10,
+                               "multilineTextAlignment": "right"
+                             }
+                           }
+                         ]
+                       },
+                       {
+                         "id": "m306484_row",
+                         "type": "HStack",
+                         "children": [
+                           {
+                             "id": "m306484_label",
+                             "type": "Text",
+                             "props": {
+                               "text": "Project",
+                               "fontSize": 12,
+                               "fontWeight": "semibold",
+                               "color": "#5F676A",
+                               "fixedSizeVertical": 1
+                             }
+                           },
+                           {
+                             "id": "m306484_field",
+                             "type": "TextField",
+                             "props": {
+                               "placeholder": "Project",
+                               "stateKey": "Add_CommentForm.p13_project_id",
+                               "padding": 10,
+                               "multilineTextAlignment": "right"
+                             }
+                           }
+                         ]
+                       },
+                       {
+                         "id": "m306485_row",
+                         "type": "HStack",
+                         "children": [
+                           {
+                             "id": "m306485_label",
+                             "type": "Text",
+                             "props": {
+                               "text": "Comment Text",
+                               "fontSize": 12,
+                               "fontWeight": "semibold",
+                               "color": "#5F676A",
+                               "fixedSizeVertical": 1
+                             }
+                           },
+                           {
+                             "id": "m306485_field",
+                             "type": "TextField",
+                             "props": {
+                               "placeholder": "Comment Text",
+                               "stateKey": "Add_CommentForm.p13_comment_text",
+                               "padding": 10,
+                               "multilineTextAlignment": "right"
+                             }
+                           }
+                         ]
+                       }
+                     ]
+                   },
+                   {
+                     "id": "m306482",
+                     "type": "VStack",
+                     "children": [
+                       {
+                         "id": "306486_row",
+                         "type": "HStack",
+                         "children": [
+                           {
+                             "id": "m306486",
+                             "type": "Button",
+                             "props": {
+                               "title": "Delete",
+                               "padding": 12,
+                               "color": "#0EA5E9",
+                               "cornerRadius": 12
+                             },
+                             "events": {
+                               "onTap": {
+                                 "params": {
+                                   "actions": [
+                                     {
+                                       "target": "navigation",
+                                       "action": "noop",
+                                       "_ai_todo": "unmapped action: "
+                                     }
+                                   ]
+                                 }
+                               }
+                             }
+                           },
+                           {
+                             "id": "m306487",
+                             "type": "Button",
+                             "props": {
+                               "title": "Cancel",
+                               "padding": 12,
+                               "color": "#0EA5E9",
+                               "cornerRadius": 12
+                             },
+                             "events": {
+                               "onTap": {
+                                 "params": {
+                                   "actions": [
+                                     {
+                                       "target": "backend_data",
+                                       "action": "DISCARD_FORM",
+                                       "goBack": "true"
+                                     }
+                                   ]
+                                 }
+                               }
+                             }
+                           },
+                           {
+                             "id": "m306488",
+                             "type": "Button",
+                             "props": {
+                               "title": "Add Comment",
+                               "padding": 12,
+                               "color": "#0EA5E9",
+                               "cornerRadius": 12
+                             },
+                             "events": {
+                               "onTap": {
+                                 "params": {
+                                   "actions": [
+                                     {
+                                       "target": "backend_data",
+                                       "action": "SAVE_FORM",
+                                       "endpoint": null,
+                                       "method": "POST",
+                                       "queue": "true"
+                                     }
+                                   ]
+                                 }
+                               }
+                             }
+                           },
+                           {
+                             "id": "m306489",
+                             "type": "Button",
+                             "props": {
+                               "title": "Save",
+                               "padding": 12,
+                               "color": "#0EA5E9",
+                               "cornerRadius": 12
+                             },
+                             "events": {
+                               "onTap": {
+                                 "params": {
+                                   "actions": [
+                                     {
+                                       "target": "navigation",
+                                       "action": "noop",
+                                       "_ai_todo": "unmapped action: "
+                                     }
+                                   ]
+                                 }
+                               }
+                             }
+                           }
+                         ]
+                       }
+                     ]
+                   },
+                   {
+                     "id": "DataSource_306481_row",
+                     "type": "HStack",
+                     "children": [
+                       {
+                         "id": "DataSource_306481_label",
+                         "type": "Text",
+                         "props": {
+                           "text": "Add_Comment",
+                           "fontSize": 12,
+                           "fontWeight": "semibold",
+                           "color": "#5F676A",
+                           "fixedSizeVertical": 1
+                         }
+                       },
+                       {
+                         "id": "DataSource_306481_field",
+                         "type": "TextField",
+                         "props": {
+                           "placeholder": "Add_Comment",
+                           "stateKey": "Add_CommentForm.add_comment",
+                           "padding": 10,
+                           "multilineTextAlignment": "right"
+                         }
+                       }
+                     ]
+                   }
+                 ]
+               }
+             ]
+           }
+         ]
+       }
+     ]
+   }
