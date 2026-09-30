@@ -22,7 +22,8 @@ struct ScrollViewComponent: UIComponent {
             }
         }
         .applyStyle(style, includeFontSize: false)
-
+        .padding(.horizontal,5)
+        
         if let navigationTitle, !navigationTitle.isEmpty {
             scrollContent
                 .navigationTitle(navigationTitle)

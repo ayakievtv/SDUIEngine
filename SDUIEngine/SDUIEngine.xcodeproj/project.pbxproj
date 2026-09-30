@@ -16,6 +16,10 @@
 		0097CBA72F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md in Resources */ = {isa = PBXBuildFile; fileRef = 0097CBA62F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md */; };
 		19398689306A974200A7F78D /* Comments.json in Resources */ = {isa = PBXBuildFile; fileRef = 19398688306A974200A7F78D /* Comments.json */; };
 		1939868B306A9BED00A7F78D /* Add_Comment.json in Resources */ = {isa = PBXBuildFile; fileRef = 1939868A306A9BED00A7F78D /* Add_Comment.json */; };
+		195C6974306CF51800713B4D /* ButtonStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195C6973306CF51700713B4D /* ButtonStyles.swift */; };
+		195C6976306CF54800713B4D /* nTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195C6975306CF54600713B4D /* nTheme.swift */; };
+		195C6979306D2D5F00713B4D /* InMemoryStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195C6978306D2D5F00713B4D /* InMemoryStateStore.swift */; };
+		195C697B306D2D8C00713B4D /* EventDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195C697A306D2D8B00713B4D /* EventDispatcher.swift */; };
 		1960D1FE3003F4C0008CA182 /* JSONValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D1FC3003F4C0008CA182 /* JSONValueTests.swift */; };
 		1960D1FF3003F4C0008CA182 /* ComponentModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D1FB3003F4C0008CA182 /* ComponentModelTests.swift */; };
 		1960D2013003F536008CA182 /* EventModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D2003003F536008CA182 /* EventModelTests.swift */; };
@@ -90,6 +94,10 @@
 		0097CBA62F6A88BF002E5CFD /* PROJECT_SHORTCOMINGS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = PROJECT_SHORTCOMINGS.md; sourceTree = "<group>"; };
 		19398688306A974200A7F78D /* Comments.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Comments.json; sourceTree = "<group>"; };
 		1939868A306A9BED00A7F78D /* Add_Comment.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Add_Comment.json; sourceTree = "<group>"; };
+		195C6973306CF51700713B4D /* ButtonStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyles.swift; sourceTree = "<group>"; };
+		195C6975306CF54600713B4D /* nTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = nTheme.swift; sourceTree = "<group>"; };
+		195C6978306D2D5F00713B4D /* InMemoryStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryStateStore.swift; sourceTree = "<group>"; };
+		195C697A306D2D8B00713B4D /* EventDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDispatcher.swift; sourceTree = "<group>"; };
 		1960D1FB3003F4C0008CA182 /* ComponentModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentModelTests.swift; sourceTree = "<group>"; };
 		1960D1FC3003F4C0008CA182 /* JSONValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONValueTests.swift; sourceTree = "<group>"; };
 		1960D2003003F536008CA182 /* EventModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModelTests.swift; sourceTree = "<group>"; };
@@ -177,6 +185,15 @@
 			path = docs;
 			sourceTree = "<group>";
 		};
+		195C6977306CF55E00713B4D /* ThemeGroup */ = {
+			isa = PBXGroup;
+			children = (
+				195C6973306CF51700713B4D /* ButtonStyles.swift */,
+				195C6975306CF54600713B4D /* nTheme.swift */,
+			);
+			path = ThemeGroup;
+			sourceTree = "<group>";
+		};
 		1960D1F93003D21E008CA182 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -226,7 +243,6 @@
 				A00000000000000000000108 /* Network */,
 				A00000000000000000000109 /* Screens */,
 				A00000000000000000000111 /* Resources */,
-				A00000000000000000000110 /* DemoJSON */,
 				A00000000000000000000011 /* SDUIEngineApp.swift */,
 				A00000000000000000000012 /* ContentView.swift */,
 			);
@@ -258,6 +274,9 @@
 		A00000000000000000000102 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				195C697A306D2D8B00713B4D /* EventDispatcher.swift */,
+				195C6978306D2D5F00713B4D /* InMemoryStateStore.swift */,
+				195C6977306CF55E00713B4D /* ThemeGroup */,
 				199209CA306BE4C0006CCB58 /*  Log.swift */,
 				199209C8306BC180006CCB58 /* GlobalVariablesStore.swift */,
 				199209C6306BC15D006CCB58 /* AppConfig.swift */,
@@ -336,13 +355,6 @@
 				A00000000000000000001111 /* ScreenView.swift */,
 			);
 			path = Screens;
-			sourceTree = "<group>";
-		};
-		A00000000000000000000110 /* DemoJSON */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DemoJSON;
 			sourceTree = "<group>";
 		};
 		A00000000000000000000111 /* Resources */ = {
@@ -502,6 +514,7 @@
 			files = (
 				199209C7306BC15F006CCB58 /* AppConfig.swift in Sources */,
 				A00000000000000000000001 /* SDUIEngineApp.swift in Sources */,
+				195C6976306CF54800713B4D /* nTheme.swift in Sources */,
 				A00000000000000000000002 /* ContentView.swift in Sources */,
 				A00000000000000000000201 /* ComponentModel.swift in Sources */,
 				A00000000000000000000202 /* JSONValue.swift in Sources */,
@@ -513,8 +526,10 @@
 				A00000000000000000000801 /* VStackComponent.swift in Sources */,
 				A00000000000000000000802 /* HStackComponent.swift in Sources */,
 				A00000000000000000000803 /* ScrollViewComponent.swift in Sources */,
+				195C6974306CF51800713B4D /* ButtonStyles.swift in Sources */,
 				A00000000000000000000901 /* ComponentStyle.swift in Sources */,
 				A00000000000000000000902 /* TextComponent.swift in Sources */,
+				195C6979306D2D5F00713B4D /* InMemoryStateStore.swift in Sources */,
 				A00000000000000000000903 /* ButtonComponent.swift in Sources */,
 				199209C9306BC181006CCB58 /* GlobalVariablesStore.swift in Sources */,
 				A00000000000000000000904 /* ImageComponent.swift in Sources */,
@@ -525,6 +540,7 @@
 				A00000000000000000000907 /* DataSourceComponent.swift in Sources */,
 				A00000000000000000000908 /* DBGridComponent.swift in Sources */,
 				A00000000000000000001001 /* UIService.swift in Sources */,
+				195C697B306D2D8C00713B4D /* EventDispatcher.swift in Sources */,
 				A00000000000000000001101 /* ScreenView.swift in Sources */,
 				A00000000000000000001201 /* NavigationEngine.swift in Sources */,
 				A00000000000000000001202 /* OfflineDataLayer.swift in Sources */,

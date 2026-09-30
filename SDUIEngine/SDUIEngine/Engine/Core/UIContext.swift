@@ -17,38 +17,6 @@ protocol StateStoreManaging: AnyObject {
     func getValues(forPrefix prefix: String) -> [String: JSONValue]
 }
 
-/// In-memory implementation of state store
-final class InMemoryStateStore: StateStoreManaging {
-    private(set) var state: [String: JSONValue] = [:]
-
-    func getValue(for key: String) -> JSONValue? {
-        state[key]
-    }
-
-    func set(_ value: JSONValue, for key: String) {
-        state[key] = value
-    }
-    
-    func merge(_ json: JSONValue, withPrefix prefix: String) {
-        guard let object = json.objectValue else { return }
-        for (key, value) in object {
-            self.set(value, for: "\(prefix).\(key)")
-        }
-    }
-    
-    func getValues(forPrefix prefix: String) -> [String: JSONValue] {
-        var result: [String: JSONValue] = [:]
-        let searchPrefix = prefix.hasSuffix(".") ? prefix : "\(prefix)."
-        
-        for (key, value) in state {
-            if key.hasPrefix(searchPrefix) {
-                let cleanKey = String(key.dropFirst(searchPrefix.count))
-                result[cleanKey] = value
-            }
-        }
-        return result
-    }
-}
 
 // MARK: - Event Dispatching
 
@@ -58,46 +26,6 @@ typealias EventHandler = (EventModel, UIContext) -> Void
 /// Protocol for dispatching component events
 protocol EventDispatching: AnyObject {
     func dispatch(_ event: EventModel, context: UIContext)
-}
-
-/// Dispatches both local UI events and backend dynamic actions
-final class EventDispatcher: EventDispatching {
-    private var handlers: [EventType: EventHandler] = [:]
-    private let componentStore: ComponentStore
-    private let paramResolver: ParamResolver
-
-    init(
-        componentStore: ComponentStore = .shared,
-        paramResolver: ParamResolver = ParamResolver()
-    ) {
-        self.componentStore = componentStore
-        self.paramResolver = paramResolver
-    }
-
-    func register(_ type: EventType, handler: @escaping EventHandler) {
-        handlers[type] = handler
-    }
-
-    func dispatch(_ event: EventModel, context: UIContext) {
-        handlers[event.type]?(event, context)
-    }
-
-    /// Executes one dynamic action if trigger matches current lifecycle/user trigger
-    func dispatch(_ componentEvent: ComponentEvent, for trigger: ComponentEventTrigger? = nil) {
-        if let trigger, componentEvent.trigger != trigger.rawValue {
-            return
-        }
-
-        let resolvedParams = paramResolver.resolve(params: componentEvent.params)
-        for targetID in componentEvent.targets {
-            componentStore.get(componentID: targetID)?.handle(action: componentEvent.action, params: resolvedParams)
-        }
-    }
-
-    /// Executes all actions for a given trigger
-    func dispatch(events: [ComponentEvent], for trigger: ComponentEventTrigger) {
-        events.forEach { dispatch($0, for: trigger) }
-    }
 }
 
 // MARK: - HTTP Client
@@ -152,6 +80,10 @@ final class UIContext {
     let globalVariables: GlobalVariablesStore      // init: = .shared
     let variableResolver: ParamResolver            // init: ParamResolver(store: globalVariables)
 
+    
+    var activeRow: [String: JSONValue] = [:]
+    
+    
     func resolveGlobalVariables(in model: ComponentModel) -> ComponentModel {
         model.resolvingVariables(using: variableResolver)
     }
@@ -180,6 +112,47 @@ final class UIContext {
         registerDefaultEventHandlers()
     }
 
+    
+    
+    
+    /// params вида {"id":{"source":"row","field":"id"}} / {"source":"state","stateKey":".."} -> [String:String]
+    private func resolveNestedParams(_ nested: [String: JSONValue]?) -> [String: String] {
+        guard let nested else { return [:] }
+        let row = Dictionary(activeRow.map { ($0.key.lowercased(), $0.value) },
+                             uniquingKeysWith: { a, _ in a })
+
+        func scalar(_ v: JSONValue) -> String? {
+            if let s = v.stringValue { return s }
+            if let n = v.numberValue { return n.rounded() == n ? String(Int(n)) : String(n) }
+            if let b = v.boolValue { return b ? "true" : "false" }
+            return nil
+        }
+
+        var out: [String: String] = [:]
+        for (k, v) in nested {
+            if let o = v.objectValue {
+                switch o["source"]?.stringValue {
+                case "row":
+                    if let f = o["field"]?.stringValue, let rv = row[f.lowercased()] { out[k] = scalar(rv) }
+                case "state":
+                    if let key = o["stateKey"]?.stringValue, let sv = stateValue(for: key) { out[k] = scalar(sv) }
+                default: break
+                }
+            } else if let s = scalar(v) {
+                out[k] = s
+            }
+        }
+        return out
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     // MARK: - State Management
 
     /// Set state value and post notification
@@ -351,8 +324,24 @@ final class UIContext {
         for actionValue in actions {
             guard let actionData = actionValue.objectValue,
                   let actionName = actionData["action"]?.stringValue else { continue }
-            let params = flattenJSONParams(actionData)
+//            let params = flattenJSONParams(actionData)
 
+            var params = flattenJSONParams(actionData)
+
+            // вложенные params (навигация): кладём значения в state целевой формы <route>Form.<key>,
+            // откуда их читает OPEN_FORM
+            let nav = resolveNestedParams(actionData["params"]?.objectValue)
+            if !nav.isEmpty {
+                if let route = params["route"], !route.isEmpty {
+                    for (k, v) in nav {
+                        setState(.string(v), for: "\(route)Form.\(k)")   // именно .string
+                        
+//                        print("🧭 nav \(route)Form.\(k) = '\(v)'")
+                    }
+                }
+                params.merge(nav) { current, _ in current }
+            }
+            
             let explicitTargets = actionData["targets"]?.arrayValue?
                 .compactMap(\.stringValue)
                 .filter { !$0.isEmpty } ?? []
@@ -500,41 +489,96 @@ final class UIContext {
             // Check: is this response still relevant?
             guard activeOpenFormTokenByPrefix[formPrefix] == requestToken else { return }
             
+            
+            
+            
+            
+            
             guard let payload = response.objectValue else {
                 setState(.string("OPEN_FORM: response is not an object"), for: "\(formPrefix)._openFormError")
                 return
             }
 
-            // Unpack data (Oracle ORDS "items" or flat object)
-            let items = payload["items"]?.arrayValue
-            let firstRecord = items?.first?.objectValue ?? payload
-            
-            // Bulk state update
-            for (key, value) in firstRecord {
+            // Обёртки ответа: DS_API кладёт строки в "report", ORDS в "items"
+            let rows = payload["report"]?.arrayValue
+                ?? payload["items"]?.arrayValue
+                ?? payload["data"]?.arrayValue
+                ?? payload["rows"]?.arrayValue
+
+            guard let firstRecord = rows?.first?.objectValue else {
+                setState(.string("OPEN_FORM: no record in response"), for: "\(formPrefix)._openFormError")
+                return
+            }
+
+            // Ключи в нижний регистр: поля формы читают <prefix>.<lower(column)>;
+            // служебную колонку RN (номер строки) не переносим
+            let record = Dictionary(firstRecord.map { ($0.key.lowercased(), $0.value) },
+                                    uniquingKeysWith: { a, _ in a })
+            for (key, value) in record where key != "rn" {
                 setState(value, for: "\(formPrefix).\(key)")
             }
 
-            // Synchronize system ID/UUID fields
-            if let uuid = firstRecord["uuid"]?.stringValue, !uuid.isEmpty {
+            // Синхронизация id/uuid
+            if let uuid = record["uuid"]?.stringValue, !uuid.isEmpty {
                 setState(.string(uuid), for: "\(formPrefix).uuid")
                 setState(.string(uuid), for: "\(formPrefix).id")
-            } else if let id = firstRecord["id"]?.stringValue, !id.isEmpty {
+            } else if let id = record["id"]?.stringValue, !id.isEmpty {
                 setState(.string(id), for: "\(formPrefix).id")
                 setState(.string(id), for: "\(formPrefix).uuid")
             }
 
-            // Date mapping (if one of them is missing)
-            if let docDate = firstRecord["doc_date"] {
+            // Маппинг дат (если одной из них нет)
+            if let docDate = record["doc_date"] {
                 setState(docDate, for: "\(formPrefix).due_date")
-            } else if let dueDate = firstRecord["due_date"] {
+            } else if let dueDate = record["due_date"] {
                 setState(dueDate, for: "\(formPrefix).doc_date")
             }
 
-            // Final ID check
+            // Финальная проверка ID
             if !idValue.isEmpty {
                 setState(.string(idValue), for: idStateKey)
                 setState(.string(idValue), for: uuidStateKey)
             }
+            
+            
+            
+            
+            
+//            guard let payload = response.objectValue else {
+//                setState(.string("OPEN_FORM: response is not an object"), for: "\(formPrefix)._openFormError")
+//                return
+//            }
+//
+//            // Unpack data (Oracle ORDS "items" or flat object)
+//            let items = payload["items"]?.arrayValue
+//            let firstRecord = items?.first?.objectValue ?? payload
+//            
+//            // Bulk state update
+//            for (key, value) in firstRecord {
+//                setState(value, for: "\(formPrefix).\(key)")
+//            }
+//
+//            // Synchronize system ID/UUID fields
+//            if let uuid = firstRecord["uuid"]?.stringValue, !uuid.isEmpty {
+//                setState(.string(uuid), for: "\(formPrefix).uuid")
+//                setState(.string(uuid), for: "\(formPrefix).id")
+//            } else if let id = firstRecord["id"]?.stringValue, !id.isEmpty {
+//                setState(.string(id), for: "\(formPrefix).id")
+//                setState(.string(id), for: "\(formPrefix).uuid")
+//            }
+//
+//            // Date mapping (if one of them is missing)
+//            if let docDate = firstRecord["doc_date"] {
+//                setState(docDate, for: "\(formPrefix).due_date")
+//            } else if let dueDate = firstRecord["due_date"] {
+//                setState(dueDate, for: "\(formPrefix).doc_date")
+//            }
+//
+//            // Final ID check
+//            if !idValue.isEmpty {
+//                setState(.string(idValue), for: idStateKey)
+//                setState(.string(idValue), for: uuidStateKey)
+//            }
             
         } catch {
             guard activeOpenFormTokenByPrefix[formPrefix] == requestToken else { return }
@@ -545,7 +589,7 @@ final class UIContext {
     
     private func performSaveForm(_ params: [String: String]) async {
         guard let rawEndpoint = params["endpoint"] else { return }
-        let idStateKey = params["idStateKey"] ?? "invoiceForm.id"
+        let idStateKey = params["idStateKey"] ?? "dummyForm.id"
         let inferredPrefix = String(idStateKey.split(separator: ".").first ?? "main")
         let prefix = params["formStatePrefix"] ?? params["formKey"] ?? inferredPrefix
         
@@ -593,7 +637,7 @@ final class UIContext {
     private func performDiscardForm(_ params: [String: JSONValue]) {
         let prefix = params["formStatePrefix"]?.stringValue
             ?? params["formKey"]?.stringValue
-            ?? "invoiceForm"
+            ?? "dummyForm"
         let keyPrefix = prefix.hasSuffix(".") ? prefix : "\(prefix)."
 
         let keysToClear = stateStore.state.keys.filter { $0.hasPrefix(keyPrefix) }
@@ -611,7 +655,7 @@ final class UIContext {
 
         let methodRaw = params["method"]?.stringValue?.uppercased() ?? "POST"
         let method = HTTPMethod(rawValue: methodRaw) ?? .post
-        let idStateKey = params["idStateKey"]?.stringValue ?? "invoiceForm.id"
+        let idStateKey = params["idStateKey"]?.stringValue ?? "dummyForm.id"
         let formPrefix = params["formStatePrefix"]?.stringValue ?? String(idStateKey.split(separator: ".").first ?? "main")
         let idValue = stateValue(for: idStateKey)?.stringValue ?? ""
         let endpoint = rawEndpoint.replacingOccurrences(of: "{id}", with: idValue)

@@ -89,3 +89,48 @@ self.font(Font.custom("MullerRegular.ttf",size:32))
 }
 
 }
+
+extension Color {
+    static let appmain = Color(hex:"#2A53A2")//Color(red: 1, green: 0.44, blue: 0.42)
+    static let appBack = Color(hex:"#E9E9EE")
+    static let buttonMain = Color(hex:"#2A53A2")
+    static let buttonBcg = Color(hex:"#B8BEE0")
+    static let buttonDis = Color(hex:"#CECECF")//#7A9ECF //DADEF1
+    static let buttonDisForg = Color(hex:"#5966A6")
+    static let buttonSmall = Color(hex:"#F2F1FE")
+    static let buttonSmallForg = Color(hex:"#2A53A2")
+    static let appprimary = Color(hex:"#3468CB")
+    static let appbluedark = Color(hex:"#12213F")
+    static let appGreen = Color(red: 0.49, green: 0.75, blue: 0.56) // #7DBF8F
+    static let appGreenDark = Color(red: 0.2, green: 0.5, blue: 0.2) // #7DBF8F
+    static let appOrange = Color(red: 0.9, green: 0.56, blue: 0.2) //  #E48F34
+    static let brown = Color(hex:"#FFF8DC")
+    static let appTitle = Color(red: 0, green: 0, blue: 0)
+    static let appFileldHeader = Color(red: 0.6, green: 0.6, blue: 0.6)
+    static let appblue = Color(hex:"#2A53A2")  //#c1c6ce
+    static let appwhite = Color(hex:"#EEEEEE")
+    static let appgray = Color(hex:"#D6D6D6")//Color(red: 0.84, green: 0.84, blue: 0.84)
+    static let appgray1 = Color(hex:"#E5E5E5")//Color(red: 0.9, green: 0.9, blue: 0.9)
+    static let appgray2 = Color(hex:"#F4F4F4")//Color(red: 0.96, green: 0.96, blue: 0.96)
+    static let appgrayRect = Color(hex:"#F0F2F9")
+    static let appgrayback = Color(hex:"#E2E5E9")  //#c1c6ce
+    static let appgraytext0 = Color(hex:"#242942")
+    static let appgraytext = Color(hex:"#323B67")//Color(hex:"#475285")
+    static let appgraytext1 = Color(hex:"#475285")//Color(hex:"#475285")
+    static let appgraytext2 = Color(hex:"#7581BD")
+    static let appbrown = Color(red: 0.898, green: 0.561, blue: 0.205)
+    static let appgrayblue = Color(red: 0.475, green: 0.555, blue: 0.698)
+    static let appnew = Color(red: 0.49, green: 0.60, blue: 0.75)
+    static let dayWork = Color(hex:"#00B007")
+    static let dayProgul = Color(hex:"#EB1414")
+    static let dayOtgul = Color(hex:"#FFBF00")
+    static let dayBolnich = Color(hex:"#FFBF00")
+    static let dayOtpusk = Color(hex:"#949ED1")
+    static let dayVykhod = Color(hex:"#949ED1")
+    static let dayUvoln = Color(hex:"#242942")
+    static let appred = Color(hex:"#FA5754")//Color(red: 0.98, green: 0.34, blue: 0.33)
+    static let prored = Color(hex:"#c03029")
+    static let prored1 = Color(hex:"#D93A32")
+    static let progreen1 = Color(hex:"#AEE5C2")
+    static let appyellow = Color(hex:"#FFBF00")  //#c1c6ce
+}

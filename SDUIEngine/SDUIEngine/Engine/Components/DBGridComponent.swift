@@ -272,7 +272,8 @@ struct DBGridComponent: UIComponent {
                             await loadInitial(config: resolved, resetCursor: true, remoteQuery: filterText)
                         }
                     }
-                    .buttonStyle(.bordered)
+//                    .buttonStyle(.bordered)
+                    .buttonStyle(BtnSmallFill())
                 }
 
                 if cfg.sorting {
@@ -414,7 +415,33 @@ struct DBGridComponent: UIComponent {
         )
     }
 
-     func handleRowTap(row: DBGridRow) {
+//     func handleRowTap(row: DBGridRow) {
+//        let selectedIDStateKey = model.resolvedProps.string("selectedIdStateKey")
+//            ?? model.resolvedProps.string("selectionStateKey")
+//            ?? "selectedRowId"
+//        context.setState(key: selectedIDStateKey, value: .string(row.id))
+//        if selectedIDStateKey.hasSuffix(".id") {
+//            let uuidKey = String(selectedIDStateKey.dropLast(3)) + ".uuid"
+//            context.setState(key: uuidKey, value: .string(row.id))
+//        } else if selectedIDStateKey.hasSuffix(".uuid") {
+//            let idKey = String(selectedIDStateKey.dropLast(5)) + ".id"
+//            context.setState(key: idKey, value: .string(row.id))
+//        }
+//
+//        guard let event = model.event(for: .onTap) else {
+//            return
+//        }
+//
+//        var params = event.params
+//        if params["value"] == nil {
+//            params["value"] = .string(row.id)
+//        }
+//        params["rowId"] = .string(row.id)
+//
+//        context.trigger(EventModel(type: .onTap, targets: event.targets, params: params))
+//    }
+
+    func handleRowTap(row: DBGridRow) {
         let selectedIDStateKey = model.resolvedProps.string("selectedIdStateKey")
             ?? model.resolvedProps.string("selectionStateKey")
             ?? "selectedRowId"
@@ -437,9 +464,23 @@ struct DBGridComponent: UIComponent {
         }
         params["rowId"] = .string(row.id)
 
+        // НОВОЕ: контекст строки для резолва {"source":"row","field":..}
+        context.activeRow = rowValues(for: row)
+        defer { context.activeRow = [:] }
+
         context.trigger(EventModel(type: .onTap, targets: event.targets, params: params))
     }
 
+    /// Значения колонок строки для резолва row-параметров.
+    /// Минимум: id. Если в DBGridRow есть словарь полей, добавьте его (см. комментарий).
+    private func rowValues(for row: DBGridRow) -> [String: JSONValue] {
+        var values: [String: JSONValue] = [:]
+        // values = row.data            // <- подставьте реальное поле DBGridRow с [String: JSONValue]
+        values["id"] = values["id"] ?? .string(row.id)
+        return values
+    }
+    
+    
      func resolvedColumns(props: [String: JSONValue]) -> [DBGridColumn] {
         guard let array = props["columns"]?.arrayValue else {
             return [

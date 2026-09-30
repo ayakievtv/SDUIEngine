@@ -100,7 +100,7 @@ final class UIService {
             }
         
         
-        Log.d("Loading loadFromBackend: \(finalURL)",finalURL)
+        Log.d("📶 Loading loadFromBackend: \(finalURL)",finalURL)
         
         let (data, response) = try await session.data(from: finalURL)
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -134,6 +134,8 @@ final class UIService {
     }
 
     private func decodeComponent(from data: Data) throws -> ComponentModel {
+        let data = resolveVariables(in: data)
+        
         // Supports multiple backend payload envelopes for compatibility.
         if let component = try? decoder.decode(ComponentModel.self, from: data) {
             return component
@@ -146,6 +148,19 @@ final class UIService {
         return try decoder.decode(RootPayload.self, from: data).root
     }
 
+    /// Data -> JSONValue -> подстановка @TOKEN -> Data.
+    /// При любой ошибке возвращает исходные данные, чтобы не ломать загрузку экрана.
+    private func resolveVariables(in data: Data, using store: GlobalVariablesStore = .shared) -> Data {
+        guard let json = try? JSONDecoder().decode(JSONValue.self, from: data) else {
+            return data
+        }
+        
+        let resolved = json.resolvingVariables(using: ParamResolver(store: store))
+        
+        return (try? JSONEncoder().encode(resolved)) ?? data
+    }
+    
+    
     private static var isDebugBuild: Bool {
         #if DEBUG
         true

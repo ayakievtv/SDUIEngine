@@ -183,36 +183,3 @@ struct BtnSmallStroke: ButtonStyle {//small_stroke
 
 }
 
-
-struct CircleButton: View {
-    @State private var tapped = Bool()
-    @State var img:String
-    @Environment(\.isEnabled) private var isEnabled
-    
-    var action: () -> ()
-    var body: some View {
-        VStack {
-            ZStack {
-                Circle()
-                    .fill(isEnabled ? Color.per_sinij_40 : .mon_seryj_80)
-                    .frame(width: 54, height: 54)
-                    .shadow(color: .gray.opacity(0.5), radius: 10, x: 7, y: 7)
-                Image(systemName: img)
-                    .foregroundColor(Color.nWhite)
-                    .font(.system(size: 16, weight: .semibold))
-            }
-            .scaleEffect(tapped ? 0.95 : 1)
-            .onTapGesture {
-              
-                UIApplication.shared.endEditing()
-                    tapped.toggle()
-                    action()
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                                        tapped = false
-                                    }
-             
-            }
-            
-        }
-    }
-}
