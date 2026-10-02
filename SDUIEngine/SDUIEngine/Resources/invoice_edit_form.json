@@ -6,7 +6,7 @@
          "id":"invoice_edit_root_scroll",
          "type":"ScrollView",
          "props":{
-            "navigationTitle":"invoice_edit_form",
+            "navigationTitle":"Редактирование счета",
             "showsIndicators":false
          },
          "events":{

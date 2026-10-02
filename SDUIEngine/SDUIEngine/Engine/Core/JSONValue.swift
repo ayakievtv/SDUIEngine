@@ -67,3 +67,47 @@ enum JSONValue: Codable, Equatable {
         }
     }
 }
+
+
+
+extension JSONValue {
+    var stringValue: String? {
+        if case let .string(value) = self { return value }
+        return nil
+    }
+
+    var numberValue: Double? {
+        if case let .number(value) = self { return value }
+        return nil
+    }
+
+    var boolValue: Bool? {
+        if case let .bool(value) = self { return value }
+        return nil
+    }
+
+    var objectValue: [String: JSONValue]? {
+        if case let .object(value) = self { return value }
+        return nil
+    }
+
+    var arrayValue: [JSONValue]? {
+        if case let .array(value) = self { return value }
+        return nil
+    }
+}
+
+extension Dictionary where Key == String, Value == JSONValue {
+    func string(_ key: String) -> String? {
+        self[key]?.stringValue
+    }
+
+    func double(_ key: String) -> Double? {
+        self[key]?.numberValue
+    }
+
+    func bool(_ key: String) -> Bool? {
+        self[key]?.boolValue
+    }
+}
+

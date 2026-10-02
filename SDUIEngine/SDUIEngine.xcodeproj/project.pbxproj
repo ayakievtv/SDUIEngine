@@ -33,6 +33,7 @@
 		1960D21230042DC1008CA182 /* ComponentRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960D20730042DC1008CA182 /* ComponentRendererTests.swift */; };
 		19794BD63012528F00D503F0 /* alldocs.json in Resources */ = {isa = PBXBuildFile; fileRef = 19794BD53012528000D503F0 /* alldocs.json */; };
 		19794BD830125D7700D503F0 /* alldocs2.json in Resources */ = {isa = PBXBuildFile; fileRef = 19794BD730125D7700D503F0 /* alldocs2.json */; };
+		1981FB44306EF00800970F1A /* DatePickerComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1981FB43306EF00600970F1A /* DatePickerComponent.swift */; };
 		199209C7306BC15F006CCB58 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199209C6306BC15D006CCB58 /* AppConfig.swift */; };
 		199209C9306BC181006CCB58 /* GlobalVariablesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199209C8306BC180006CCB58 /* GlobalVariablesStore.swift */; };
 		199209CB306BE4C3006CCB58 /*  Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199209CA306BE4C0006CCB58 /*  Log.swift */; };
@@ -111,6 +112,7 @@
 		1960D20B30042DC1008CA182 /* LayoutComponentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutComponentsTests.swift; sourceTree = "<group>"; };
 		19794BD53012528000D503F0 /* alldocs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = alldocs.json; sourceTree = "<group>"; };
 		19794BD730125D7700D503F0 /* alldocs2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = alldocs2.json; sourceTree = "<group>"; };
+		1981FB43306EF00600970F1A /* DatePickerComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerComponent.swift; sourceTree = "<group>"; };
 		199209C6306BC15D006CCB58 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		199209C8306BC180006CCB58 /* GlobalVariablesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalVariablesStore.swift; sourceTree = "<group>"; };
 		199209CA306BE4C0006CCB58 /*  Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " Log.swift"; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 		A00000000000000000000103 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				1981FB43306EF00600970F1A /* DatePickerComponent.swift */,
 				A00000000000000000000913 /* ButtonComponent.swift */,
 				0097CB9B2F69DD56002E5CFD /* TabBarComponent.swift */,
 				A00000000000000000000914 /* ImageComponent.swift */,
@@ -517,6 +520,7 @@
 				195C6976306CF54800713B4D /* nTheme.swift in Sources */,
 				A00000000000000000000002 /* ContentView.swift in Sources */,
 				A00000000000000000000201 /* ComponentModel.swift in Sources */,
+				1981FB44306EF00800970F1A /* DatePickerComponent.swift in Sources */,
 				A00000000000000000000202 /* JSONValue.swift in Sources */,
 				A00000000000000000000301 /* EventModel.swift in Sources */,
 				A00000000000000000000401 /* UIContext.swift in Sources */,

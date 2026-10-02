@@ -153,6 +153,10 @@ struct SettingsRow: View {
 /// Register default components in registry
 private func registerDefaultComponents(in registry: ComponentRegistry) {
     // Default mapping between JSON "type" and SwiftUI implementation
+    
+    Log.d("📕📕📕 registerDefaultComponents",registry);
+    
+    
     registry.register(type: "VStack", component: VStackComponent.self)
     registry.register(type: "HStack", component: HStackComponent.self)
     registry.register(type: "ScrollView", component: ScrollViewComponent.self)
@@ -161,6 +165,8 @@ private func registerDefaultComponents(in registry: ComponentRegistry) {
     registry.register(type: "Image", component: ImageComponent.self)
     registry.register(type: "Spacer", component: SpacerComponent.self)
     registry.register(type: "TextField", component: TextFieldComponent.self)
+    registry.register(type: "DateField", component: DatePickerComponent.self)
+    registry.register(type: "NumberField", component: TextFieldComponent.self)
     registry.register(type: "DataSource", component: DataSourceComponent.self)
     registry.register(type: "DBGrid", component: DBGridComponent.self)
     registry.register(type: "TabBar", component: TabBarComponent.self)
