@@ -36,8 +36,8 @@ struct TextComponent: UIComponent {
         let borderColor = Color.sduiColor(props.string("borderColor") ?? "#D1D5DB") ?? Color.gray.opacity(0.5)
         let backgroundColor = Color.sduiColor(props.string("backgroundColor") ?? "#F9FAFB") ?? Color(.systemBackground)
         let cornerRadius = CGFloat(props.double("cornerRadius") ?? 8)
-        let verticalPadding = CGFloat(props.double("inputPaddingVertical") ?? 10)
-        let horizontalPadding = CGFloat(props.double("inputPaddingHorizontal") ?? 12)
+        let verticalPadding = CGFloat(props.double("PaddingVertical") ?? 0)
+        let horizontalPadding = CGFloat(props.double("PaddingHorizontal") ?? 0)
 
         let baseText = Text(value).applyStyle(style)
         let renderedText: AnyView
@@ -57,7 +57,13 @@ struct TextComponent: UIComponent {
                     )
             )
         } else {
-            renderedText = baseText
+//            renderedText = baseText
+            renderedText = AnyView(
+                baseText
+                    .padding(.vertical, verticalPadding)
+                    .padding(.horizontal, horizontalPadding)
+                 
+            )
         }
 
         return renderedText

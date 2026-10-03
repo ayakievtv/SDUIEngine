@@ -213,30 +213,7 @@ final class UIContext {
 
     // MARK: - Navigation
 
-    /// Navigate to route by name
-    func navigate(to route: String) {
-        navigation.navigate(to: AppRoute(screenName: route), mode: .push)
-    }
-
-    /// Navigate to route (alias)
-    func navigate(_ route: String) {
-        navigate(to: route)
-    }
-
-    /// Push route onto navigation stack
-    func push(_ route: String) {
-        navigation.push(AppRoute(screenName: route))
-    }
-
-    /// Present route modally
-    func modal(_ route: String) {
-        navigation.modal(AppRoute(screenName: route))
-    }
-
-    /// Replace current route
-    func replace(with route: String) {
-        navigation.replace(with: AppRoute(screenName: route))
-    }
+   
 
     /// Handle server navigation action
     func handle(action: ServerAction) {
@@ -280,10 +257,10 @@ final class UIContext {
             if event.params["actions"]?.arrayValue != nil {
                 return
             }
-            if let action = ServerAction.from(event: event) {
-              
-                context.handle(action: action)
-            }
+            let currentAppId = context.navigation.currentRoute?.appId ?? "1"
+              if let action = ServerAction.from(event: event, currentAppId: currentAppId) {
+                  context.handle(action: action)
+              }
         }
 
         // Submit actions can navigate as well (for forms/search flows)
@@ -292,8 +269,10 @@ final class UIContext {
             if event.params["actions"]?.arrayValue != nil {
                 return
             }
-            guard let action = ServerAction.from(event: event) else { return }
-            context.handle(action: action)
+            let currentAppId = context.navigation.currentRoute?.appId ?? "1"
+              if let action = ServerAction.from(event: event, currentAppId: currentAppId) {
+                  context.handle(action: action)
+              }
         }
         
         // Change actions support "event chains", e.g. TextField value update -> target component update.
@@ -302,8 +281,10 @@ final class UIContext {
             if event.params["actions"]?.arrayValue != nil {
                 return
             }
-            guard let action = ServerAction.from(event: event) else { return }
-            context.handle(action: action)
+            let currentAppId = context.navigation.currentRoute?.appId ?? "1"
+              if let action = ServerAction.from(event: event, currentAppId: currentAppId) {
+                  context.handle(action: action)
+              }
         }
 
         // Lifecycle events should also be able to trigger component/backend data actions.
@@ -376,18 +357,15 @@ final class UIContext {
     private func handleSystemAction(_ targetID: String, action: String, params: [String: String]) {
         switch targetID {
         case "navigation":
-            // Now we only focus on action (push, pop, modal)
+            let appId = params["appId"] ?? navigation.currentRoute?.appId ?? "1"
             switch action.lowercased() {
-            case "push", "navigate": self.push(params["route"] ?? "")
-            case "modal":   self.modal(params["route"] ?? "")
+            case "push", "navigate": self.push(params["route"] ?? "", appId: appId)
+            case "modal":   self.modal(params["route"] ?? "", appId: appId)
             case "pop":     self.goBack()
-            case "replace": self.replace(with: params["route"] ?? "")
+            case "replace": self.replace(with: params["route"] ?? "", appId: appId)
             default: break
             }
-            
         case "backend_data":
-            // Pass parameters to existing OPEN_FORM / SAVE_FORM methods
-            // Need to slightly adapt them for [String: String] or back to JSONValue
             handleDataAction(action: action, params: params)
         default: break
         }
@@ -673,5 +651,29 @@ final class UIContext {
         } catch {
             // Save queue/offline layer can fail silently here; state is preserved for retry.
         }
+    }
+}
+
+
+
+extension UIContext {
+    func navigate(to route: String, appId: String) {
+        navigation.navigate(to: AppRoute(appId: appId, screenName: route), mode: .push)
+    }
+
+    func navigate(_ route: String, appId: String) {
+        navigate(to: route, appId: appId)
+    }
+
+    func push(_ route: String, appId: String) {
+        navigation.push(AppRoute(appId: appId, screenName: route))
+    }
+
+    func modal(_ route: String, appId: String) {
+        navigation.modal(AppRoute(appId: appId, screenName: route))
+    }
+
+    func replace(with route: String, appId: String) {
+        navigation.replace(with: AppRoute(appId: appId, screenName: route))
     }
 }

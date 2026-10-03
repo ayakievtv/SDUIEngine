@@ -35,81 +35,46 @@ final class UIService {
         self.decoder = decoder
     }
 
-    func loadScreen(screenName: String) async throws -> ComponentModel {
-        // Fallback strategy:
-        // 1) In development/local mode, always use bundle JSON.
-        // 2) Otherwise try backend first.
-        // 3) If backend fails for any reason, fallback to bundle JSON.
-        
-        
-//        if Self.useLocalScreens || Self.isDebugBuild {
-//            let localData = try loadLocalScreenData(screenName: screenName)
-//            print("Loaded UI from local JSON fallback")
-//            return try decodeComponent(from: localData)
-//        }
-
+    func loadScreen(screenName: String, appId: String) async throws -> ComponentModel {
         do {
-            let backendData = try await loadFromBackend(screenName: screenName)
-            await cache.set(screenName, data: backendData)
-       
-            Log.d("Loaded UI from backend",screenName)
-            
+            let backendData = try await loadFromBackend(screenName: screenName, appId: appId)
+            await cache.set(cacheKey(screenName: screenName, appId: appId), data: backendData)
             return try decodeComponent(from: backendData)
         } catch {
             let localData = try loadLocalScreenData(screenName: screenName)
-            
-            
-            Log.d("Loaded UI from local JSON fallback",screenName)
-            
-            
             return try decodeComponent(from: localData)
         }
     }
 
-    private func loadFromBackend(screenName: String) async throws -> Data {
-        // Avoid duplicate network calls for previously loaded screens.
-        if let cached = await cache.get(screenName) {
+    private func cacheKey(screenName: String, appId: String) -> String {
+        "\(appId)::\(screenName)"
+    }
+
+    private func loadFromBackend(screenName: String, appId: String) async throws -> Data {
+        let key = cacheKey(screenName: screenName, appId: appId)
+        if let cached = await cache.get(key) {
             return cached
         }
+        guard let baseURL else { throw UIServiceError.invalidBackendBaseURL }
 
-        guard let baseURL else {
+        let endpoint = baseURL.appendingPathComponent("api").appendingPathComponent("run")
+        guard var components = URLComponents(url: endpoint, resolvingAgainstBaseURL: true) else {
             throw UIServiceError.invalidBackendBaseURL
         }
+        components.queryItems = [
+            URLQueryItem(name: "1", value: "1"),
+            URLQueryItem(name: "module", value: "dsapi"),
+            URLQueryItem(name: "action", value: "GET_SCREEN"),
+            URLQueryItem(name: "screenId", value: screenName),
+            URLQueryItem(name: "app_id", value: appId),
+        ]
+        guard let finalURL = components.url else { throw UIServiceError.invalidBackendBaseURL }
 
-
-        let endpoint = baseURL
-            .appendingPathComponent("api")
-            .appendingPathComponent("run")
-//            .appendingPathComponent(screenName)
-
-        
-        
-        guard var components = URLComponents(url: endpoint, resolvingAgainstBaseURL: true) else {
-                throw UIServiceError.invalidBackendBaseURL
-            }
-
-            components.queryItems = [
-                URLQueryItem(name: "1", value: "1"),
-                URLQueryItem(name: "module", value: "dsapi"),
-                URLQueryItem(name: "action", value: "GET_SCREEN"),
-                URLQueryItem(name: "screenId", value: screenName)
-            ]
-
-            guard let finalURL = components.url else {
-                throw UIServiceError.invalidBackendBaseURL
-            }
-        
-        
-        Log.d("📶 Loading loadFromBackend: \(finalURL)",finalURL)
-        
         let (data, response) = try await session.data(from: finalURL)
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw UIServiceError.invalidResponse
-        }
+        guard let httpResponse = response as? HTTPURLResponse else { throw UIServiceError.invalidResponse }
         guard (200...299).contains(httpResponse.statusCode) else {
             throw UIServiceError.badStatusCode(httpResponse.statusCode)
         }
-
         return data
     }
 

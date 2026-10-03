@@ -13,26 +13,22 @@ struct ContentView: View {
     @State private var errorMessage: String?
     @State private var selectedTab = 0
 
+    // NEW: единая точка входа приложения, аналог f?p=1:main в APEX
+    private static let entryRoute = AppRoute(appId: "1", screenName: "main")
+
     init() {
-        // A single router instance is shared by the whole app tree
         let router = NavigationRouter()
         _router = StateObject(wrappedValue: router)
 
-        // UIContext is the runtime "engine" used by components
         let context = UIContext(navigation: router)
         registerDefaultComponents(in: context.componentRegistry)
         self.context = context
-      //  self.service = UIService()
-        
-        self.service =  UIService(baseURL:URL(string:AppConfig.baseURL))
-        
-//        self.service =  UIService(baseURL:URL(string:"http://192.168.2.104:8023/ords/yakiev"))
-       
+
+        self.service = UIService(baseURL: URL(string: AppConfig.baseURL))
     }
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            // SDUI Tab
             NavigationStack(path: $router.path) {
                 Group {
                     if isLoading {
@@ -46,15 +42,15 @@ struct ContentView: View {
                 }
                 // A single destination resolver for every AppRoute
                 .navigationDestination(for: AppRoute.self) { route in
-                    ScreenView(name: route.screenName, service: service, context: context)
+                    // CHANGED: передаём весь route (appId+screenName), а не только имя
+                    ScreenView(route: route, service: service, context: context)
                 }
             }
             .tabItem {
                 Label("Main", systemImage: "house.fill")
             }
             .tag(0)
-            
-            // Settings Tab
+
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gear")
@@ -73,8 +69,11 @@ struct ContentView: View {
         errorMessage = nil
 
         do {
-            // Backend-driven entry point
-            rootComponent = try await service.loadScreen(screenName:"main")
+            // CHANGED: appId обязателен, используем зашитую точку входа
+            rootComponent = try await service.loadScreen(
+                screenName: Self.entryRoute.screenName,
+                appId: Self.entryRoute.appId
+            )
         } catch {
             rootComponent = nil
             errorMessage = error.localizedDescription
@@ -166,6 +165,8 @@ private func registerDefaultComponents(in registry: ComponentRegistry) {
     registry.register(type: "Spacer", component: SpacerComponent.self)
     registry.register(type: "TextField", component: TextFieldComponent.self)
     registry.register(type: "DateField", component: DatePickerComponent.self)
+    registry.register(type: "Picker", component: PickerComponent.self)
+    registry.register(type: "Popup", component: PopupComponent.self)
     registry.register(type: "NumberField", component: TextFieldComponent.self)
     registry.register(type: "DataSource", component: DataSourceComponent.self)
     registry.register(type: "DBGrid", component: DBGridComponent.self)

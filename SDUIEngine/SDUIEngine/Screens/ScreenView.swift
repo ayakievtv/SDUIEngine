@@ -1,8 +1,8 @@
 import SwiftUI
 
-// Reusable screen container: loads JSON by name and renders dynamic component tree.
+// Reusable screen container: loads JSON by (appId, name) and renders dynamic component tree.
 struct ScreenView: View {
-    let name: String
+    let route: AppRoute          // CHANGED: раньше был `name: String`
     let service: UIService
     let context: UIContext
 
@@ -10,8 +10,8 @@ struct ScreenView: View {
     @State private var errorMessage: String?
     @State private var isLoading = false
 
-    init(name: String, service: UIService, context: UIContext) {
-        self.name = name
+    init(route: AppRoute, service: UIService, context: UIContext) {
+        self.route = route
         self.service = service
         self.context = context
     }
@@ -19,7 +19,7 @@ struct ScreenView: View {
     var body: some View {
         Group {
             if isLoading {
-                ProgressView("Loading \(name)...")
+                ProgressView("Loading \(route.screenName)...")
             } else if let errorMessage {
                 VStack(spacing: 12) {
                     Text("Failed to load screen")
@@ -40,8 +40,9 @@ struct ScreenView: View {
                 EmptyView()
             }
         }
-        .task(id: name) {
-            // Reload when route/screen name changes.
+        // CHANGED: id теперь учитывает appId+screenName - перезагрузка
+        // при смене либо экрана, либо приложения
+        .task(id: "\(route.appId)::\(route.screenName)") {
             await load()
         }
     }
@@ -52,8 +53,7 @@ struct ScreenView: View {
         errorMessage = nil
 
         do {
-            // Delegates to UIService (backend first, local fallback).
-            rootComponent = try await service.loadScreen(screenName: name)
+            rootComponent = try await service.loadScreen(screenName: route.screenName, appId: route.appId)
         } catch {
             rootComponent = nil
             errorMessage = error.localizedDescription

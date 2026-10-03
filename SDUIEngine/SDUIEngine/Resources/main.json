@@ -18,7 +18,7 @@
                "id":"title_text",
                "type":"Text",
                "props":{
-                  "text":"Welcome to SDUIEngine",
+                  "text":"Welcome to SDUIEngine 1",
                   "fontSize":26,
                   "fontWeight":"bold",
                   "color":"#5F2937"
@@ -40,7 +40,8 @@
                            {
                               "target":"navigation",
                               "action":"push",
-                              "route":"Projects"
+                              "route":"Projects",
+                              "appId": "109"
                            }
                         ]
                      }

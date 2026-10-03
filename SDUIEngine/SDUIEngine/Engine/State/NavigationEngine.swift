@@ -11,73 +11,86 @@ enum NavigationMode {
 }
 
 /// Unified route model passed through NavigationStack path
-enum AppRoute: Hashable, Codable {
-    case main                               // Root/main screen
-    case screen(name: String)                // Named screen route
+//enum AppRoute: Hashable, Codable {
+//    case main                               // Root/main screen
+//    case screen(name: String)                // Named screen route
+//
+//    /// Extract screen name for display purposes
+//    var screenName: String {
+//        switch self {
+//        case .main:
+//            return "main"
+//        case let .screen(name):
+//            return name
+//        }
+//    }
+//
+//    /// Initialize with screen name, mapping "main" to main case
+//    init(screenName: String) {
+//        if screenName == "main" {
+//            self = .main
+//        } else {
+//            self = .screen(name: screenName)
+//        }
+//    }
+//
+//    /// Custom decoder implementation for flexible route parsing
+//    init(from decoder: Decoder) throws {
+//        if let singleValue = try? decoder.singleValueContainer(),
+//           let raw = try? singleValue.decode(String.self) {
+//            self = AppRoute(screenName: raw)
+//            return
+//        }
+//
+//        let container = try decoder.container(keyedBy: CodingKeys.self)
+//        let type = try container.decode(RouteType.self, forKey: .type)
+//
+//        switch type {
+//        case .main:
+//            self = .main
+//        case .screen:
+//            self = .screen(name: try container.decode(String.self, forKey: .name))
+//        }
+//    }
+//
+//    /// Custom encoder implementation for route serialization
+//    func encode(to encoder: Encoder) throws {
+//        var container = encoder.container(keyedBy: CodingKeys.self)
+//
+//        switch self {
+//        case .main:
+//            try container.encode(RouteType.main, forKey: .type)
+//        case let .screen(name):
+//            try container.encode(RouteType.screen, forKey: .type)
+//            try container.encode(name, forKey: .name)
+//        }
+//    }
+//
+//    /// Coding keys for route serialization
+//    private enum CodingKeys: String, CodingKey {
+//        case type
+//        case name
+//    }
+//
+//    /// Internal route type for serialization
+//    private enum RouteType: String, Codable {
+//        case main
+//        case screen
+//    }
+//}
 
-    /// Extract screen name for display purposes
-    var screenName: String {
-        switch self {
-        case .main:
-            return "main"
-        case let .screen(name):
-            return name
-        }
-    }
+struct AppRoute: Hashable, Codable {
+    let appId: String
+    let name: String
 
-    /// Initialize with screen name, mapping "main" to main case
-    init(screenName: String) {
-        if screenName == "main" {
-            self = .main
-        } else {
-            self = .screen(name: screenName)
-        }
-    }
+    var screenName: String { name }
 
-    /// Custom decoder implementation for flexible route parsing
-    init(from decoder: Decoder) throws {
-        if let singleValue = try? decoder.singleValueContainer(),
-           let raw = try? singleValue.decode(String.self) {
-            self = AppRoute(screenName: raw)
-            return
-        }
-
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let type = try container.decode(RouteType.self, forKey: .type)
-
-        switch type {
-        case .main:
-            self = .main
-        case .screen:
-            self = .screen(name: try container.decode(String.self, forKey: .name))
-        }
-    }
-
-    /// Custom encoder implementation for route serialization
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-
-        switch self {
-        case .main:
-            try container.encode(RouteType.main, forKey: .type)
-        case let .screen(name):
-            try container.encode(RouteType.screen, forKey: .type)
-            try container.encode(name, forKey: .name)
-        }
-    }
-
-    /// Coding keys for route serialization
-    private enum CodingKeys: String, CodingKey {
-        case type
-        case name
-    }
-
-    /// Internal route type for serialization
-    private enum RouteType: String, Codable {
-        case main
-        case screen
+    init(appId: String, screenName: String) {
+        self.appId = appId
+        self.name = screenName
     }
 }
+
 
 /// Action contract expected from backend responses/events
 enum ActionType: String, Codable, Hashable {
@@ -150,99 +163,60 @@ protocol NavigationRouting: AnyObject {
 
 // MARK: - Navigation Router Implementation
 
-/// Single source of truth for stack-based navigation state
 @MainActor
 final class NavigationRouter: ObservableObject, NavigationRouting {
     @Published var path: [AppRoute] = []
     @Published private(set) var modalRoute: AppRoute?
 
-    /// Get current route from path
     var currentRoute: AppRoute? {
         path.last
     }
 
-    /// Converts server intent into concrete stack mutations
     func handle(action: ServerAction) {
-        print("🔍 DEBUG: NavigationRouter.handle called with action: \(action)")
         switch action.type {
         case .navigate:
-            guard let route = action.route else { 
-                print("❌ DEBUG: No route in navigate action")
-                return 
-            }
+            guard let route = action.route else { return }
             if action.mode == .replace {
-                print("🔍 DEBUG: Replacing with route: \(route)")
                 replace(with: route)
             } else {
-                print("🔍 DEBUG: Pushing route: \(route)")
                 push(route)
             }
-            
+
         case .navigateChain:
             let chain = action.routes
-            guard !chain.isEmpty else { 
-                print("❌ DEBUG: Empty route chain")
-                return 
-            }
-
-            // Supports deep nested navigation when backend sends a full chain:
-            // ["catalog", "product_42", "checkout"]
+            guard !chain.isEmpty else { return }
             if action.mode == .replace {
-                print("🔍 DEBUG: Replacing with route chain: \(chain)")
                 path.removeAll()
                 chain.forEach { push($0) }
             } else {
-                print("🔍 DEBUG: Pushing route chain: \(chain)")
                 chain.forEach { push($0) }
             }
-            
+
         case .pop:
-            print("🔍 DEBUG: Popping current route")
             pop()
-            
+
         case .popToRoot:
-            print("🔍 DEBUG: Popping to root")
             path.removeAll()
         }
     }
 
-    /// Navigate to route with specified mode
     func navigate(to route: AppRoute, mode: NavigationMode) {
         switch mode {
-        case .push:
-            push(route)
-        case .modal:
-            modal(route)
-        case .replace:
-            replace(with: route)
+        case .push: push(route)
+        case .modal: modal(route)
+        case .replace: replace(with: route)
         }
     }
 
-    /// Push route onto navigation stack
     func push(_ route: AppRoute) {
-        print("🔍 DEBUG: Pushing route: \(route)")
-        // "main" is a root route and should never live inside NavigationStack path
-        if route == .main {
-            print("🔍 DEBUG: Clearing path for main route")
-            path.removeAll()
-            return
-        }
         path.append(route)
-        print("🔍 DEBUG: Current path: \(path)")
     }
 
-    /// Present route modally
     func modal(_ route: AppRoute) {
         modalRoute = route
     }
 
-    /// Replace current route with new route
     func replace(with route: AppRoute) {
-        // Replacing with root route means returning to root stack state
-        if route == .main {
-            path.removeAll()
-            return
-        }
         if path.isEmpty {
             path = [route]
         } else {
@@ -250,19 +224,16 @@ final class NavigationRouter: ObservableObject, NavigationRouting {
         }
     }
 
-    /// Pop current route from stack
     func pop() {
         guard !path.isEmpty else { return }
         path.removeLast()
     }
 
-    /// Reset navigation to specific route
     func reset(to route: AppRoute?) {
         path = route.map { [$0] } ?? []
         modalRoute = nil
     }
 
-    /// Dismiss current modal presentation
     func dismissModal() {
         modalRoute = nil
     }
@@ -271,70 +242,50 @@ final class NavigationRouter: ObservableObject, NavigationRouting {
 // MARK: - Server Action Extensions
 
 extension ServerAction {
-    /// Maps event payload coming from SDUI components into a routing action
-    static func from(event: EventModel) -> ServerAction? {
-        print("🔍 DEBUG: ServerAction.from called with event: \(event)")
-        print("🔍 DEBUG: Event type: \(event.type)")
-        print("🔍 DEBUG: Event params: \(event.params)")
-        print("🔍 DEBUG: Event targets: \(event.targets)")
-        
+    static func from(event: EventModel, currentAppId: String) -> ServerAction? {
         guard event.type == .onTap || event.type == .onSubmit || event.type == .onChange else {
-            print("❌ DEBUG: Event type not supported for navigation: \(event.type)")
             return nil
         }
 
-        // Handle actions array (new format)
         if let actions = event.params["actions"]?.arrayValue,
            !actions.isEmpty,
            let firstAction = actions.first?.objectValue {
-            print("🔍 DEBUG: Processing actions array format")
-            
+
             let rawType = firstAction["action"]?.stringValue ?? "navigate"
             let type = ActionType(rawValue: rawType) ?? .navigate
-            
             let modeRaw = firstAction["mode"]?.stringValue ?? "push"
             let mode = NavigationModePayload(rawValue: modeRaw) ?? .push
-            
+            let targetAppId = firstAction["appId"]?.stringValue ?? currentAppId
+
             if let routeName = firstAction["route"]?.stringValue {
-                let route = AppRoute(screenName: routeName)
-                print("🔍 DEBUG: Created navigation from actions array - type: \(type), route: \(route), mode: \(mode)")
+                let route = AppRoute(appId: targetAppId, screenName: routeName)
                 return ServerAction(type: type, route: route, mode: mode)
             }
         }
 
-        // Legacy format - direct params
         let rawType = event.params["type"]?.stringValue ?? event.params["actionType"]?.stringValue ?? "navigate"
         let type = ActionType(rawValue: rawType) ?? .navigate
-
         let modeRaw = event.params["mode"]?.stringValue ?? "push"
         let mode = NavigationModePayload(rawValue: modeRaw) ?? .push
+        let targetAppId = event.params["appId"]?.stringValue ?? currentAppId
 
-        print("🔍 DEBUG: Parsed type: \(type), mode: \(mode)")
-
-        // Handle navigation chain for multi-route navigation
         if type == .navigateChain,
            let routeValues = event.params["routes"]?.arrayValue {
-            let routes = routeValues.compactMap { $0.stringValue }.map(AppRoute.init(screenName:))
-            print("🔍 DEBUG: Created navigateChain with routes: \(routes)")
+            let routes = routeValues.compactMap { $0.stringValue }.map { AppRoute(appId: targetAppId, screenName: $0) }
             return ServerAction(type: .navigateChain, routes: routes, mode: mode)
         }
 
-        // Handle single route navigation
         if let routeName = event.params["route"]?.stringValue {
-            let route = AppRoute(screenName: routeName)
-            print("🔍 DEBUG: Created single route navigation to: \(route)")
+            let route = AppRoute(appId: targetAppId, screenName: routeName)
             return ServerAction(type: type, route: route, mode: mode)
         }
 
-        // Handle screen target navigation
         if let screenTarget = event.targets.first(where: { $0.hasPrefix("screen:") }) {
             let screenName = String(screenTarget.dropFirst("screen:".count))
-            let route = AppRoute(screenName: screenName)
-            print("🔍 DEBUG: Created screen target navigation to: \(route)")
+            let route = AppRoute(appId: targetAppId, screenName: screenName)
             return ServerAction(type: .navigate, route: route, mode: mode)
         }
 
-        print("❌ DEBUG: No valid navigation parameters found")
         return nil
     }
 }
